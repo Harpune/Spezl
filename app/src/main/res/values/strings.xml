@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Spezl</string>
+    <string name="text_password">Passwort</string>
+    <string name="text_email">Email</string>
+    <string name="text_login">Login</string>
+    <string name="text_no_account">Noch keinen Account? Registriere dich jetzt!</string>
+    <string name="text_check_password">Passwort erneut eingeben</string>
+    <string name="text_name">Name</string>
+    <string name="text_age">Alter</string>
+    <string name="text_town">Stadt</string>
+    <string name="text_register">Registrieren</string>
+    <string name="header">Header</string>
+</resources>
