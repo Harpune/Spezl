@@ -10,4 +10,6 @@
     <string name="text_town">Stadt</string>
     <string name="text_register">Registrieren</string>
     <string name="header">Header</string>
+    <string name="text_create_event">Create Event</string>
+    <string name="text_join_event">Join Event</string>
 </resources>
