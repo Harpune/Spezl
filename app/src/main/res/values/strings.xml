@@ -12,4 +12,10 @@
     <string name="header">Header</string>
     <string name="text_create_event">Create Event</string>
     <string name="text_join_event">Join Event</string>
+    <string name="text_kulinarisch">kulinarisch</string>
+    <string name="text_feiern">Feriern</string>
+    <string name="text_kultur">Kultur</string>
+    <string name="text_relaxen">Relaxen</string>
+    <string name="text_action">Action</string>
+    <string name="text_sport">Sport</string>
 </resources>

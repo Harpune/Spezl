@@ -5,20 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class DecisionActivity extends Activity {
+public class JoinActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_decision);
+        setContentView(R.layout.activity_join);
     }
 
-    public void createEvent(View view) {
-
-    }
-
-    public void joinEvent(View view) {
-        Intent intent = new Intent(this, JoinActivity.class);
+    public void chooseDate(View view) {
+        Intent intent = new Intent(this, DateActivity.class);
         startActivity(intent);
     }
 }
