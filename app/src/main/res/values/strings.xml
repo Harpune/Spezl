@@ -13,9 +13,18 @@
     <string name="text_create_event">Create Event</string>
     <string name="text_join_event">Join Event</string>
     <string name="text_kulinarisch">kulinarisch</string>
-    <string name="text_feiern">Feriern</string>
+    <string name="text_feiern">Feiern</string>
     <string name="text_kultur">Kultur</string>
     <string name="text_relaxen">Relaxen</string>
     <string name="text_action">Action</string>
     <string name="text_sport">Sport</string>
+    <string name="text_date">Datum</string>
+    <string name="text_start_time">Startzeit</string>
+    <string name="text_end_time">Endzeit</string>
+    <string name="text_duration">Dauer</string>
+    <string name="text_oclock">Uhr</string>
+    <string name="auth_failed">Da ist etwas schief gelaufen.</string>
+    <string name="auth_weak_password">Das Passwort ist leider zu schwach!</string>
+    <string name="auth_invalid_email">Deine Email ist leider nicht gültig</string>
+    <string name="auth_user_exists">Der Benutzer existiert schon.</string>
 </resources>
