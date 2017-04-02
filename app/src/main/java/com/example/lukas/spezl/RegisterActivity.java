@@ -135,7 +135,7 @@ public class RegisterActivity extends Activity {
                             }
 
                         } else {
-                            Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
                         }

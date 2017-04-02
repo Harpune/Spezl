@@ -27,4 +27,5 @@
     <string name="auth_weak_password">Das Passwort ist leider zu schwach!</string>
     <string name="auth_invalid_email">Deine Email ist leider nicht gültig</string>
     <string name="auth_user_exists">Der Benutzer existiert schon.</string>
+    <string name="logout">Logout</string>
 </resources>
