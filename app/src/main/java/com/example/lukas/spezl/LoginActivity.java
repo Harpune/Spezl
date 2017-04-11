@@ -8,6 +8,7 @@ import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -64,13 +65,13 @@ public class LoginActivity extends Activity {
         mPasswordLayout.setErrorEnabled(false);
 
         if (email.matches("")) {
-            mEmailLayout.setError("Bitte geb deine E-Mail an!");
+            mEmailLayout.setError("Bitte gib deine E-Mail an!");
             mEmailText.requestFocus();
             return;
         }
 
         if (password.matches("")) {
-            mPasswordLayout.setError("Geb ein Passwort ein!");
+            mPasswordLayout.setError("Gib ein Passwort ein!");
             mPasswordText.requestFocus();
             return;
         }
@@ -81,13 +82,20 @@ public class LoginActivity extends Activity {
             return;
         }
 
+        final RelativeLayout loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.VISIBLE);
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
+                            loadingPanel.setVisibility(View.GONE);
                             Toast.makeText(LoginActivity.this, "E-Mail und Passwort stimmen nicht überein!", Toast.LENGTH_SHORT).show();
                         } else {
+                            loadingPanel.setVisibility(View.GONE);
+
+
                             Intent intent = new Intent(LoginActivity.this, DecisionActivity.class);
                             startActivity(intent);
                             finish();

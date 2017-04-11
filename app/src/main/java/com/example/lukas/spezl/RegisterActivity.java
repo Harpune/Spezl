@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,12 +18,14 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-
-import static android.content.ContentValues.TAG;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends Activity {
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mDatabaseRef;
 
     private EditText mNameText, mTownText, mEmailText, mAgeText, mPasswordText, mPasswordCheckText;
     private TextInputLayout mNameLayout, mTownLayout, mEmailLayout, mAgeLayout, mPasswordLayout,
@@ -38,6 +40,7 @@ public class RegisterActivity extends Activity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
 
         mNameText = (EditText) findViewById(R.id.input_name);
         mTownText = (EditText) findViewById(R.id.input_town);
@@ -112,11 +115,16 @@ public class RegisterActivity extends Activity {
             return;
         }
 
+        final RelativeLayout loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        loadingPanel.setVisibility(View.VISIBLE);
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
+                            loadingPanel.setVisibility(View.GONE);
+
                             try {
                                 throw task.getException();
                             } catch (FirebaseAuthUserCollisionException e) {
@@ -135,6 +143,14 @@ public class RegisterActivity extends Activity {
                             }
 
                         } else {
+                            FirebaseUser fireUser = task.getResult().getUser();
+
+                            User user = new User(fireUser.getUid(), name, town, email, Double.parseDouble(age));
+                            mDatabaseRef = mDatabase.getReference();
+                            mDatabaseRef.child("users").child(fireUser.getUid()).setValue(user);
+
+                            loadingPanel.setVisibility(View.GONE);
+
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
