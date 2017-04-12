@@ -30,7 +30,8 @@
         <activity
             android:name=".View.DateActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".View.CreateActivity"></activity>
+        <activity android:name=".View.CreateActivity" />
+        <activity android:name=".View.EventActivity"></activity>
     </application>
 
 </manifest>

@@ -16,7 +16,8 @@ public class Event {
     private List<String> participantIds;
     private List<String> tags;
 
-    public Event() {}
+    public Event() {
+    }
 
     public Event(String uId, String name, String description, Double maxParticipants, Date date, String town, String ownerId, String ownerName, String imageUri, List<String> participantIds, List<String> tags) {
         this.uId = uId;

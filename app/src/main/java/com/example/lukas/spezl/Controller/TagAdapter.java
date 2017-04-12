@@ -26,6 +26,14 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagHolder> {
 
             this.tagView = (TextView) view.findViewById(R.id.text_tag);
             this.deleteButton = (ImageButton) view.findViewById(R.id.imageButton_delete_tag);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tagList.remove(getAdapterPosition());
+                    notifyItemRemoved(getAdapterPosition());
+                    notifyItemRangeChanged(getAdapterPosition(), tagList.size());
+                }
+            });
         }
     }
 
@@ -45,14 +53,6 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagHolder> {
         String tag = tagList.get(position);
         Log.d("onBindViewHolder", tag);
         holder.tagView.setText(tag);
-
-        //Set OnClickListener on Delete-ImageButton to delete chosen tag.
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tagList.remove(holder.getAdapterPosition());
-            }
-        });
     }
 
     @Override
