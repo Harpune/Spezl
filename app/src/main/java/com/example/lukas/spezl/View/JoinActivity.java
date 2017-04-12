@@ -1,9 +1,11 @@
-package com.example.lukas.spezl;
+package com.example.lukas.spezl.View;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.lukas.spezl.R;
 
 public class JoinActivity extends Activity {
 

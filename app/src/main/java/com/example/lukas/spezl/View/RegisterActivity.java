@@ -1,4 +1,4 @@
-package com.example.lukas.spezl;
+package com.example.lukas.spezl.View;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.lukas.spezl.Model.User;
+import com.example.lukas.spezl.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

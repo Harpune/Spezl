@@ -1,9 +1,11 @@
-package com.example.lukas.spezl;
+package com.example.lukas.spezl.View;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import com.example.lukas.spezl.R;
 
 public class DecisionActivity extends Activity {
 
@@ -14,7 +16,8 @@ public class DecisionActivity extends Activity {
     }
 
     public void createEvent(View view) {
-
+        Intent intent = new Intent(this, CreateActivity.class);
+        startActivity(intent);
     }
 
     public void joinEvent(View view) {

@@ -1,4 +1,4 @@
-package com.example.lukas.spezl;
+package com.example.lukas.spezl.Model;
 
 import android.app.Application;
 import com.firebase.client.Firebase;

@@ -1,4 +1,4 @@
-package com.example.lukas.spezl;
+package com.example.lukas.spezl.View;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import com.example.lukas.spezl.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

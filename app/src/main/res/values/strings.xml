@@ -28,4 +28,10 @@
     <string name="auth_invalid_email">Deine Email ist leider nicht gültig</string>
     <string name="auth_user_exists">Der Benutzer existiert schon.</string>
     <string name="logout">Logout</string>
+    <string name="text_description">Beschreibung</string>
+    <string name="text_time">Uhrzeit</string>
+    <string name="text_max_participants">Wie viele Teilnehmer?</string>
+    <string name="text_delete_tag">Delete Tag</string>
+    <string name="text_new">Neu</string>
+    <string name="text_tag">Tags</string>
 </resources>
