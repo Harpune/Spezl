@@ -12,23 +12,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.lukas.spezl.Controller.EventAdapter;
 import com.example.lukas.spezl.Model.Event;
 import com.example.lukas.spezl.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -78,9 +74,15 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 eventList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    // Get the event from database with its key (uid).
+                    String key = postSnapshot.getKey();
+                    Log.d("KEY", key);
                     Event event = postSnapshot.getValue(Event.class);
+                    event.setuId(key);
                     eventList.add(event);
                 }
+
+                // Notify adapter and stop refreshing
                 mEventAdapter.notifyDataSetChanged();
                 mSwipeRefreshLayout.setRefreshing(false);
             }

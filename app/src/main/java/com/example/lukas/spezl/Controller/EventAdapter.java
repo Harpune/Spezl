@@ -19,8 +19,12 @@ import java.util.Locale;
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder> {
 
     private final String TAG_EVENT_ID = "TAG_EVENT_ID";
+    private final String TAG_EVENT_NAME = "TAG_EVENT_NAME";
     private final String TAG_OWNER_ID = "TAG_OWNER_ID";
-
+    private final String TAG_DESCRIPTION = "TAG_DESCRIPTION";
+    private final String TAG_OWNER_NAME = "TAG_OWNER_NAME";
+    private final String TAG_MAX_PARTICIPANTS = "TAG_PARTICIPANTS";
+    private final String TAG_EVENT_TOWN = "TAG_EVENT_TOWN";
 
     private List<Event> eventList;
 
@@ -44,7 +48,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
                 public void onClick(View view) {
                     Intent intent = new Intent(rootLayout.getContext(), EventActivity.class);
                     intent.putExtra(TAG_EVENT_ID, eventList.get(getAdapterPosition()).getuId());
+                    intent.putExtra(TAG_EVENT_NAME, eventList.get(getAdapterPosition()).getName());
                     intent.putExtra(TAG_OWNER_ID, eventList.get(getAdapterPosition()).getOwnerId());
+                    intent.putExtra(TAG_DESCRIPTION, eventList.get(getAdapterPosition()).getDescription());
+                    intent.putExtra(TAG_OWNER_NAME, eventList.get(getAdapterPosition()).getOwnerName());
+                    intent.putExtra(TAG_MAX_PARTICIPANTS, eventList.get(getAdapterPosition()).getMaxParticipants());
+                    intent.putExtra(TAG_EVENT_TOWN, eventList.get(getAdapterPosition()).getTown());
+
                     rootLayout.getContext().startActivity(intent);
                 }
             });
