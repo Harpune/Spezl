@@ -2,6 +2,7 @@ package com.example.lukas.spezl.Controller;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,11 +52,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
                     intent.putExtra(TAG_EVENT_NAME, eventList.get(getAdapterPosition()).getName());
                     intent.putExtra(TAG_OWNER_ID, eventList.get(getAdapterPosition()).getOwnerId());
                     intent.putExtra(TAG_DESCRIPTION, eventList.get(getAdapterPosition()).getDescription());
-                    intent.putExtra(TAG_OWNER_NAME, eventList.get(getAdapterPosition()).getOwnerName());
+                    intent.putExtra(TAG_OWNER_NAME, eventList.get(getAdapterPosition()).getOwnerName());//TODO warum hier ne nullpointer?1
+                    Log.d("OWNER_NAME", eventList.get(getAdapterPosition()).getOwnerName());
                     intent.putExtra(TAG_MAX_PARTICIPANTS, eventList.get(getAdapterPosition()).getMaxParticipants());
                     intent.putExtra(TAG_EVENT_TOWN, eventList.get(getAdapterPosition()).getTown());
 
-                    rootLayout.getContext().startActivity(intent);
+                    view.getContext().startActivity(intent);
                 }
             });
         }

@@ -3,10 +3,14 @@ package com.example.lukas.spezl.View;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.QuickContactBadge;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -32,9 +36,10 @@ public class RegisterActivity extends Activity {
     private EditText mNameText, mTownText, mEmailText, mAgeText, mPasswordText, mPasswordCheckText;
     private TextInputLayout mNameLayout, mTownLayout, mEmailLayout, mAgeLayout, mPasswordLayout,
             mPasswordCheckLayout;
+    private RadioGroup mRadioGroup;
 
     private String name, town, email, age, password, passwordCheck;
-
+    private Boolean sex = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,20 @@ public class RegisterActivity extends Activity {
         mAgeText = (EditText) findViewById(R.id.input_age);
         mPasswordText = (EditText) findViewById(R.id.input_password);
         mPasswordCheckText = (EditText) findViewById(R.id.input_check_password);
+        mRadioGroup = (RadioGroup) findViewById(R.id.radioGroup_sex);
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int id) {
+                switch (id) {
+                    case R.id.radio_sex_female:
+                        sex = false;
+                        break;
+                    case R.id.radio_sex_male:
+                        sex = true;
+                        break;
+                }
+            }
+        });
 
         mNameLayout = (TextInputLayout) findViewById(R.id.input_layout_name);
         mTownLayout = (TextInputLayout) findViewById(R.id.input_layout_town);
@@ -73,6 +92,12 @@ public class RegisterActivity extends Activity {
         mAgeLayout.setErrorEnabled(false);
         mPasswordLayout.setErrorEnabled(false);
         mPasswordCheckLayout.setErrorEnabled(false);
+
+        if(sex == null){
+            Toast.makeText(this, "Männlein oder Weiblein?", Toast.LENGTH_SHORT).show();
+            mRadioGroup.requestFocus();
+            return;
+        }
 
         if (name.matches("")) {
             mNameLayout.setError("Gib bitte deinen Namen an!");
@@ -147,7 +172,7 @@ public class RegisterActivity extends Activity {
                         } else {
                             FirebaseUser fireUser = task.getResult().getUser();
 
-                            User user = new User(fireUser.getUid(), name, town, email, Double.parseDouble(age));
+                            User user = new User(fireUser.getUid(), name, sex, town, email, Double.parseDouble(age), "");
                             mDatabaseRef = mDatabase.getReference();
                             mDatabaseRef.child("users").child(fireUser.getUid()).setValue(user);
 

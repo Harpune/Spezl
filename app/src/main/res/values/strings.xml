@@ -34,4 +34,6 @@
     <string name="text_delete_tag">Delete Tag</string>
     <string name="text_new">Neu</string>
     <string name="text_tag">Tags</string>
+    <string name="text_female">Nicht Mann</string>
+    <string name="text_male">Mann</string>
 </resources>

@@ -1,39 +1,93 @@
 package com.example.lukas.spezl.Model;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class User {
-    private DatabaseReference mDatabase;
 
-    public String userId;
-    public String username;
-    public String town;
-    public String email;
-    public Double age;
+    private String userId;
+    private String username;
+    private Boolean sex;
+    private String town;
+    private String email;
+    private Double age;
+    private String imageUri;
 
     public User(){}
 
-    public User(String userId, String username, String town, String email, Double age) {
+    public User(String userId, String username, Boolean sex, String town, String email, Double age, String imageUri) {
+        this.userId = userId;
         this.username = username;
+        this.sex = sex;
         this.town = town;
         this.email = email;
         this.age = age;
+        this.imageUri = imageUri;
     }
 
-    @Exclude
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("uid", userId);
-        result.put("username", username);
-        result.put("city", town);
-        result.put("email", email);
-        result.put("age", age);
+    public String getUserId() {
+        return userId;
+    }
 
-        return result;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Boolean isSex() {
+        return sex;
+    }
+
+    public void setSex(Boolean sex) {
+        this.sex = sex;
+    }
+
+    public String getTown() {
+        return town;
+    }
+
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Double getAge() {
+        return age;
+    }
+
+    public void setAge(Double age) {
+        this.age = age;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", sex=" + sex +
+                ", town='" + town + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", imageUri='" + imageUri + '\'' +
+                '}';
     }
 }

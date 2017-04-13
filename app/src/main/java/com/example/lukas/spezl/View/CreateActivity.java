@@ -166,9 +166,16 @@ public class CreateActivity extends Activity {
         event.setMaxParticipants(maxParticipants);
         event.setTown(town);
         event.setTags(tagList);
+
+        //Add user data to the event
         assert user != null;
         event.setOwnerId(user.getUid());
         event.setOwnerName(user.getDisplayName());
+
+        List<String> participants = new ArrayList<>();
+        participants.add(user.getUid());
+
+        event.setParticipantIds(participants);
 
         // Create database connection and reference.
         mDatabase = FirebaseDatabase.getInstance();

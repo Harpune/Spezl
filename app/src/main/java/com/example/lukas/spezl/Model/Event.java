@@ -120,4 +120,22 @@ public class Event {
     public void setTags(List<String> tags) {
         this.tags = tags;
     }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "uId='" + uId + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", maxParticipants=" + maxParticipants +
+                ", date=" + date +
+                ", town='" + town + '\'' +
+                ", ownerId='" + ownerId + '\'' +
+                ", ownerName='" + ownerName + '\'' +
+                ", imageUri='" + imageUri + '\'' +
+                ", participantIds=" + participantIds +
+                ", tags=" + tags +
+                '}';
+    }
 }
+
