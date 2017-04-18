@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
         return true;
     }
-
+    TODO Options hinzufügen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -156,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
         }
     }
-
 */
     public void getEvent(View view) {
         Intent intent = new Intent(this, CreateActivity.class);
