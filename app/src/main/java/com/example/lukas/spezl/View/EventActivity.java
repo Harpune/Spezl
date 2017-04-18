@@ -18,6 +18,7 @@ import com.example.lukas.spezl.Controller.UserAdapter;
 import com.example.lukas.spezl.Model.Event;
 import com.example.lukas.spezl.Model.User;
 import com.example.lukas.spezl.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,16 +62,26 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+
         // Get the Intent information from the MainActivity
         Intent intent = getIntent();
         eventId = intent.getStringExtra(TAG_EVENT_ID);
-        String ownerId = intent.getStringExtra(TAG_OWNER_ID);
-        ownerName = intent.getStringExtra(TAG_OWNER_NAME);
         String eventDescription = intent.getStringExtra(TAG_DESCRIPTION);
         Double eventMaxParticipants = intent.getDoubleExtra(TAG_MAX_PARTICIPANTS, 0);
         String eventTown = intent.getStringExtra(TAG_EVENT_TOWN);
         String eventName = intent.getStringExtra(TAG_EVENT_NAME);
+        /*
+        String ownerId = intent.getStringExtra(TAG_OWNER_ID);
+        ownerName = intent.getStringExtra(TAG_OWNER_NAME);
+        */
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        //ownerName = user.getDisplayName();
+        //Log.d("OWNER NAME", ownerName);
 
         // Initialize the Views.
         mDescriptionText = (TextView) findViewById(R.id.text_event_description);
@@ -80,7 +91,7 @@ public class EventActivity extends AppCompatActivity {
         // Set the Titel and the Views with intent-information.
         setTitle(eventName);
         mDescriptionText.setText("<b>Beschreibung:</b> \n\n" + eventDescription);
-        mUsernameText.setText(ownerName);
+        //mUsernameText.setText(ownerName);
 
         //Setup the recyclerView and its adapter.
         mUserAdapter = new UserAdapter(users);
@@ -98,7 +109,7 @@ public class EventActivity extends AppCompatActivity {
     /**
      * Read the participant ids deposited in the event object.
      */
-    public void readParticipantsIds(){
+    public void readParticipantsIds() {
         mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mDatabaseRef = mDatabase.getReference("events").child(eventId);
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -119,25 +130,28 @@ public class EventActivity extends AppCompatActivity {
 
     /**
      * Read the User information from the given ids.
+     *
      * @param participants The ids of the participants in a list.
      */
-    public void readParticipants(List<String> participants){
-        for(int i = 0; i < participants.size(); i++){
+    public void readParticipants(List<String> participants) {
+        for (int i = 0; i < participants.size(); i++) {
             DatabaseReference mDatabaseRef = mDatabase.getReference("users").child(participants.get(i));
             final int finalI = i; //for final sake.
             mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class); // read the user.
-                    user.setUserId(dataSnapshot.getKey()); // add the userId to the user itself.
-                    Log.d("GET_USERS-user", user.toString());
-
-                    if(finalI == 0){ // the owner of the event.
-                        //mUsernameText.setText(ownerName + " (" + user.getAge().intValue() + ")");
-                    } else {
-                        users.add(user); // add user to the list.
-                        mUserAdapter.notifyItemChanged(finalI); // notify the adapter the new user.
+                    if (user != null) {
+                        user.setUserId(dataSnapshot.getKey()); // add the userId to the user itself.
+                        Log.d("GET_USERS-user", user.toString());
+                        if (finalI == 0) { // the owner of the event.
+                            //TODO wohin mit dem besitzer?
+                        } else {
+                            users.add(user); // add user to the list.
+                            mUserAdapter.notifyItemChanged(finalI); // notify the adapter the new user.
+                        }
                     }
+
                 }
 
                 @Override
@@ -150,11 +164,16 @@ public class EventActivity extends AppCompatActivity {
 
     /**
      * Triggered when fab is clicked.
+     *
      * @param view The fab-view.
      */
     public void joinEvent(View view) {
         Toast.makeText(this, "Join Event", Toast.LENGTH_SHORT).show();
+    }
 
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

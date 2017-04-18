@@ -36,4 +36,6 @@
     <string name="text_tag">Tags</string>
     <string name="text_female">Nicht Mann</string>
     <string name="text_male">Mann</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>

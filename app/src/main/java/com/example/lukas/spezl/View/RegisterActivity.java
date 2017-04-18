@@ -32,6 +32,7 @@ public class RegisterActivity extends Activity {
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDatabaseRef;
+    private FirebaseUser fireUser;
 
     private EditText mNameText, mTownText, mEmailText, mAgeText, mPasswordText, mPasswordCheckText;
     private TextInputLayout mNameLayout, mTownLayout, mEmailLayout, mAgeLayout, mPasswordLayout,
@@ -93,7 +94,7 @@ public class RegisterActivity extends Activity {
         mPasswordLayout.setErrorEnabled(false);
         mPasswordCheckLayout.setErrorEnabled(false);
 
-        if(sex == null){
+        if (sex == null) {
             Toast.makeText(this, "Männlein oder Weiblein?", Toast.LENGTH_SHORT).show();
             mRadioGroup.requestFocus();
             return;
@@ -129,7 +130,7 @@ public class RegisterActivity extends Activity {
             return;
         }
 
-        if(password.length() < 6){
+        if (password.length() < 6) {
             mPasswordLayout.setError("Das Passwort muss länger als 6 Buchstaben sein");
             mPasswordText.requestFocus();
             return;
@@ -165,24 +166,51 @@ public class RegisterActivity extends Activity {
                                 mEmailText.requestFocus();
                             } catch (FirebaseAuthInvalidUserException e) {
                                 Toast.makeText(getApplicationContext(), getString(R.string.auth_failed), Toast.LENGTH_SHORT).show();
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
 
                         } else {
-                            FirebaseUser fireUser = task.getResult().getUser();
+                            loadingPanel.setVisibility(View.GONE);
+                            sendVerificationEmail();
+                            fireUser = task.getResult().getUser();
 
                             User user = new User(fireUser.getUid(), name, sex, town, email, Double.parseDouble(age), "");
                             mDatabaseRef = mDatabase.getReference();
                             mDatabaseRef.child("users").child(fireUser.getUid()).setValue(user);
 
-                            loadingPanel.setVisibility(View.GONE);
-
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            FirebaseAuth.getInstance().signOut();
                             startActivity(intent);
                             finish();
+
                         }
                     }
                 });
+    }
+
+    private void sendVerificationEmail() {
+        FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
+
+        userFire.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "E-Mail send", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            Toast.makeText(getApplicationContext(), "E-Mail DIDNOT send", Toast.LENGTH_SHORT).show();
+                            //restart this activity
+                            overridePendingTransition(0, 0);
+                            finish();
+                            overridePendingTransition(0, 0);
+                            startActivity(getIntent());
+
+                        }
+                    }
+                });
+
+
     }
 }

@@ -37,6 +37,8 @@ public class LoginActivity extends Activity {
         mPasswordLayout = (TextInputLayout) findViewById(R.id.input_layout_password);
 
         mAuth = FirebaseAuth.getInstance();
+
+        //Check if a user is logged in
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -96,15 +98,38 @@ public class LoginActivity extends Activity {
                         } else {
                             loadingPanel.setVisibility(View.GONE);
 
+                            if (!isEmailVerified()) {
+                                //restart this activity
+                                Toast.makeText(getApplicationContext(), "Bestätige zuerst deine Email!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
 
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
                         }
                     }
                 });
+    }
 
-
+    private boolean isEmailVerified() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Log.d("IS_EMAIL_VERIFIED", "User is null");
+            return false;
+        }
+        Log.d("IS_EMAIL_VERIFIED", "" + user.isEmailVerified());
+        if (user.isEmailVerified()) {
+            // user is verified, so you can finish this activity or send user to activity which you want.
+            Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            // email is not verified, so just prompt the message to the user and restart this activity.
+            // NOTE: don't forget to log out the user.
+            FirebaseAuth.getInstance().signOut();
+            Toast.makeText(this, "Please verify your Account", Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     @Override
