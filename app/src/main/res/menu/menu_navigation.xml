@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/profile"
+            android:icon="@drawable/ic_person"
+            android:title="Profil" />
+        <item
+            android:id="@+id/settings"
+            android:icon="@drawable/ic_action_add"
+            android:title="Einstellungen" />
+    </group>
+
     <item
-        android:id="@+id/profile"
-        android:icon="@drawable/ic_person"
-        android:title="Profile" />
-    <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_action_add"
-        android:title="Settings" />
+        android:id="@+id/logout"
+        android:icon="@drawable/ic_power_settings_new"
+        android:title="Logout" />
 </menu>

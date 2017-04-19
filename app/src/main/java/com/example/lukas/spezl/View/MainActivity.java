@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -55,6 +56,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mEventAdapter = new EventAdapter(eventList);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
@@ -66,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mEventAdapter);
 
         initDrawerLayout();
+
+        //TODO search icon and functionality
+        //TODO add drawer layout icon
 
         //getRecyclerViewDataTest();
         getRecyclerViewData();
@@ -88,12 +96,20 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.profile:
-                        Toast.makeText(getApplicationContext(), "Home", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Profil", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.settings:
-                        Toast.makeText(getApplicationContext(), "Home", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Einstellungen", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawers();
+                        break;
+                    case R.id.logout:
+                        Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_SHORT).show();
+                        drawerLayout.closeDrawers();
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                     default:
                 }
