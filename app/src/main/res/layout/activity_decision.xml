@@ -2,57 +2,86 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="2">
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="?attr/actionBarSize">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.5"
-            android:contentDescription="@string/text_create_event"
-            android:scaleType="centerCrop"
-            android:src="@drawable/foto_create"
-            android:tint="@color/colorAccentCloudy" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:onClick="createEvent"
-            android:text="@string/text_create_event"
-            android:textSize="24pt" />
+    </android.support.v7.widget.Toolbar>
 
-    </RelativeLayout>
-
-    <RelativeLayout
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:stretchColumns="*">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.5"
-            android:contentDescription="@string/text_join_event"
-            android:scaleType="centerCrop"
-            android:src="@drawable/foto_join"
-            android:tint="@color/colorPrimaryCloudy" />
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:onClick="joinEvent"
-            android:text="@string/text_join_event"
-            android:textSize="24pt" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/recycler_view_padding"
+                android:background="@color/colorPrimaryCloudy"
+                android:gravity="center"
+                android:text="Entspannt" />
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/recycler_view_padding"
+                android:background="@color/colorPrimaryCloudy"
+                android:gravity="center"
+                android:text="Feiern" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/recycler_view_padding"
+                android:background="@color/colorPrimaryCloudy"
+                android:gravity="center"
+                android:text="Sport" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/recycler_view_padding"
+                android:background="@color/colorPrimaryCloudy"
+                android:gravity="center"
+                android:text="Kochen" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/recycler_view_padding"
+                android:background="@color/colorPrimaryCloudy"
+                android:gravity="center"
+                android:text="Diskussion" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/recycler_view_padding"
+                android:background="@color/colorPrimaryCloudy"
+                android:gravity="center"
+                android:text="Kultur" />
+
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

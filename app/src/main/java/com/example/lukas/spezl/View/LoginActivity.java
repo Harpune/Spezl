@@ -45,7 +45,7 @@ public class LoginActivity extends Activity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d("AUTH", "Signed in... UserID: + " + user.getUid());
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
                     startActivity(intent);
                     finish();
                 } else {

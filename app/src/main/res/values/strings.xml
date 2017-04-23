@@ -38,4 +38,7 @@
     <string name="text_male">Mann</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="text_welcome">Hi Spezl</string>
+    <string name="text_new_login">Schon ein Spezl</string>
+    <string name="text_new_register">Neu hier?</string>
 </resources>
