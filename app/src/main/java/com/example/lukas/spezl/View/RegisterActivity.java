@@ -1,15 +1,16 @@
 package com.example.lukas.spezl.View;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.QuickContactBadge;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -28,30 +29,36 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class RegisterActivity extends Activity {
     private FirebaseAuth mAuth;
-    private FirebaseDatabase mDatabase;
-    private DatabaseReference mDatabaseRef;
-    private FirebaseUser fireUser;
 
-    private EditText mNameText, mTownText, mEmailText, mAgeText, mPasswordText, mPasswordCheckText;
-    private TextInputLayout mNameLayout, mTownLayout, mEmailLayout, mAgeLayout, mPasswordLayout,
+    private Calendar mCalendar = Calendar.getInstance();
+
+    private EditText mFirstNameText, mLastNameText, mEmailText, mAgeText, mPasswordText, mPasswordCheckText;
+    private TextInputLayout mFirstNameLayout, mLastNameLayout, mEmailLayout, mAgeLayout, mPasswordLayout,
             mPasswordCheckLayout;
     private RadioGroup mRadioGroup;
 
-    private String name, town, email, age, password, passwordCheck;
+    private String firstName, lastName, email, age, password, passwordCheck;
     private Boolean sex = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //TODO name zu firebase user hinzufügen
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance();
 
-        mNameText = (EditText) findViewById(R.id.input_name);
-        mTownText = (EditText) findViewById(R.id.input_town);
+        mFirstNameText = (EditText) findViewById(R.id.input_first_name);
+        mLastNameText = (EditText) findViewById(R.id.input_last_name);
         mEmailText = (EditText) findViewById(R.id.input_email);
         mAgeText = (EditText) findViewById(R.id.input_age);
         mPasswordText = (EditText) findViewById(R.id.input_password);
@@ -71,44 +78,48 @@ public class RegisterActivity extends Activity {
             }
         });
 
-        mNameLayout = (TextInputLayout) findViewById(R.id.input_layout_name);
-        mTownLayout = (TextInputLayout) findViewById(R.id.input_layout_town);
+        mFirstNameLayout = (TextInputLayout) findViewById(R.id.input_layout_first_name);
+        mLastNameLayout = (TextInputLayout) findViewById(R.id.input_layout_last_name);
         mEmailLayout = (TextInputLayout) findViewById(R.id.input_layout_email);
         mAgeLayout = (TextInputLayout) findViewById(R.id.input_layout_age);
         mPasswordLayout = (TextInputLayout) findViewById(R.id.input_layout_password);
         mPasswordCheckLayout = (TextInputLayout) findViewById(R.id.input_layout_check_password);
+
+        getDateFromUser();
     }
 
     public void register(View view) {
-        name = mNameText.getText().toString().trim();
-        town = mTownText.getText().toString().trim();
+        firstName = mFirstNameText.getText().toString().trim();
+        lastName = mLastNameText.getText().toString().trim();
         email = mEmailText.getText().toString().trim();
         age = mAgeText.getText().toString().trim();
         password = mPasswordText.getText().toString().trim();
         passwordCheck = mPasswordCheckText.getText().toString().trim();
 
-        mNameLayout.setErrorEnabled(false);
-        mTownLayout.setErrorEnabled(false);
+        mFirstNameLayout.setErrorEnabled(false);
+        mLastNameLayout.setErrorEnabled(false);
         mEmailLayout.setErrorEnabled(false);
         mAgeLayout.setErrorEnabled(false);
         mPasswordLayout.setErrorEnabled(false);
         mPasswordCheckLayout.setErrorEnabled(false);
 
+
+
+        if (firstName.matches("")) {
+            mFirstNameLayout.setError("Gib bitte deinen Vornamen an!");
+            mFirstNameText.requestFocus();
+            return;
+        }
+
+        if (lastName.matches("")) {
+            mLastNameLayout.setError("Wie lautet dein Nachname?");
+            mLastNameText.requestFocus();
+            return;
+        }
+
         if (sex == null) {
             Toast.makeText(this, "Männlein oder Weiblein?", Toast.LENGTH_SHORT).show();
             mRadioGroup.requestFocus();
-            return;
-        }
-
-        if (name.matches("")) {
-            mNameLayout.setError("Gib bitte deinen Namen an!");
-            mNameText.requestFocus();
-            return;
-        }
-
-        if (town.matches("")) {
-            mTownLayout.setError("Wo wohnst du denn?");
-            mTownText.requestFocus();
             return;
         }
 
@@ -172,13 +183,32 @@ public class RegisterActivity extends Activity {
 
                         } else {
                             loadingPanel.setVisibility(View.GONE);
+
                             sendVerificationEmail();
-                            fireUser = task.getResult().getUser();
 
-                            User user = new User(fireUser.getUid(), name, sex, town, email, Double.parseDouble(age), "");
-                            mDatabaseRef = mDatabase.getReference();
-                            mDatabaseRef.child("users").child(fireUser.getUid()).setValue(user);
+                            FirebaseUser fireUser = task.getResult().getUser();
 
+                            // Build the user-object.
+                            User user = new User();
+                            user.setUserId(fireUser.getUid());
+                            user.setUsername(firstName+ " " + lastName);
+                            user.setSex(sex);
+                            user.setEmail(email);
+                            user.setAge(mCalendar.getTime());
+
+                            Log.d("NEW_USER", user.toString());
+                            Log.d("NEW_USER", fireUser.getEmail());
+
+                            // Create database connection and reference.
+                            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+                            DatabaseReference mDatabaseRef = mDatabase.getReference("users");
+
+                            // Create user.
+                            String userId = mDatabaseRef.push().getKey();
+
+                            mDatabaseRef.child(userId).setValue(user);
+
+                            //start intent and sign out.
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             FirebaseAuth.getInstance().signOut();
                             startActivity(intent);
@@ -192,6 +222,7 @@ public class RegisterActivity extends Activity {
     private void sendVerificationEmail() {
         FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
 
+        assert userFire != null;
         userFire.sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -206,11 +237,47 @@ public class RegisterActivity extends Activity {
                             finish();
                             overridePendingTransition(0, 0);
                             startActivity(getIntent());
-
                         }
                     }
                 });
+    }
 
+    /**
+     * Start Date Dialog to get the Date of the event.
+     */
+    private void getDateFromUser() {
+        //Create the DatePickerDialog
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                mCalendar.set(Calendar.YEAR, year);
+                mCalendar.set(Calendar.MONTH, monthOfYear);
+                mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateDate();
+            }
+        };
 
+        // Show the DatePickerDialog
+        mAgeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterActivity.this, date,
+                        mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    /**
+     * Update the editTextField with chosen date.
+     */
+    private void updateDate() {
+        String dateFormat = "dd.MM.YYYY";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
+
+        mAgeText.setText(sdf.format(mCalendar.getTime()));
     }
 }

@@ -5,6 +5,11 @@
             android:id="@+id/profile"
             android:icon="@drawable/ic_person"
             android:title="Profil" />
+
+        <item
+            android:id="@+id/createEvent"
+            android:icon="@drawable/ic_person"
+            android:title="Neues Event" />
         <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_action_add"

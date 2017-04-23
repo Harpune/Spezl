@@ -1,87 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-
-
-    </android.support.v7.widget.Toolbar>
-
-    <TableLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:stretchColumns="*">
+        android:orientation="vertical">
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/recycler_view_padding"
-                android:background="@color/colorPrimaryCloudy"
-                android:gravity="center"
-                android:text="Entspannt" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/recycler_view_padding"
-                android:background="@color/colorPrimaryCloudy"
-                android:gravity="center"
-                android:text="Feiern" />
+                <ImageButton
+                    android:id="@+id/owl_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/ic_person" />
 
-        </TableRow>
+            </LinearLayout>
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/recycler_view_padding"
-                android:background="@color/colorPrimaryCloudy"
-                android:gravity="center"
-                android:text="Sport" />
+        </android.support.v7.widget.Toolbar>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/recycler_view_padding"
-                android:background="@color/colorPrimaryCloudy"
-                android:gravity="center"
-                android:text="Kochen" />
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:stretchColumns="*">
 
-        </TableRow>
+            <TableRow
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
 
-        <TableRow
-            android:layout_weight="1"
-            android:gravity="center">
+                <Button
+                    android:id="@+id/relax_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimaryCloudy"
+                    android:onClick="showRelaxEvents"
+                    android:text="@string/text_relax" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/recycler_view_padding"
-                android:background="@color/colorPrimaryCloudy"
-                android:gravity="center"
-                android:text="Diskussion" />
+                <Button
+                    android:id="@+id/party_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimaryCloudy"
+                    android:onClick="showPartyEvents"
+                    android:text="@string/text_party" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/recycler_view_padding"
-                android:background="@color/colorPrimaryCloudy"
-                android:gravity="center"
-                android:text="Kultur" />
+            </TableRow>
 
-        </TableRow>
-    </TableLayout>
+            <TableRow
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
 
-</LinearLayout>
+                <Button
+                    android:id="@+id/sport_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimaryCloudy"
+                    android:onClick="showSportEvents"
+                    android:text="@string/text_sport" />
+
+                <Button
+                    android:id="@+id/cook_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimaryCloudy"
+                    android:onClick="showCookEvents"
+                    android:text="@string/text_cook" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/discussion_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimaryCloudy"
+                    android:onClick="showDiscussionEvents"
+                    android:text="@string/text_discussion" />
+
+                <Button
+                    android:id="@+id/culture_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimaryCloudy"
+                    android:onClick="showCultureEvents"
+                    android:text="@string/text_culture" />
+
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/menu_navigation" />
+</android.support.v4.widget.DrawerLayout>

@@ -1,22 +1,22 @@
 package com.example.lukas.spezl.Model;
 
+import java.util.Date;
+
 public class User {
 
     private String userId;
     private String username;
     private Boolean sex;
-    private String town;
     private String email;
-    private Double age;
+    private Date age;
     private String imageUri;
 
     public User(){}
 
-    public User(String userId, String username, Boolean sex, String town, String email, Double age, String imageUri) {
+    public User(String userId, String username, Boolean sex, String email, Date age, String imageUri) {
         this.userId = userId;
         this.username = username;
         this.sex = sex;
-        this.town = town;
         this.email = email;
         this.age = age;
         this.imageUri = imageUri;
@@ -46,14 +46,6 @@ public class User {
         this.sex = sex;
     }
 
-    public String getTown() {
-        return town;
-    }
-
-    public void setTown(String town) {
-        this.town = town;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -62,11 +54,11 @@ public class User {
         this.email = email;
     }
 
-    public Double getAge() {
+    public Date getAge() {
         return age;
     }
 
-    public void setAge(Double age) {
+    public void setAge(Date age) {
         this.age = age;
     }
 
@@ -84,7 +76,6 @@ public class User {
                 "userId='" + userId + '\'' +
                 ", username='" + username + '\'' +
                 ", sex=" + sex +
-                ", town='" + town + '\'' +
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 ", imageUri='" + imageUri + '\'' +

@@ -20,13 +20,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
     private List<User> userList;
 
     public class UserHolder extends RecyclerView.ViewHolder {
-        public TextView nameView, townView, ageView;
+        public TextView nameView, ageView;
         public ImageView userImageView;
 
         public UserHolder(View view) {
             super(view);
             nameView = (TextView) view.findViewById(R.id.text_name);
-            townView = (TextView) view.findViewById(R.id.text_town);
             ageView = (TextView) view.findViewById(R.id.text_age);
             userImageView = (ImageView) view.findViewById(R.id.userImage);
         }
@@ -48,7 +47,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         User user = userList.get(position);
         Log.d("onBindViewHolder", user.getUserId());
         holder.nameView.setText(user.getUsername());
-        holder.townView.setText(user.getTown());
         holder.ageView.setText(String.valueOf(user.getAge()));
 
     }

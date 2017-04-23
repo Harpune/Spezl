@@ -18,15 +18,29 @@
 
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_name"
+            android:id="@+id/input_layout_first_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/input_name"
+                android:id="@+id/input_first_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/text_name"
+                android:hint="@string/text_first_name"
+                android:inputType="textPersonName" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_last_name"
                 android:inputType="textPersonName" />
 
         </android.support.design.widget.TextInputLayout>
@@ -55,20 +69,6 @@
         </RadioGroup>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_town"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/input_town"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/text_town"
-                android:inputType="textPostalAddress" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
             android:id="@+id/input_layout_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -91,8 +91,10 @@
                 android:id="@+id/input_age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="false"
                 android:hint="@string/text_age"
-                android:inputType="numberDecimal" />
+                android:inputType="date"
+                android:longClickable="false" />
 
         </android.support.design.widget.TextInputLayout>
 

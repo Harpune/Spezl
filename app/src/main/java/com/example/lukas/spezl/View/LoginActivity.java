@@ -44,10 +44,16 @@ public class LoginActivity extends Activity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Log.d("AUTH", "Signed in... UserID: + " + user.getUid());
-                    Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if(user.isEmailVerified()){
+                        Log.d("AUTH", "Signed in... UserID: + " + user.getUid());
+                        Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Log.d("AUTH", "User has to verify its email");
+                    }
+
                 } else {
                     Log.d("AUTH", "Signed out...");
                 }
@@ -98,11 +104,9 @@ public class LoginActivity extends Activity {
                         } else {
                             loadingPanel.setVisibility(View.GONE);
 
-                            if (!isEmailVerified()) {
-                                //restart this activity
-                                Toast.makeText(getApplicationContext(), "Bestätige zuerst deine Email!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            if (isEmailVerified()) {
+                                Intent intent = new Intent(LoginActivity.this, DecisionActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 finish();
                             }
@@ -118,7 +122,7 @@ public class LoginActivity extends Activity {
             Log.d("IS_EMAIL_VERIFIED", "User is null");
             return false;
         }
-        Log.d("IS_EMAIL_VERIFIED", "" + user.isEmailVerified());
+
         if (user.isEmailVerified()) {
             // user is verified, so you can finish this activity or send user to activity which you want.
             Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();

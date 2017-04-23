@@ -23,12 +23,7 @@
             android:layout_height="wrap_content"
             android:text="Lukas"
             android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/text_town"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ulm"
-            android:layout_weight="1"/>
+
         <TextView
             android:id="@+id/text_age"
             android:layout_width="match_parent"

@@ -70,8 +70,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mEventAdapter);
 
-        initDrawerLayout();
-
         //TODO search icon and functionality
         //TODO add drawer layout icon
 
@@ -87,40 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initDrawerLayout() {
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.profile:
-                        Toast.makeText(getApplicationContext(), "Profil", Toast.LENGTH_SHORT).show();
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.settings:
-                        Toast.makeText(getApplicationContext(), "Einstellungen", Toast.LENGTH_SHORT).show();
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_SHORT).show();
-                        drawerLayout.closeDrawers();
-                        FirebaseAuth.getInstance().signOut();
-                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
-
-        View header = navigationView.getHeaderView(0);
-        mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-
-    }
 
     public void getRecyclerViewData() {
         mSwipeRefreshLayout.setRefreshing(true);

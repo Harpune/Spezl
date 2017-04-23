@@ -6,23 +6,27 @@
     <string name="text_no_account">Noch keinen Account? Registriere dich jetzt!</string>
     <string name="text_check_password">Passwort erneut eingeben</string>
     <string name="text_name">Name</string>
+    <string name="text_first_name">Vorname</string>
+    <string name="text_last_name">Nachname</string>
     <string name="text_age">Alter</string>
     <string name="text_town">Stadt</string>
     <string name="text_register">Registrieren</string>
     <string name="header">Header</string>
     <string name="text_create_event">Create Event</string>
     <string name="text_join_event">Join Event</string>
-    <string name="text_kulinarisch">kulinarisch</string>
-    <string name="text_feiern">Feiern</string>
-    <string name="text_kultur">Kultur</string>
-    <string name="text_relaxen">Relaxen</string>
-    <string name="text_action">Action</string>
+
+    <string name="text_relax">Entspannt</string>
+    <string name="text_party">Feiern</string>
     <string name="text_sport">Sport</string>
+    <string name="text_cook">Kochen</string>
+    <string name="text_discussion">Diskussion</string>
+    <string name="text_culture">Kultur</string>
+
     <string name="text_date">Datum</string>
     <string name="text_start_time">Startzeit</string>
     <string name="text_end_time">Endzeit</string>
     <string name="text_duration">Dauer</string>
-    <string name="text_oclock">Uhr</string>
+    <string name="text_oclock"> Uhr</string>
     <string name="auth_failed">Da ist etwas schief gelaufen.</string>
     <string name="auth_weak_password">Das Passwort ist leider zu schwach!</string>
     <string name="auth_invalid_email">Deine Email ist leider nicht gültig</string>
@@ -34,7 +38,7 @@
     <string name="text_delete_tag">Delete Tag</string>
     <string name="text_new">Neu</string>
     <string name="text_tag">Tags</string>
-    <string name="text_female">Nicht Mann</string>
+    <string name="text_female">Frau</string>
     <string name="text_male">Mann</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>

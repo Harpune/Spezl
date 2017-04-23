@@ -27,10 +27,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".View.JoinActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".View.DateActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
