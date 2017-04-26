@@ -45,4 +45,10 @@
     <string name="text_welcome">Hi Spezl</string>
     <string name="text_new_login">Schon ein Spezl</string>
     <string name="text_new_register">Neu hier?</string>
+    <string name="text_profile">Profil</string>
+    <string name="text_new_event">Neues Event</string>
+    <string name="text_settings">Einstellungen</string>
+    <string name="text_logout">Logout</string>
+    <string name="text_address">Adresse</string>
+    <string name="text_category">Kategorie</string>
 </resources>

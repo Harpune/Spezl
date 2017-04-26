@@ -3,23 +3,18 @@ package com.example.lukas.spezl.View;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
-import com.example.lukas.spezl.Controller.TagAdapter;
 import com.example.lukas.spezl.Model.Event;
 import com.example.lukas.spezl.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,28 +25,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class CreateActivity extends Activity {
-    private FirebaseDatabase mDatabase;
-
-    private DatabaseReference mDatabaseRef;
 
     private Calendar mCalendar = Calendar.getInstance();
 
-    private EditText mNameText, mDescriptionText, mDateText, mTimeText, mTownText, mMaxParticipentsText;
+    private EditText mNameText, mDescriptionText, mDateText, mTimeText, mTownText, mAddressText, mMaxParticipentsText;
 
-    private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mTownLayput, mMaxParticipentsLayout;
+    private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mTownLayput, mAddressLayout, mMaxParticipentsLayout;
 
-    private RecyclerView mRecyclerView;
-
-    private TagAdapter mTagAdapter;
-
-    private List<String> tagList = new ArrayList<>();
+    private String category = "Entspannt";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +51,7 @@ public class CreateActivity extends Activity {
         mDateText = (EditText) findViewById(R.id.input_date);
         mTimeText = (EditText) findViewById(R.id.input_time);
         mTownText = (EditText) findViewById(R.id.input_town);
+        mAddressText = (EditText) findViewById(R.id.input_address);
         mMaxParticipentsText = (EditText) findViewById(R.id.input_max_participants);
 
         mNameLayout = (TextInputLayout) findViewById(R.id.input_layout_name);
@@ -71,18 +59,25 @@ public class CreateActivity extends Activity {
         mDateLayout = (TextInputLayout) findViewById(R.id.input_layout_date);
         mTimeLayout = (TextInputLayout) findViewById(R.id.input_layout_time);
         mTownLayput = (TextInputLayout) findViewById(R.id.input_layout_town);
+        mAddressLayout = (TextInputLayout) findViewById(R.id.input_layout_address);
         mMaxParticipentsLayout = (TextInputLayout) findViewById(R.id.input_layout_max_participants);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mTagAdapter = new TagAdapter(tagList);
+        //Setup spinner with categories
+        Spinner mSpinner = (Spinner) findViewById(R.id.spinner);
+        final String[] categories = new String[]{"Entspannt", "Feiern", "Sport", "Kochen", "Diskussion", "Kultur"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        mSpinner.setAdapter(adapter);
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                category = categories[pos];
+            }
 
-        // Setup the RecyclerView for the tags.
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mTagAdapter);
-        mRecyclerView.setNestedScrollingEnabled(false);
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(getApplicationContext(), "Keine Kategorie ausgewählt", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Get the dates.
         getDateFromUser();
@@ -96,8 +91,9 @@ public class CreateActivity extends Activity {
         String date = mDateText.getText().toString().trim();
         String time = mTimeText.getText().toString().trim();
         String town = mTownText.getText().toString().trim();
+        String address = mAddressText.getText().toString().trim();
         String maxParticipantsString = mMaxParticipentsText.getText().toString().trim();
-        Double maxParticipants = Double.parseDouble(maxParticipantsString);
+
 
         // Disable all error notifications of the TextInputLayouts.
         mNameLayout.setErrorEnabled(false);
@@ -131,10 +127,24 @@ public class CreateActivity extends Activity {
             mTimeText.requestFocus();
             return;
         }
+
         if (town.matches("")) {
             mTownLayput.setError("In Tumbuktu?");
             mTownText.requestFocus();
             return;
+        }
+
+        if (address.matches("")) {
+            mAddressLayout.setError("Gib bitte deine Adresse an.");
+            mAddressText.requestFocus();
+            return;
+        }
+
+        Double maxParticipants;
+        if (maxParticipantsString.matches("")) {
+            maxParticipants = 0d;
+        } else {
+            maxParticipants = Double.parseDouble(maxParticipantsString);
         }
 
         //Build the date.
@@ -147,11 +157,6 @@ public class CreateActivity extends Activity {
             e.printStackTrace();
         }
 
-        //Show the loading panel while creating the event in the Database.
-        final RelativeLayout loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        loadingPanel.setVisibility(View.VISIBLE);
-
-
         //Create the event from the given information.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Event event = new Event();
@@ -160,12 +165,12 @@ public class CreateActivity extends Activity {
         event.setDate(dateTime);
         event.setMaxParticipants(maxParticipants);
         event.setTown(town);
-        event.setTags(tagList);
+        event.setAddress(address);
+        event.setCategory(category);
 
         //Add user data to the event
         assert user != null;
         event.setOwnerId(user.getUid());
-        event.setOwnerName(user.getDisplayName());
 
         List<String> participants = new ArrayList<>();
         participants.add(user.getUid());
@@ -173,17 +178,14 @@ public class CreateActivity extends Activity {
         event.setParticipantIds(participants);
 
         // Create database connection and reference.
-        mDatabase = FirebaseDatabase.getInstance();
-        mDatabaseRef = mDatabase.getReference();
+        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference mDatabaseRef = mDatabase.getReference();
 
         // Push the event and create own uid.
-        mDatabaseRef.child("events").push().setValue(event);
-
-        // Hide the loading panel.
-        loadingPanel.setVisibility(View.GONE);
+        mDatabaseRef.child("events").child(category).push().setValue(event);
 
         // Start MainActivity.
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, DecisionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
@@ -246,7 +248,7 @@ public class CreateActivity extends Activity {
         mTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this, time,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(CreateActivity.this, R.style.TimePicker, time,
                         mCalendar.get(Calendar.HOUR_OF_DAY),
                         mCalendar.get(Calendar.MINUTE),
                         true);
@@ -263,43 +265,5 @@ public class CreateActivity extends Activity {
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat, Locale.getDefault());
         String oClock = sdf.format(mCalendar.getTime()) + getString(R.string.text_oclock);
         mTimeText.setText(oClock);
-    }
-
-    /**
-     * Triggered if new a new tag should be added
-     *
-     * @param view Clicked TextField.
-     */
-    public void addTag(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Mehrere Tags können mit Kommas separiert werden.");
-
-        // Set up the input
-        final EditText input = new EditText(this);
-
-        // Specify the type of input expected.
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("Feiern, Bowlen");
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String newTag = input.getText().toString();
-                List<String> tags = Arrays.asList(newTag.split(","));
-                tagList.addAll(tags);
-                mTagAdapter.notifyDataSetChanged();
-            }
-        });
-
-        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
     }
 }

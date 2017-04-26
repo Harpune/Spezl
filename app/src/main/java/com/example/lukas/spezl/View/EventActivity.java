@@ -3,6 +3,7 @@ package com.example.lukas.spezl.View;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.IntegerRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,19 +36,24 @@ public class EventActivity extends AppCompatActivity {
     //TAGS.
     private final String TAG_EVENT_ID = "TAG_EVENT_ID";
     private final String TAG_EVENT_NAME = "TAG_EVENT_NAME";
-    private final String TAG_OWNER_ID = "TAG_OWNER_ID";
     private final String TAG_DESCRIPTION = "TAG_DESCRIPTION";
-    private final String TAG_OWNER_NAME = "TAG_OWNER_NAME";
     private final String TAG_MAX_PARTICIPANTS = "TAG_PARTICIPANTS";
+    private final String TAG_AMOUNT_PARTICIPANTS = "TAG_AMOUNT_PARTICIPANTS";
     private final String TAG_EVENT_TOWN = "TAG_EVENT_TOWN";
+    private final String TAG_EVENT_ADDRESS = "TAG_EVENT_ADDRESS";
+    private final String TAG_EVENT_CATEGORY = "TAG_EVENT_CATEGORY";
 
-    //The EventId.
-    private String eventId, ownerName;
+    private final String TAG_OWNER_ID = "TAG_OWNER_ID";
+
+    //The EventData.
+    private String eventId, ownerId, eventCategory;
+    private Double eventMaxParticipants;
+    private int eventAmountPaticipants;
 
     // Views.
     private TextView mDescriptionText, mUsernameText;
     private RecyclerView mRecyclerView;
-
+    private FloatingActionButton fab;
     // The Adapter of the RecyclerView responsible for the Users.
     private UserAdapter mUserAdapter;
 
@@ -56,6 +62,14 @@ public class EventActivity extends AppCompatActivity {
 
     // Global Database.
     private FirebaseDatabase mDatabase;
+
+    private FirebaseUser fireUser;
+
+    // Current event.
+    private Event event = new Event();
+
+    // Owner of the Event.
+    private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,27 +85,29 @@ public class EventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         eventId = intent.getStringExtra(TAG_EVENT_ID);
         String eventDescription = intent.getStringExtra(TAG_DESCRIPTION);
-        Double eventMaxParticipants = intent.getDoubleExtra(TAG_MAX_PARTICIPANTS, 0);
+        eventMaxParticipants = intent.getDoubleExtra(TAG_MAX_PARTICIPANTS, 0);
+        eventAmountPaticipants = intent.getIntExtra(TAG_AMOUNT_PARTICIPANTS, 0);
         String eventTown = intent.getStringExtra(TAG_EVENT_TOWN);
+        String eventAddress = intent.getStringExtra(TAG_EVENT_ADDRESS);
         String eventName = intent.getStringExtra(TAG_EVENT_NAME);
-        /*
-        String ownerId = intent.getStringExtra(TAG_OWNER_ID);
-        ownerName = intent.getStringExtra(TAG_OWNER_NAME);
-        */
+        eventCategory = intent.getStringExtra(TAG_EVENT_CATEGORY);
+        ownerId = intent.getStringExtra(TAG_OWNER_ID);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        //ownerName = user.getDisplayName();
-        //Log.d("OWNER NAME", ownerName);
+        fireUser = FirebaseAuth.getInstance().getCurrentUser();
+        readOwner();
+
+        // Read the Event
+        readEvent();
 
         // Initialize the Views.
         mDescriptionText = (TextView) findViewById(R.id.text_event_description);
         mUsernameText = (TextView) findViewById(R.id.text_user_name);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        // Set the Titel and the Views with intent-information.
+        // Set the title and the Views with intent-information.
         setTitle(eventName);
-        mDescriptionText.setText("<b>Beschreibung:</b> \n\n" + eventDescription);
-        //mUsernameText.setText(ownerName);
+        mDescriptionText.setText("Beschreibung: \n\n" + eventDescription);
 
         //Setup the recyclerView and its adapter.
         mUserAdapter = new UserAdapter(users);
@@ -101,24 +117,72 @@ public class EventActivity extends AppCompatActivity {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mUserAdapter);
 
-        //Read the ids deposited in the event object.
-        readParticipantsIds();
 
+    }
+
+    /**
+     * Triggered when fab is clicked.
+     *
+     * @param view The fab-view.
+     */
+    public void joinEvent(View view) {
+        if(userAlreadyParticipates()){
+            DatabaseReference mDatabaseRef = mDatabase.getReference("events")
+                    .child(eventCategory)
+                    .child(eventId)
+                    .child("participantIds")
+                    .child(fireUser.getUid());
+            mDatabaseRef.removeValue();
+        } else {
+            DatabaseReference mDatabaseRef = mDatabase.getReference("events")
+                    .child(eventCategory)
+                    .child(eventId)
+                    .child("participantIds")
+                    .push();
+            mDatabaseRef.setValue(fireUser.getUid());
+        }
+
+    }
+
+    /**
+     * Check if user should be able to join the event.
+     *
+     * @return true if current user is already taking part.
+     */
+    private boolean userAlreadyParticipates() {
+        for (String id : event.getParticipantIds()) {
+            if (id.equals(fireUser.getUid())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void readOwner() {
+        //TODO? Read user
     }
 
     /**
      * Read the participant ids deposited in the event object.
      */
-    public void readParticipantsIds() {
+    public void readEvent() {
         mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseRef = mDatabase.getReference("events").child(eventId);
+        DatabaseReference mDatabaseRef = mDatabase.getReference("events").child(eventCategory).child(eventId);
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Event event = dataSnapshot.getValue(Event.class);
-                Log.d("GET_PARTICIPANTS", event.toString());
-                List<String> participants = event.getParticipantIds();
-                readParticipants(participants);
+                event = dataSnapshot.getValue(Event.class);
+                event.setuId(dataSnapshot.getKey());
+                Log.d("EVENT_FROM_SERVER", event.toString());
+
+                //Check if user should be able to participate. TODO Benachrichtinung über zustand des users zum event
+                if (eventMaxParticipants <= eventAmountPaticipants) {
+                    Toast.makeText(EventActivity.this, "Dieses Event ist leider voll.", Toast.LENGTH_SHORT).show();
+                    fab.setVisibility(View.GONE);
+                } else if (userAlreadyParticipates()) {
+                    Toast.makeText(EventActivity.this, "Du nimmst schon teil.", Toast.LENGTH_SHORT).show();
+                    fab.setImageResource(R.drawable.ic_cancel);
+                }
             }
 
             @Override
@@ -126,6 +190,12 @@ public class EventActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Da ist etwas falsch gelaufen", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     /**
@@ -160,20 +230,5 @@ public class EventActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    /**
-     * Triggered when fab is clicked.
-     *
-     * @param view The fab-view.
-     */
-    public void joinEvent(View view) {
-        Toast.makeText(this, "Join Event", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        finish();
-        return true;
     }
 }

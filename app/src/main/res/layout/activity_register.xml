@@ -131,21 +131,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="register"
-            android:text="@string/text_register" />
-
-        <RelativeLayout
-            android:id="@+id/loadingPanel"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clickable="false"
-            android:gravity="center"
-            android:visibility="gone">
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:indeterminate="true" />
-        </RelativeLayout>
+            android:text="@string/text_register"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
+
+
 </ScrollView>

@@ -10,27 +10,27 @@ public class Event {
     private Double maxParticipants;
     private Date date;
     private String town;
+    private String address;
+    private String category;
     private String ownerId;
-    private String ownerName;
     private String imageUri;
     private List<String> participantIds;
-    private List<String> tags;
 
     public Event() {
     }
 
-    public Event(String uId, String name, String description, Double maxParticipants, Date date, String town, String ownerId, String ownerName, String imageUri, List<String> participantIds, List<String> tags) {
+    public Event(String uId, String name, String description, Double maxParticipants, Date date, String town, String address, String category, String ownerId, String imageUri, List<String> participantIds) {
         this.uId = uId;
         this.name = name;
         this.description = description;
         this.maxParticipants = maxParticipants;
         this.date = date;
         this.town = town;
+        this.address = address;
+        this.category = category;
         this.ownerId = ownerId;
-        this.ownerName = ownerName;
         this.imageUri = imageUri;
         this.participantIds = participantIds;
-        this.tags = tags;
     }
 
     public String getuId() {
@@ -81,20 +81,28 @@ public class Event {
         this.town = town;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public String getOwnerId() {
         return ownerId;
     }
 
     public void setOwnerId(String ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
     }
 
     public String getImageUri() {
@@ -113,14 +121,6 @@ public class Event {
         this.participantIds = participantIds;
     }
 
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
     @Override
     public String toString() {
         return "Event{" +
@@ -130,11 +130,11 @@ public class Event {
                 ", maxParticipants=" + maxParticipants +
                 ", date=" + date +
                 ", town='" + town + '\'' +
+                ", address='" + address + '\'' +
+                ", category='" + category + '\'' +
                 ", ownerId='" + ownerId + '\'' +
-                ", ownerName='" + ownerName + '\'' +
                 ", imageUri='" + imageUri + '\'' +
                 ", participantIds=" + participantIds +
-                ", tags=" + tags +
                 '}';
     }
 }

@@ -21,11 +21,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
 
     private final String TAG_EVENT_ID = "TAG_EVENT_ID";
     private final String TAG_EVENT_NAME = "TAG_EVENT_NAME";
-    private final String TAG_OWNER_ID = "TAG_OWNER_ID";
     private final String TAG_DESCRIPTION = "TAG_DESCRIPTION";
-    private final String TAG_OWNER_NAME = "TAG_OWNER_NAME";
     private final String TAG_MAX_PARTICIPANTS = "TAG_PARTICIPANTS";
+    private final String TAG_AMOUNT_PARTICIPANTS = "TAG_AMOUNT_PARTICIPANTS";
     private final String TAG_EVENT_TOWN = "TAG_EVENT_TOWN";
+    private final String TAG_EVENT_ADDRESS = "TAG_EVENT_ADDRESS";
+    private final String TAG_EVENT_CATEGORY = "TAG_EVENT_CATEGORY";
+    private final String TAG_OWNER_ID = "TAG_OWNER_ID";
 
     private List<Event> eventList;
 
@@ -52,12 +54,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
                     intent.putExtra(TAG_EVENT_NAME, eventList.get(getAdapterPosition()).getName());
                     intent.putExtra(TAG_DESCRIPTION, eventList.get(getAdapterPosition()).getDescription());
                     intent.putExtra(TAG_MAX_PARTICIPANTS, eventList.get(getAdapterPosition()).getMaxParticipants());
+                    intent.putExtra(TAG_AMOUNT_PARTICIPANTS, eventList.get(getAdapterPosition()).getParticipantIds().size());
                     intent.putExtra(TAG_EVENT_TOWN, eventList.get(getAdapterPosition()).getTown());
-                    /*
-                    intent.putExtra(TAG_OWNER_NAME, eventList.get(getAdapterPosition()).getOwnerName());//TODO warum hier ne nullpointer?1
+                    intent.putExtra(TAG_EVENT_ADDRESS, eventList.get(getAdapterPosition()).getAddress());
+                    intent.putExtra(TAG_EVENT_CATEGORY, eventList.get(getAdapterPosition()).getCategory());
                     intent.putExtra(TAG_OWNER_ID, eventList.get(getAdapterPosition()).getOwnerId());
-                    */
-                    // null weil user von firebase nur email und email hat.
                     view.getContext().startActivity(intent);
                 }
             });

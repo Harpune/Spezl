@@ -10,4 +10,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="TimePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:timePickerDialogTheme">@style/AppTheme2</item>
+    </style>
+
+    <style name="AppTheme2" parent="AppTheme">
+        <item name="android:windowIsFloating">true</item>
+    </style>
 </resources>

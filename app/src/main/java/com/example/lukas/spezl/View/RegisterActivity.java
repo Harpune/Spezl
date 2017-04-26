@@ -2,12 +2,17 @@ package com.example.lukas.spezl.View;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -29,10 +34,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class RegisterActivity extends Activity {
@@ -104,7 +107,6 @@ public class RegisterActivity extends Activity {
         mPasswordCheckLayout.setErrorEnabled(false);
 
 
-
         if (firstName.matches("")) {
             mFirstNameLayout.setError("Gib bitte deinen Vornamen an!");
             mFirstNameText.requestFocus();
@@ -154,16 +156,11 @@ public class RegisterActivity extends Activity {
             return;
         }
 
-        final RelativeLayout loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
-        loadingPanel.setVisibility(View.VISIBLE);
-
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            loadingPanel.setVisibility(View.GONE);
-
                             try {
                                 throw task.getException();
                             } catch (FirebaseAuthUserCollisionException e) {
@@ -182,31 +179,16 @@ public class RegisterActivity extends Activity {
                             }
 
                         } else {
-                            loadingPanel.setVisibility(View.GONE);
+                            FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
+                            if (fireUser == null) {
+                                Toast.makeText(getApplicationContext(), "User is null", Toast.LENGTH_SHORT).show();
+                            }
 
-                            sendVerificationEmail();
+                            // Send verification mail
+                            sendVerificationEmail(fireUser);
 
-                            FirebaseUser fireUser = task.getResult().getUser();
-
-                            // Build the user-object.
-                            User user = new User();
-                            user.setUserId(fireUser.getUid());
-                            user.setUsername(firstName+ " " + lastName);
-                            user.setSex(sex);
-                            user.setEmail(email);
-                            user.setAge(mCalendar.getTime());
-
-                            Log.d("NEW_USER", user.toString());
-                            Log.d("NEW_USER", fireUser.getEmail());
-
-                            // Create database connection and reference.
-                            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-                            DatabaseReference mDatabaseRef = mDatabase.getReference("users");
-
-                            // Create user.
-                            String userId = mDatabaseRef.push().getKey();
-
-                            mDatabaseRef.child(userId).setValue(user);
+                            // Create a new User!
+                            createNewUser(fireUser);
 
                             //start intent and sign out.
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -219,11 +201,30 @@ public class RegisterActivity extends Activity {
                 });
     }
 
-    private void sendVerificationEmail() {
-        FirebaseUser userFire = FirebaseAuth.getInstance().getCurrentUser();
+    private void createNewUser(FirebaseUser fireUser) {
+        // Build the user-object.
+        User user = new User();
+        user.setUserId(fireUser.getUid());
+        user.setUsername(firstName + " " + lastName);
+        user.setSex(sex);
+        user.setEmail(email);
+        user.setAge(mCalendar.getTime());
+        user.setImageUri("");
 
-        assert userFire != null;
-        userFire.sendEmailVerification()
+        Log.d("NEW_USER", user.toString());
+        Log.d("NEW_USER", fireUser.getEmail());
+
+        // Create database connection and reference.
+        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
+        mDatabaseRef.child("users").child(fireUser.getUid()).setValue(user);
+    }
+
+    /**
+     * Send verification E-Mail to the given user.
+     */
+    private void sendVerificationEmail(FirebaseUser fireUser) {
+        assert fireUser != null;
+        fireUser.sendEmailVerification()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -247,7 +248,7 @@ public class RegisterActivity extends Activity {
      */
     private void getDateFromUser() {
         //Create the DatePickerDialog
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 mCalendar.set(Calendar.YEAR, year);
@@ -261,12 +262,11 @@ public class RegisterActivity extends Activity {
         mAgeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterActivity.this, date,
-                        mCalendar.get(Calendar.YEAR),
-                        mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH));
-
-                datePickerDialog.show();
+                //Check for different build, because it crashes.
+                int mYear = mCalendar.get(Calendar.YEAR);
+                int mMonth = mCalendar.get(Calendar.MONTH);
+                int mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+                new DatePickerDialog(RegisterActivity.this, mDateSetListener, mYear, mMonth, mDay).show();
             }
         });
     }
@@ -279,5 +279,16 @@ public class RegisterActivity extends Activity {
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
 
         mAgeText.setText(sdf.format(mCalendar.getTime()));
+    }
+
+    private static boolean isBrokenSamsungDevice() {
+        return (Build.MANUFACTURER.equalsIgnoreCase("samsung")
+                && isBetweenAndroidVersions(
+                Build.VERSION_CODES.LOLLIPOP,
+                Build.VERSION_CODES.LOLLIPOP_MR1));
+    }
+
+    private static boolean isBetweenAndroidVersions(int min, int max) {
+        return Build.VERSION.SDK_INT >= min && Build.VERSION.SDK_INT <= max;
     }
 }

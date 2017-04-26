@@ -28,7 +28,8 @@
                     android:id="@+id/owl_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:tint="@android:color/white"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_person" />
 
@@ -53,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@color/colorPrimaryCloudy"
+                    android:background="@drawable/button_shape"
                     android:onClick="showRelaxEvents"
                     android:text="@string/text_relax" />
 
@@ -62,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@color/colorPrimaryCloudy"
+                    android:background="@drawable/button_shape"
                     android:onClick="showPartyEvents"
                     android:text="@string/text_party" />
 
@@ -78,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@color/colorPrimaryCloudy"
+                    android:background="@drawable/button_shape"
                     android:onClick="showSportEvents"
                     android:text="@string/text_sport" />
 
@@ -87,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@color/colorPrimaryCloudy"
+                    android:background="@drawable/button_shape"
                     android:onClick="showCookEvents"
                     android:text="@string/text_cook" />
 
@@ -103,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@color/colorPrimaryCloudy"
+                    android:background="@drawable/button_shape"
                     android:onClick="showDiscussionEvents"
                     android:text="@string/text_discussion" />
 
@@ -112,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@color/colorPrimaryCloudy"
+                    android:background="@drawable/button_shape"
                     android:onClick="showCultureEvents"
                     android:text="@string/text_culture" />
 
