@@ -1,11 +1,9 @@
 package com.example.lukas.spezl.View;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 
 import android.support.v4.widget.DrawerLayout;
@@ -107,7 +105,8 @@ public class DecisionActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.profile:
-                        Toast.makeText(getApplicationContext(), "Profil", Toast.LENGTH_SHORT).show();
+                        Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        startActivity(profileIntent);
                         mDrawerLayout.closeDrawers();
                         break;
                     case R.id.createEvent:
