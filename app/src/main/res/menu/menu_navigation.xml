@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/userFunctionGroup">
         <item
-            android:id="@+id/profile"
-            android:icon="@drawable/ic_person"
-            android:title="@string/text_profile" />
+            android:id="@+id/resetPassword"
+            android:icon="@drawable/ic_action_lock_open"
+            android:title="@string/text_reset_password_short" />
 
         <item
             android:id="@+id/createEvent"

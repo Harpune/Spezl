@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -15,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.lukas.spezl.Model.Event;
+import com.example.lukas.spezl.model.Event;
 import com.example.lukas.spezl.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,13 +24,12 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class CreateActivity extends Activity {
+    private final String TAG_CATEGORY = "TAG_CATEGORY";
 
     private Calendar mCalendar = Calendar.getInstance();
 
@@ -62,11 +61,22 @@ public class CreateActivity extends Activity {
         mAddressLayout = (TextInputLayout) findViewById(R.id.input_layout_address);
         mMaxParticipentsLayout = (TextInputLayout) findViewById(R.id.input_layout_max_participants);
 
+        // Get the intent if the user comes from CategoryActivity.
+        Intent intent = getIntent();
+        if (intent.hasExtra(TAG_CATEGORY)){
+            category = intent.getStringExtra(TAG_CATEGORY);
+        }
+
         //Setup spinner with categories
         Spinner mSpinner = (Spinner) findViewById(R.id.spinner);
         final String[] categories = new String[]{"Entspannt", "Feiern", "Sport", "Kochen", "Diskussion", "Kultur"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categories);
         mSpinner.setAdapter(adapter);
+
+        // Set adapterPosition to the value from the intent. Default: Entspannt.
+        int spinnerPosition = adapter.getPosition(category);
+        mSpinner.setSelection(spinnerPosition);
+
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {

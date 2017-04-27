@@ -1,8 +1,7 @@
-package com.example.lukas.spezl.Model;
+package com.example.lukas.spezl.model;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class Event {
     private String uId;

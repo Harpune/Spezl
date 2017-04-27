@@ -1,16 +1,14 @@
-package com.example.lukas.spezl.Controller;
+package com.example.lukas.spezl.controller;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.lukas.spezl.Model.Event;
-import com.example.lukas.spezl.Model.User;
+import com.example.lukas.spezl.model.User;
 import com.example.lukas.spezl.R;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class DecisionActivity extends AppCompatActivity {
     private final String TAG_CATEGORY = "TAG_CATEGORY";
 
-    private FirebaseUser user;
+    private FirebaseUser fireUser;
 
     private DrawerLayout mDrawerLayout;
 
@@ -31,43 +31,43 @@ public class DecisionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decision);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        fireUser = FirebaseAuth.getInstance().getCurrentUser();
 
         initDrawerLayout();
     }
 
     public void showRelaxEvents(View view) {
-        Intent intent = new Intent(DecisionActivity.this, RelaxActivity.class);
+        Intent intent = new Intent(DecisionActivity.this, CategoryActivity.class);
         intent.putExtra(TAG_CATEGORY, "Entspannt");
         startActivity(intent);
     }
 
     public void showPartyEvents(View view) {
-        Intent intent = new Intent(DecisionActivity.this, RelaxActivity.class);
+        Intent intent = new Intent(DecisionActivity.this, CategoryActivity.class);
         intent.putExtra(TAG_CATEGORY, "Feiern");
         startActivity(intent);
     }
 
     public void showSportEvents(View view) {
-        Intent intent = new Intent(DecisionActivity.this, RelaxActivity.class);
+        Intent intent = new Intent(DecisionActivity.this, CategoryActivity.class);
         intent.putExtra(TAG_CATEGORY, "Sport");
         startActivity(intent);
     }
 
     public void showCookEvents(View view) {
-        Intent intent = new Intent(DecisionActivity.this, RelaxActivity.class);
+        Intent intent = new Intent(DecisionActivity.this, CategoryActivity.class);
         intent.putExtra(TAG_CATEGORY, "Kochen");
         startActivity(intent);
     }
 
     public void showDiscussionEvents(View view) {
-        Intent intent = new Intent(DecisionActivity.this, RelaxActivity.class);
+        Intent intent = new Intent(DecisionActivity.this, CategoryActivity.class);
         intent.putExtra(TAG_CATEGORY, "Diskussion");
         startActivity(intent);
     }
 
     public void showCultureEvents(View view) {
-        Intent intent = new Intent(DecisionActivity.this, RelaxActivity.class);
+        Intent intent = new Intent(DecisionActivity.this, CategoryActivity.class);
         intent.putExtra(TAG_CATEGORY, "Kultur");
         startActivity(intent);
     }
@@ -104,8 +104,8 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.profile:
-                        Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    case R.id.resetPassword:
+                        Intent profileIntent = new Intent(getApplicationContext(), ResetPasswordActivity.class);
                         startActivity(profileIntent);
                         mDrawerLayout.closeDrawers();
                         break;
@@ -115,7 +115,8 @@ public class DecisionActivity extends AppCompatActivity {
                         mDrawerLayout.closeDrawers();
                         break;
                     case R.id.settings:
-                        Toast.makeText(getApplicationContext(), "Einstellungen", Toast.LENGTH_SHORT).show();
+                        Intent settingsIntent = new Intent(getApplicationContext(), AGBActivity.class);
+                        startActivity(settingsIntent);
                         mDrawerLayout.closeDrawers();
                         break;
                     case R.id.logout:
@@ -134,7 +135,8 @@ public class DecisionActivity extends AppCompatActivity {
 
         View header = navigationView.getHeaderView(0);
         TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-        mUsernameTextField.setText(user.getEmail());//TODO name verwenden
+        mUsernameTextField.setText(fireUser.getDisplayName());//TODO name verwenden
+
     }
 
     @Override

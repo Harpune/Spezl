@@ -1,23 +1,20 @@
-package com.example.lukas.spezl.Controller;
+package com.example.lukas.spezl.controller;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.lukas.spezl.Model.Event;
+import com.example.lukas.spezl.model.Event;
 import com.example.lukas.spezl.R;
-import com.example.lukas.spezl.View.EventActivity;
+import com.example.lukas.spezl.view.EventActivity;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder> {
 
@@ -91,8 +88,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
 
     @Override
     public void onBindViewHolder(EventHolder holder, int position) {
+        // The current event.
         Event event = eventList.get(position);
 
+        // Check if participants already joined the
         int participants = 0;
         if (event.getParticipantIds() != null) {
             participants = event.getParticipantIds().size();

@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;

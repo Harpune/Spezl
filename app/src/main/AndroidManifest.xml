@@ -3,39 +3,43 @@
     package="com.example.lukas.spezl">
 
     <application
-        android:name=".Model.Spezl"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".View.LoginActivity"
+            android:name=".view.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".View.RegisterActivity"
+            android:name=".view.RegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".View.MainActivity"
+            android:name=".view.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.DecisionActivity"
+            android:name=".view.DecisionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.DateActivity"
+            android:name=".view.DateActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".View.CreateActivity"
+            android:name=".view.CreateActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.EventActivity"
+            android:name=".view.EventActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".View.WelcomeActivity"
+            android:name=".view.CategoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ResetPasswordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.WelcomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,8 +47,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.RelaxActivity" />
-        <activity android:name=".View.ProfileActivity"></activity>
+        <activity android:name=".view.AGBActivity"></activity>
     </application>
 
 </manifest>

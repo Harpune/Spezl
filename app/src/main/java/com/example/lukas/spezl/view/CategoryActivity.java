@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,9 +11,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
-import com.example.lukas.spezl.Controller.EventAdapter;
-import com.example.lukas.spezl.Model.Event;
+import com.example.lukas.spezl.controller.EventAdapter;
+import com.example.lukas.spezl.model.Event;
 import com.example.lukas.spezl.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelaxActivity extends Activity {
+public class CategoryActivity extends Activity {
     private final String TAG_CATEGORY = "TAG_CATEGORY";
 
     private EventAdapter eventAdapter;
@@ -38,7 +39,7 @@ public class RelaxActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_relax);
+        setContentView(R.layout.activity_category);
 
         // Get the intent.
         Intent intent = getIntent();
@@ -101,5 +102,11 @@ public class RelaxActivity extends Activity {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    public void createEvent(View view) {
+        Intent intent = new Intent(CategoryActivity.this, CreateActivity.class);
+        intent.putExtra(TAG_CATEGORY, category);
+        startActivity(intent);
     }
 }

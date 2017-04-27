@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;

@@ -2,7 +2,7 @@
     <string name="app_name">Spezl</string>
     <string name="text_password">Passwort</string>
     <string name="text_email">Email</string>
-    <string name="text_login">Login</string>
+    <string name="text_login">Los gehts!</string>
     <string name="text_no_account">Noch keinen Account? Registriere dich jetzt!</string>
     <string name="text_check_password">Passwort erneut eingeben</string>
     <string name="text_name">Name</string>
@@ -55,4 +55,9 @@
     <string name="text_show_check_password">Passwort anzeigen</string>
     <string name="text_old_password">Altes Passwort</string>
     <string name="text_change_password">Passwort ändern</string>
+    <string name="text_reset_password">Passwort vergessen? Setze dein Passwort zurück.</string>
+    <string name="text_reset_password_short">Passwort ändern</string>
+    <string name="text_new_password">Neues Passwort</string>
+    <string name="text_check_new_password">Neues Passwort erneut eingeben</string>
+    <string name="text_agb_confirmation">Ich bestätige, die AGB gelesen zu haben.</string>
 </resources>

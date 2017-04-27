@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.Model;
+package com.example.lukas.spezl.model;
 
 import java.util.Date;
 

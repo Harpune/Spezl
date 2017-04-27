@@ -1,26 +1,22 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.lukas.spezl.Model.User;
+import com.example.lukas.spezl.model.User;
 import com.example.lukas.spezl.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,20 +31,27 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 public class RegisterActivity extends Activity {
+    // TAG for AGB
+    private final int TAG_AGB = 1;
+
+    // Firebase Authentication.
     private FirebaseAuth mAuth;
 
+    // Calender for the Date.
     private Calendar mCalendar = Calendar.getInstance();
 
+    // Views of the Layout.
     private EditText mFirstNameText, mLastNameText, mEmailText, mAgeText, mPasswordText, mPasswordCheckText;
     private TextInputLayout mFirstNameLayout, mLastNameLayout, mEmailLayout, mAgeLayout, mPasswordLayout,
             mPasswordCheckLayout;
     private RadioGroup mRadioGroup;
+    private RelativeLayout loadingPanel;
+    private CheckBox checkBox;
 
+    // Input of the user.
     private String firstName, lastName, email, age, password, passwordCheck;
     private Boolean sex = null;
 
@@ -59,8 +62,10 @@ public class RegisterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Instanciate the FirebaseAuthentication.
         mAuth = FirebaseAuth.getInstance();
 
+        // Find the views.
         mFirstNameText = (EditText) findViewById(R.id.input_first_name);
         mLastNameText = (EditText) findViewById(R.id.input_last_name);
         mEmailText = (EditText) findViewById(R.id.input_email);
@@ -89,9 +94,18 @@ public class RegisterActivity extends Activity {
         mPasswordLayout = (TextInputLayout) findViewById(R.id.input_layout_password);
         mPasswordCheckLayout = (TextInputLayout) findViewById(R.id.input_layout_check_password);
 
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        checkBox = (CheckBox) findViewById(R.id.agb_checkBox);
+
+        // Get date from user.
         getDateFromUser();
     }
 
+    /**
+     * Check every input of the user.
+     *
+     * @param view register-button clicked.
+     */
     public void register(View view) {
         firstName = mFirstNameText.getText().toString().trim();
         lastName = mLastNameText.getText().toString().trim();
@@ -107,6 +121,10 @@ public class RegisterActivity extends Activity {
         mPasswordLayout.setErrorEnabled(false);
         mPasswordCheckLayout.setErrorEnabled(false);
 
+        if (!checkBox.isChecked()) {
+            Toast.makeText(RegisterActivity.this, "Bitte bestätige die AGB", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         if (firstName.matches("")) {
             mFirstNameLayout.setError("Gib bitte deinen Vornamen an!");
@@ -157,6 +175,8 @@ public class RegisterActivity extends Activity {
             return;
         }
 
+        loadingPanel.setVisibility(View.VISIBLE);
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -178,6 +198,7 @@ public class RegisterActivity extends Activity {
                             } catch (Exception e) {
                                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
+                            loadingPanel.setVisibility(View.GONE);
 
                         } else {
                             FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -191,11 +212,6 @@ public class RegisterActivity extends Activity {
                             // Create a new User!
                             createNewUser(fireUser);
 
-                            //start intent and sign out.
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            FirebaseAuth.getInstance().signOut();
-                            startActivity(intent);
-                            finish();
 
                         }
                     }
@@ -217,7 +233,25 @@ public class RegisterActivity extends Activity {
 
         // Create database connection and reference.
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        mDatabaseRef.child("users").child(fireUser.getUid()).setValue(user);
+        mDatabaseRef.child("users")
+                .child(fireUser.getUid())
+                .setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            loadingPanel.setVisibility(View.GONE);
+                            FirebaseAuth.getInstance().signOut();
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            loadingPanel.setVisibility(View.GONE);
+                            Toast.makeText(RegisterActivity.this, "Der Benutzer konnte nicht angelegt werden", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
     }
 
     /**
@@ -278,5 +312,19 @@ public class RegisterActivity extends Activity {
     private void updateDate() {
         DateFormat df = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         mAgeText.setText(df.format(mCalendar.getTime()));
+    }
+
+    public void showAGB(View view) {
+        Intent intent = new Intent(RegisterActivity.this, AGBActivity.class);
+        startActivityForResult(intent, TAG_AGB);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TAG_AGB) {
+            if (resultCode == RESULT_OK) {
+                checkBox.setChecked(true);
+            }
+        }
     }
 }

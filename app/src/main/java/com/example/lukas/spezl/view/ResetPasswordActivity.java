@@ -1,9 +1,8 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +20,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ResetPasswordActivity extends AppCompatActivity {
     private final String TAG = "1";
 
     private EditText oldPassword, firstPassword, newPassword;
@@ -29,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_reset_password);
 
         // Setup toolbar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(getApplicationContext(), "Passwort wurde geändert", Toast.LENGTH_SHORT).show();
                                     Log.d(TAG, "Password updated");
-                                    Intent intent = new Intent(ProfileActivity.this, DecisionActivity.class);
+                                    Intent intent = new Intent(ResetPasswordActivity.this, DecisionActivity.class);
                                     startActivity(intent);
                                     finish();
                                 } else {

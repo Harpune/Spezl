@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,9 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends Activity {
+    // Firebase Instance
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    // Views globally needed.
     private EditText mEmailText, mPasswordText;
     private TextInputLayout mEmailLayout, mPasswordLayout;
 
@@ -30,12 +32,14 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Find Views in Layout
         mEmailText = (EditText) findViewById(R.id.input_email);
         mPasswordText = (EditText) findViewById(R.id.input_password);
 
         mEmailLayout = (TextInputLayout) findViewById(R.id.input_layout_email);
         mPasswordLayout = (TextInputLayout) findViewById(R.id.input_layout_password);
 
+        // get Firebase Instance.
         mAuth = FirebaseAuth.getInstance();
 
         //Check if a user is logged in
@@ -44,7 +48,7 @@ public class LoginActivity extends Activity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    if(user.isEmailVerified()){
+                    if (user.isEmailVerified()) { // is logged in
                         Log.d("AUTH", "Signed in... UserID: + " + user.getUid());
                         Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -59,17 +63,28 @@ public class LoginActivity extends Activity {
                 }
             }
         };
+
     }
 
+    /**
+     * Triggered when view new registration should be done.
+     * @param view clicked TextView
+     */
     public void register(View view) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Check all inputs for validation.
+     * @param view clicked Button
+     */
     public void login(View view) {
+        // Get typed email and password.
         String email = mEmailText.getText().toString().trim();
         String password = mPasswordText.getText().toString().trim();
 
+        // Remove error-note.
         mEmailLayout.setErrorEnabled(false);
         mPasswordLayout.setErrorEnabled(false);
 
@@ -91,9 +106,11 @@ public class LoginActivity extends Activity {
             return;
         }
 
+        // Start loading panel.
         final RelativeLayout loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
         loadingPanel.setVisibility(View.VISIBLE);
 
+        // Sign in with Firebase Instance.
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -104,6 +121,7 @@ public class LoginActivity extends Activity {
                         } else {
                             loadingPanel.setVisibility(View.GONE);
 
+                            //Check if user verified his email.
                             if (isEmailVerified()) {
                                 Intent intent = new Intent(LoginActivity.this, DecisionActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -116,6 +134,10 @@ public class LoginActivity extends Activity {
                 });
     }
 
+    /**
+     * Email-Verification.
+     * @return true if user verified his email.
+     */
     private boolean isEmailVerified() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -148,5 +170,33 @@ public class LoginActivity extends Activity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    /**
+     * Reset the password. Email is send to given address.
+     * Firebase generates link to reset the password.
+     * @param view clicked TextView
+     */
+    public void resetPassword(View view) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String email = mEmailText.getText().toString().trim();
+
+        if (email.matches("")) {
+            mEmailLayout.setError("Bitte gib zuerst hier deine E-Mail an");
+            mEmailText.requestFocus();
+            return;
+        }
+
+        // Send reset-password mail.
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("RESET_PASSWORD", "Email sent.");
+                            Toast.makeText(LoginActivity.this, "Überpfüfe deinen Email-Eingang", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 }

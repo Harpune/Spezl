@@ -1,4 +1,4 @@
-package com.example.lukas.spezl.View;
+package com.example.lukas.spezl.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +14,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.lukas.spezl.Controller.EventAdapter;
-import com.example.lukas.spezl.Model.Event;
-import com.example.lukas.spezl.Model.User;
+import com.example.lukas.spezl.controller.EventAdapter;
+import com.example.lukas.spezl.model.Event;
+import com.example.lukas.spezl.model.User;
 import com.example.lukas.spezl.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
