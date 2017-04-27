@@ -172,11 +172,6 @@ public class CreateActivity extends Activity {
         assert user != null;
         event.setOwnerId(user.getUid());
 
-        List<String> participants = new ArrayList<>();
-        participants.add(user.getUid());
-
-        event.setParticipantIds(participants);
-
         // Create database connection and reference.
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mDatabaseRef = mDatabase.getReference();
@@ -210,7 +205,7 @@ public class CreateActivity extends Activity {
         mDateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(CreateActivity.this, date,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CreateActivity.this, R.style.TimePicker, date,
                         mCalendar.get(Calendar.YEAR),
                         mCalendar.get(Calendar.MONTH),
                         mCalendar.get(Calendar.DAY_OF_MONTH));

@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         }
            */
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        mEventAdapter = new EventAdapter(eventList);
+        mEventAdapter = new EventAdapter(eventList, this);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());

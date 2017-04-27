@@ -60,7 +60,7 @@ public class RelaxActivity extends Activity {
 
         // Implement recyclerView.
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        eventAdapter = new EventAdapter(events);
+        eventAdapter = new EventAdapter(events, this);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));

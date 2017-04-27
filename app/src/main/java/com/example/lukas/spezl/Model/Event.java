@@ -1,6 +1,7 @@
 package com.example.lukas.spezl.Model;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class Event {
@@ -14,12 +15,12 @@ public class Event {
     private String category;
     private String ownerId;
     private String imageUri;
-    private List<String> participantIds;
+    private HashMap<String, String> participantIds;
 
     public Event() {
     }
 
-    public Event(String uId, String name, String description, Double maxParticipants, Date date, String town, String address, String category, String ownerId, String imageUri, List<String> participantIds) {
+    public Event(String uId, String name, String description, Double maxParticipants, Date date, String town, String address, String category, String ownerId, String imageUri, HashMap<String, String> participantIds) {
         this.uId = uId;
         this.name = name;
         this.description = description;
@@ -113,11 +114,11 @@ public class Event {
         this.imageUri = imageUri;
     }
 
-    public List<String> getParticipantIds() {
+    public HashMap<String, String> getParticipantIds() {
         return participantIds;
     }
 
-    public void setParticipantIds(List<String> participantIds) {
+    public void setParticipantIds(HashMap<String, String> participantIds) {
         this.participantIds = participantIds;
     }
 

@@ -28,8 +28,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -126,13 +128,19 @@ public class EventActivity extends AppCompatActivity {
      * @param view The fab-view.
      */
     public void joinEvent(View view) {
-        if(userAlreadyParticipates()){
-            DatabaseReference mDatabaseRef = mDatabase.getReference("events")
-                    .child(eventCategory)
-                    .child(eventId)
-                    .child("participantIds")
-                    .child(fireUser.getUid());
-            mDatabaseRef.removeValue();
+        if (userAlreadyParticipates()) {
+            String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
+            if(key != null){
+                DatabaseReference mDatabaseRef = mDatabase.getReference("events")
+                        .child(eventCategory)
+                        .child(eventId)
+                        .child("participantIds")
+                        .child(key);
+                mDatabaseRef.removeValue();
+                onBackPressed();
+            }
+
+
         } else {
             DatabaseReference mDatabaseRef = mDatabase.getReference("events")
                     .child(eventCategory)
@@ -140,8 +148,18 @@ public class EventActivity extends AppCompatActivity {
                     .child("participantIds")
                     .push();
             mDatabaseRef.setValue(fireUser.getUid());
+            onBackPressed();
         }
 
+    }
+
+    public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
+        for (Map.Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     /**
@@ -150,12 +168,7 @@ public class EventActivity extends AppCompatActivity {
      * @return true if current user is already taking part.
      */
     private boolean userAlreadyParticipates() {
-        for (String id : event.getParticipantIds()) {
-            if (id.equals(fireUser.getUid())) {
-                return true;
-            }
-        }
-        return false;
+        return event.getParticipantIds() != null && event.getParticipantIds().containsValue(fireUser.getUid());
     }
 
     private void readOwner() {
@@ -176,12 +189,17 @@ public class EventActivity extends AppCompatActivity {
                 Log.d("EVENT_FROM_SERVER", event.toString());
 
                 //Check if user should be able to participate. TODO Benachrichtinung über zustand des users zum event
-                if (eventMaxParticipants <= eventAmountPaticipants) {
-                    Toast.makeText(EventActivity.this, "Dieses Event ist leider voll.", Toast.LENGTH_SHORT).show();
+                if (fireUser.getUid().equals(ownerId)) {
+                    Toast.makeText(EventActivity.this, "Das ist dein Event!", Toast.LENGTH_SHORT).show();
                     fab.setVisibility(View.GONE);
                 } else if (userAlreadyParticipates()) {
                     Toast.makeText(EventActivity.this, "Du nimmst schon teil.", Toast.LENGTH_SHORT).show();
                     fab.setImageResource(R.drawable.ic_cancel);
+                } else if (eventMaxParticipants == 0) {
+                    // unendlich Viele Teilnhemer zulassen
+                } else if (eventMaxParticipants <= eventAmountPaticipants) {
+                    Toast.makeText(EventActivity.this, "Dieses Event ist leider voll.", Toast.LENGTH_SHORT).show();
+                    fab.setVisibility(View.GONE);
                 }
             }
 

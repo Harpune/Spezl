@@ -1,5 +1,6 @@
 package com.example.lukas.spezl.Controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +14,7 @@ import com.example.lukas.spezl.Model.Event;
 import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.View.EventActivity;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -31,12 +33,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
 
     private List<Event> eventList;
 
+    private Context context;
+
     public class EventHolder extends RecyclerView.ViewHolder {
         public TextView nameView, descriptionView, datumView, townView, participantView;
 
         public RelativeLayout rootLayout;
 
-        public EventHolder(View view){
+        public EventHolder(View view) {
             super(view);
 
             this.nameView = (TextView) view.findViewById(R.id.eventName);
@@ -50,23 +54,32 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(rootLayout.getContext(), EventActivity.class);
+
                     intent.putExtra(TAG_EVENT_ID, eventList.get(getAdapterPosition()).getuId());
                     intent.putExtra(TAG_EVENT_NAME, eventList.get(getAdapterPosition()).getName());
                     intent.putExtra(TAG_DESCRIPTION, eventList.get(getAdapterPosition()).getDescription());
                     intent.putExtra(TAG_MAX_PARTICIPANTS, eventList.get(getAdapterPosition()).getMaxParticipants());
-                    intent.putExtra(TAG_AMOUNT_PARTICIPANTS, eventList.get(getAdapterPosition()).getParticipantIds().size());
                     intent.putExtra(TAG_EVENT_TOWN, eventList.get(getAdapterPosition()).getTown());
                     intent.putExtra(TAG_EVENT_ADDRESS, eventList.get(getAdapterPosition()).getAddress());
                     intent.putExtra(TAG_EVENT_CATEGORY, eventList.get(getAdapterPosition()).getCategory());
                     intent.putExtra(TAG_OWNER_ID, eventList.get(getAdapterPosition()).getOwnerId());
+
+                    if (eventList.get(getAdapterPosition()).getParticipantIds() != null) {
+                        intent.putExtra(TAG_AMOUNT_PARTICIPANTS, eventList.get(getAdapterPosition()).getParticipantIds().size());
+                    } else {
+                        intent.putExtra(TAG_AMOUNT_PARTICIPANTS, 0);
+                    }
+
                     view.getContext().startActivity(intent);
                 }
             });
         }
     }
 
-    public EventAdapter(List<Event> moviesList) {
+    public EventAdapter(List<Event> moviesList, Context context) {
         this.eventList = moviesList;
+        this.context = context;
+
     }
 
     @Override
@@ -79,18 +92,26 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
     @Override
     public void onBindViewHolder(EventHolder holder, int position) {
         Event event = eventList.get(position);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.YYYY HH:mm", Locale.GERMAN);
+
         int participants = 0;
-        if(event.getParticipantIds() != null){
+        if (event.getParticipantIds() != null) {
             participants = event.getParticipantIds().size();
         }
 
+        DateFormat dfDate = android.text.format.DateFormat.getDateFormat(context);
+        DateFormat dfTime = android.text.format.DateFormat.getTimeFormat(context);
 
         holder.nameView.setText(event.getName());
         holder.descriptionView.setText(event.getDescription());
-        holder.datumView.setText(simpleDateFormat.format(event.getDate()));
+        holder.datumView.setText(dfDate.format(event.getDate()) + " " + dfTime.format(event.getDate()));
         holder.townView.setText(event.getTown());
-        holder.participantView.setText(String.valueOf(participants) + "/" + event.getMaxParticipants().intValue());
+
+        if (event.getMaxParticipants() == 0) {
+            holder.participantView.setText(String.valueOf(participants));
+        } else {
+            holder.participantView.setText(String.valueOf(participants) + "/" + event.getMaxParticipants().intValue());
+        }
+
     }
 
     @Override
