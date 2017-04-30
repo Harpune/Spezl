@@ -1,17 +1,20 @@
 package com.example.lukas.spezl.view;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +27,8 @@ public class DecisionActivity extends AppCompatActivity {
 
     private FirebaseUser fireUser;
 
+    private ImageButton owl, relaxButton, partyButton, sportButton, cookButton, dicussionButton, cultureButton;
+
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -33,7 +38,28 @@ public class DecisionActivity extends AppCompatActivity {
 
         fireUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        relaxButton = (ImageButton) findViewById(R.id.pic_relax);
+        partyButton = (ImageButton) findViewById(R.id.pic_party);
+        sportButton = (ImageButton) findViewById(R.id.pic_sport);
+        cookButton = (ImageButton) findViewById(R.id.pic_cook);
+        dicussionButton = (ImageButton) findViewById(R.id.pic_discussion);
+        cultureButton = (ImageButton) findViewById(R.id.pic_culture);
+
+        relaxButton.setBackground(resize(R.drawable.entspannt));
+        partyButton.setBackground(resize(R.drawable.feiern));
+        sportButton.setBackground(resize(R.drawable.sport));
+        cookButton.setBackground(resize(R.drawable.kochen));
+        dicussionButton.setBackground(resize(R.drawable.diskussion));
+        cultureButton.setBackground(resize(R.drawable.kultur));
+
         initDrawerLayout();
+    }
+
+    private Drawable resize(int image) {
+        Drawable drawable = getDrawable(image);
+        Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 500, 500, false);
+        return new BitmapDrawable(getResources(), bitmapResized);
     }
 
     public void showRelaxEvents(View view) {
@@ -141,7 +167,7 @@ public class DecisionActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;

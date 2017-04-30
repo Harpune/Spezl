@@ -15,9 +15,10 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            app:theme="@style/ToolbarColoredBackArrow"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary">
+            android:minHeight="?android:attr/actionBarSize"
+            android:layout_height="128dp"
+            android:background="@color/colorPrimary"
+            app:theme="@style/ToolbarColoredBackArrow">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -27,106 +28,115 @@
 
                 <ImageButton
                     android:id="@+id/owl_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:scaleType="centerCrop"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:tint="@android:color/white"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/ic_person" />
+                    android:src="@drawable/pic_owl_active" />
 
             </LinearLayout>
 
-
         </android.support.v7.widget.Toolbar>
 
-        <TableLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:stretchColumns="*">
+            android:orientation="vertical"
+            android:weightSum="3">
 
-            <TableRow
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/relax_button"
+                <ImageButton
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:background="@drawable/button_shape"
+                    android:id="@+id/pic_relax"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
                     android:onClick="showRelaxEvents"
-                    android:text="@string/text_relax" />
-
-                <Button
-                    android:id="@+id/party_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_shape"
-                    android:onClick="showPartyEvents"
-                    android:text="@string/text_party" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="0dp"
+                    android:scaleType="fitCenter" />
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:id="@+id/pic_party"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:background="?attr/selectableItemBackground"
+                android:onClick="showPartyEvents"
+                android:scaleType="fitCenter"/>
 
-                <Button
-                    android:id="@+id/sport_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_shape"
-                    android:onClick="showSportEvents"
-                    android:text="@string/text_sport" />
+        </LinearLayout>
 
-                <Button
-                    android:id="@+id/cook_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_shape"
-                    android:onClick="showCookEvents"
-                    android:text="@string/text_cook" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="0dp"
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:id="@+id/pic_sport"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:background="?attr/selectableItemBackground"
+                android:onClick="showSportEvents"
+                android:scaleType="fitCenter"/>
 
-                <Button
-                    android:id="@+id/discussion_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_shape"
-                    android:onClick="showDiscussionEvents"
-                    android:text="@string/text_discussion" />
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:id="@+id/pic_cook"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="showCookEvents"
+                android:scaleType="fitCenter" />
 
-                <Button
-                    android:id="@+id/culture_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_shape"
-                    android:onClick="showCultureEvents"
-                    android:text="@string/text_culture" />
+        </LinearLayout>
 
-            </TableRow>
-        </TableLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:id="@+id/pic_discussion"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="showDiscussionEvents"
+                android:scaleType="fitCenter"/>
+
+            <ImageButton
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:id="@+id/pic_culture"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="showCultureEvents"
+                android:scaleType="fitCenter" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
+</LinearLayout>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/navigation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/menu_navigation" />
+<android.support.design.widget.NavigationView
+    android:id="@+id/navigation_view"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    app:headerLayout="@layout/nav_header"
+    app:menu="@menu/menu_navigation" />
 </android.support.v4.widget.DrawerLayout>
