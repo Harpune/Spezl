@@ -1,12 +1,31 @@
 package com.example.lukas.spezl.view;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AGBActivity extends AppCompatActivity {
 
@@ -19,6 +38,16 @@ public class AGBActivity extends AppCompatActivity {
 
         readStrings();
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle(R.string.text_settings);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
+
         TextView privacyPolicyView = (TextView) findViewById(R.id.privacyPolicy);
         TextView termsOfUseView = (TextView) findViewById(R.id.termsOfUse);
 
@@ -26,6 +55,83 @@ public class AGBActivity extends AppCompatActivity {
         termsOfUseView.setText(termsOfUse);
 
         setResult(RESULT_OK);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.delete_user:
+
+                new AlertDialog.Builder(this)
+                        .setIcon(R.drawable.pic_owl_active)
+                        .setTitle("Acount löschen")
+                        .setMessage("Möchtest du wirklich keinen Account löschen? Das kann nicht rückgängig gemacht werden.")
+                        .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Toast.makeText(AGBActivity.this, "Delete user comes here!", Toast.LENGTH_LONG).show();
+                            }
+                        })
+                        .setNegativeButton("Nein", null)
+                        .show();
+
+                /*
+                TODO Delete user and his events/participations!
+                */
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void deleteUser(){
+        final FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        DatabaseReference mRefUser = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference mRefEvent = FirebaseDatabase.getInstance().getReference("events");
+
+        assert fireUser != null;
+        mRefUser.child(fireUser.getUid()).removeValue();
+
+
+        // Get auth credentials from the user for re-authentication. The example below shows
+        // email and password credentials but there are multiple possible providers,
+        // such as GoogleAuthProvider or FacebookAuthProvider.
+        AuthCredential credential = EmailAuthProvider.getCredential("user@example.com", "password1234");
+        // Prompt the user to re-provide their sign-in credentials
+        fireUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        fireUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d("ASDA", "User account deleted.");
+                                }
+                            }
+                        });
+
+                    }
+                });
+
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(AGBActivity.this, WelcomeActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 
     public void readStrings() {

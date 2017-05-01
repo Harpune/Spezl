@@ -2,7 +2,7 @@
     <string name="app_name">Spezl</string>
     <string name="text_password">Passwort</string>
     <string name="text_email">Email</string>
-    <string name="text_login">Los gehts!</string>
+    <string name="text_login">Los spezln!</string>
     <string name="text_no_account">Noch keinen Account? Registriere dich jetzt!</string>
     <string name="text_check_password">Passwort erneut eingeben</string>
     <string name="text_name">Name</string>
@@ -61,4 +61,8 @@
     <string name="text_check_new_password">Neues Passwort erneut eingeben</string>
     <string name="text_agb_confirmation">Ich bestätige, die AGB gelesen zu haben.</string>
     <string name="text_place">Ortsbeschreibung</string>
+    <string name="text_cancel">Nein, doch nicht.</string>
+    <string name="text_continue">Ja, weiter gehts!</string>
+    <string name="text_delete_user">Benutzer löschen</string>
+    <string name="text_my_event">Meine Events</string>
 </resources>

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryActivity extends Activity {
+public class CategoryActivity extends AppCompatActivity {
     private final String TAG_CATEGORY = "TAG_CATEGORY";
 
     private EventAdapter eventAdapter;
@@ -58,6 +59,12 @@ public class CategoryActivity extends Activity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(category);
         toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
 
         // Implement recyclerView.
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -108,5 +115,11 @@ public class CategoryActivity extends Activity {
         Intent intent = new Intent(CategoryActivity.this, CreateActivity.class);
         intent.putExtra(TAG_CATEGORY, category);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

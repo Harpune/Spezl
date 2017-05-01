@@ -31,12 +31,16 @@ public class DecisionActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
 
+    boolean owlActiv = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decision);
 
         fireUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        owl = (ImageButton) findViewById(R.id.owl_button);
 
         relaxButton = (ImageButton) findViewById(R.id.pic_relax);
         partyButton = (ImageButton) findViewById(R.id.pic_party);
@@ -130,19 +134,23 @@ public class DecisionActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.resetPassword:
+                    case R.id.profile:
                         Intent profileIntent = new Intent(getApplicationContext(), ResetPasswordActivity.class);
                         startActivity(profileIntent);
                         mDrawerLayout.closeDrawers();
                         break;
-                    case R.id.createEvent:
-                        Intent createIntent = new Intent(getApplicationContext(), CreateActivity.class);
-                        startActivity(createIntent);
+                    case R.id.myEvents:
+                        Toast.makeText(getApplicationContext(), "Meine Events", Toast.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawers();
                         break;
                     case R.id.settings:
                         Intent settingsIntent = new Intent(getApplicationContext(), AGBActivity.class);
                         startActivity(settingsIntent);
+                        mDrawerLayout.closeDrawers();
+                        break;
+                    case R.id.createEvent:
+                        Intent createIntent = new Intent(getApplicationContext(), CreateActivity.class);
+                        startActivity(createIntent);
                         mDrawerLayout.closeDrawers();
                         break;
                     case R.id.logout:
@@ -161,7 +169,7 @@ public class DecisionActivity extends AppCompatActivity {
 
         View header = navigationView.getHeaderView(0);
         TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-        mUsernameTextField.setText(fireUser.getDisplayName());//TODO name verwenden
+        mUsernameTextField.setText(fireUser.getDisplayName());
 
     }
 
@@ -173,5 +181,16 @@ public class DecisionActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showCurrentEvents(View view) {
+        if(owlActiv){
+            owl.setImageResource(R.drawable.pic_owl_inactive);
+            owlActiv = false;
+        } else {
+            owl.setImageResource(R.drawable.pic_owl_active);
+            owlActiv = true;
+        }
+
     }
 }

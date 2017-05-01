@@ -47,7 +47,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.AGBActivity"></activity>
+        <activity android:name=".view.AGBActivity" />
+        <activity android:name=".view.ConfirmationActivity"></activity>
     </application>
 
 </manifest>
