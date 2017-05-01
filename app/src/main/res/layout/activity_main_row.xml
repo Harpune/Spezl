@@ -1,100 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
-    android:clickable="true"
-    android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_margin="@dimen/recycler_view_padding"
-        android:id="@+id/linearLayout">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/eventName"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="4dp"
+                android:layout_toStartOf="@+id/linearLayout2"
+                android:gravity="top"
+                android:maxLength="25"
                 android:maxLines="1"
-                android:text="Seilspringen für Anfänger" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/recycler_view_padding"
-            android:layout_weight="1">
-
-            <TextView
-                android:id="@+id/eventDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:maxLines="3"
-                android:text="Wir springen Seil..."
+                android:text="ss"
                 android:textSize="10pt" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:gravity="end|center_vertical">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_access_time" />
+
+                <TextView
+                    android:id="@+id/eventDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="24.03.2017 - 19:00" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:weightSum="1">
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <ImageButton
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_access_time"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1.50">
 
-            <TextView
-                android:id="@+id/eventDate"
-                android:gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="24.03.2017 - 19:00" />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_location" />
 
-            <ImageButton
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/eventTown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="MünchenMünchenMünchenMünchenMünchen" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_location"
-                android:paddingStart="@dimen/recycler_view_padding"
-                android:background="?attr/selectableItemBackgroundBorderless" />
+                android:layout_weight="1"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/eventTown"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Ulm" />
+                <TextView
+                    android:id="@+id/eventDayText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Übermorgen" />
+            </LinearLayout>
 
-            <ImageButton
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_people"
-                android:paddingStart="@dimen/recycler_view_padding"
-                android:background="?attr/selectableItemBackgroundBorderless" />
+                android:layout_weight="0.50"
+                android:layout_gravity="center_vertical"
+                android:gravity="end">
 
-            <TextView
-                android:id="@+id/eventParticipant"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="10/12" />
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:paddingStart="@dimen/recycler_view_padding"
+                    android:src="@drawable/ic_people" />
 
+                <TextView
+                    android:id="@+id/eventParticipant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="10/1000" />
+            </LinearLayout>
         </LinearLayout>
+
 
     </LinearLayout>
 

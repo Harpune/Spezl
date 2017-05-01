@@ -20,7 +20,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/text_name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:maxLength="25" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -68,6 +69,20 @@
                 android:hint="@string/text_time"
                 android:inputType="time"
                 android:longClickable="false" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/input_layout_place"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/input_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_place"
+                android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
 

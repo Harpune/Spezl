@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.example.lukas.spezl.model.Event;
 import com.example.lukas.spezl.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class CreateActivity extends Activity {
@@ -33,9 +37,9 @@ public class CreateActivity extends Activity {
 
     private Calendar mCalendar = Calendar.getInstance();
 
-    private EditText mNameText, mDescriptionText, mDateText, mTimeText, mTownText, mAddressText, mMaxParticipentsText;
+    private EditText mNameText, mDescriptionText, mDateText, mTimeText, mPlaceText, mTownText, mAddressText, mMaxParticipentsText;
 
-    private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mTownLayput, mAddressLayout, mMaxParticipentsLayout;
+    private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mPlaceLayout, mTownLayput, mAddressLayout, mMaxParticipentsLayout;
 
     private String category = "Entspannt";
 
@@ -49,6 +53,7 @@ public class CreateActivity extends Activity {
         mDescriptionText = (EditText) findViewById(R.id.input_description);
         mDateText = (EditText) findViewById(R.id.input_date);
         mTimeText = (EditText) findViewById(R.id.input_time);
+        mPlaceText = (EditText) findViewById(R.id.input_place);
         mTownText = (EditText) findViewById(R.id.input_town);
         mAddressText = (EditText) findViewById(R.id.input_address);
         mMaxParticipentsText = (EditText) findViewById(R.id.input_max_participants);
@@ -57,13 +62,14 @@ public class CreateActivity extends Activity {
         mDescriptionLayout = (TextInputLayout) findViewById(R.id.input_layout_description);
         mDateLayout = (TextInputLayout) findViewById(R.id.input_layout_date);
         mTimeLayout = (TextInputLayout) findViewById(R.id.input_layout_time);
+        mPlaceLayout = (TextInputLayout) findViewById(R.id.input_layout_place);
         mTownLayput = (TextInputLayout) findViewById(R.id.input_layout_town);
         mAddressLayout = (TextInputLayout) findViewById(R.id.input_layout_address);
         mMaxParticipentsLayout = (TextInputLayout) findViewById(R.id.input_layout_max_participants);
 
         // Get the intent if the user comes from CategoryActivity.
         Intent intent = getIntent();
-        if (intent.hasExtra(TAG_CATEGORY)){
+        if (intent.hasExtra(TAG_CATEGORY)) {
             category = intent.getStringExtra(TAG_CATEGORY);
         }
 
@@ -100,6 +106,7 @@ public class CreateActivity extends Activity {
         String description = mDescriptionText.getText().toString().trim();
         String date = mDateText.getText().toString().trim();
         String time = mTimeText.getText().toString().trim();
+        String place = mPlaceText.getText().toString().trim();
         String town = mTownText.getText().toString().trim();
         String address = mAddressText.getText().toString().trim();
         String maxParticipantsString = mMaxParticipentsText.getText().toString().trim();
@@ -110,7 +117,10 @@ public class CreateActivity extends Activity {
         mDescriptionLayout.setErrorEnabled(false);
         mDateLayout.setErrorEnabled(false);
         mTimeLayout.setErrorEnabled(false);
+        mPlaceLayout.setErrorEnabled(false);
         mTownLayput.setErrorEnabled(false);
+        mAddressLayout.setErrorEnabled(false);
+        mMaxParticipentsLayout.setErrorEnabled(false);
 
 
         //Check the input for wrong input.
@@ -138,15 +148,15 @@ public class CreateActivity extends Activity {
             return;
         }
 
-        if (town.matches("")) {
-            mTownLayput.setError("In Tumbuktu?");
-            mTownText.requestFocus();
+        if (place.matches("")) {
+            mPlaceLayout.setError("Wohin geht's?");
+            mPlaceText.requestFocus();
             return;
         }
 
-        if (address.matches("")) {
-            mAddressLayout.setError("Gib bitte deine Adresse an.");
-            mAddressText.requestFocus();
+        if (town.matches("")) {
+            mTownLayput.setError("In Tumbuktu?");
+            mTownText.requestFocus();
             return;
         }
 
@@ -155,6 +165,11 @@ public class CreateActivity extends Activity {
             maxParticipants = 0d;
         } else {
             maxParticipants = Double.parseDouble(maxParticipantsString);
+        }
+
+        if (maxParticipants > 8) {
+            mMaxParticipentsLayout.setError("Maximal 8 Teilnehmer. Wähle 0 wenn es egal ist, wie viele kommen!");
+            return;
         }
 
         //Build the date.
@@ -168,11 +183,13 @@ public class CreateActivity extends Activity {
         }
 
         //Create the event from the given information.
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Event event = new Event();
         event.setName(name);
         event.setDescription(description);
         event.setDate(dateTime);
+        event.setCreationDate(new Date());
+        event.setPlace(place);
         event.setMaxParticipants(maxParticipants);
         event.setTown(town);
         event.setAddress(address);
@@ -182,15 +199,29 @@ public class CreateActivity extends Activity {
         assert user != null;
         event.setOwnerId(user.getUid());
 
+
+
         // Create database connection and reference.
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mDatabaseRef = mDatabase.getReference();
 
         // Push the event and create own uid.
-        mDatabaseRef.child("events").child(category).push().setValue(event);
+        DatabaseReference newEvent = mDatabase.getReference("events")
+                .child(category)
+                .push();
+        newEvent.setValue(event);
+        String key = newEvent.getKey();
+        DatabaseReference addOwner = mDatabaseRef
+                .child("events")
+                .child(category)
+                .child(key)
+                .child("participantIds")
+                .push();
+        addOwner.setValue(user.getUid());
+
 
         // Start MainActivity.
-        Intent intent = new Intent(this, DecisionActivity.class);
+        Intent intent = new Intent(CreateActivity.this, DecisionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
@@ -221,6 +252,7 @@ public class CreateActivity extends Activity {
                         mCalendar.get(Calendar.DAY_OF_MONTH));
 
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + (2 * 24 * 60 * 60 * 1000));
                 datePickerDialog.show();
             }
         });

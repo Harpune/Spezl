@@ -9,6 +9,8 @@ public class Event {
     private String description;
     private Double maxParticipants;
     private Date date;
+    private Date creationDate;
+    private String place;
     private String town;
     private String address;
     private String category;
@@ -19,12 +21,14 @@ public class Event {
     public Event() {
     }
 
-    public Event(String uId, String name, String description, Double maxParticipants, Date date, String town, String address, String category, String ownerId, String imageUri, HashMap<String, String> participantIds) {
+    public Event(String uId, String name, String description, Double maxParticipants, Date date, Date creationDate, String place, String town, String address, String category, String ownerId, String imageUri, HashMap<String, String> participantIds) {
         this.uId = uId;
         this.name = name;
         this.description = description;
         this.maxParticipants = maxParticipants;
         this.date = date;
+        this.creationDate = creationDate;
+        this.place = place;
         this.town = town;
         this.address = address;
         this.category = category;
@@ -71,6 +75,22 @@ public class Event {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
     }
 
     public String getTown() {
@@ -129,6 +149,8 @@ public class Event {
                 ", description='" + description + '\'' +
                 ", maxParticipants=" + maxParticipants +
                 ", date=" + date +
+                ", creationDate=" + creationDate +
+                ", place='" + place + '\'' +
                 ", town='" + town + '\'' +
                 ", address='" + address + '\'' +
                 ", category='" + category + '\'' +

@@ -14,6 +14,8 @@ import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.view.EventActivity;
 
 import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder> {
@@ -33,7 +35,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
     private Context context;
 
     public class EventHolder extends RecyclerView.ViewHolder {
-        public TextView nameView, descriptionView, datumView, townView, participantView;
+        public TextView nameView, datumView, townView, participantView, dayTextView;
 
         public RelativeLayout rootLayout;
 
@@ -41,10 +43,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
             super(view);
 
             this.nameView = (TextView) view.findViewById(R.id.eventName);
-            this.descriptionView = (TextView) view.findViewById(R.id.eventDescription);
             this.datumView = (TextView) view.findViewById(R.id.eventDate);
             this.townView = (TextView) view.findViewById(R.id.eventTown);
             this.participantView = (TextView) view.findViewById(R.id.eventParticipant);
+            this.dayTextView = (TextView) view.findViewById(R.id.eventDayText);
 
             this.rootLayout = (RelativeLayout) view.findViewById(R.id.rootLayout);
             rootLayout.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +103,37 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
         DateFormat dfTime = android.text.format.DateFormat.getTimeFormat(context);
 
         holder.nameView.setText(event.getName());
-        holder.descriptionView.setText(event.getDescription());
-        holder.datumView.setText(dfDate.format(event.getDate()) + " " + dfTime.format(event.getDate()));
-        holder.townView.setText(event.getTown());
+
+
+        Calendar c0 = Calendar.getInstance(); // today
+
+        Calendar c1 = Calendar.getInstance(); // today
+        c1.add(Calendar.DAY_OF_YEAR, 1); // tomorrow
+
+        Calendar c2 = Calendar.getInstance(); // today
+        c2.add(Calendar.DAY_OF_YEAR, 2); // day after tomorrow
+
+        Calendar c3 = Calendar.getInstance();
+        c3.setTime(event.getDate()); // your date
+
+        if (c3.get(Calendar.YEAR) == c0.get(Calendar.YEAR)
+                && c3.get(Calendar.DAY_OF_YEAR) == c0.get(Calendar.DAY_OF_YEAR)) {
+            holder.dayTextView.setText("Heute");
+        } else if (c3.get(Calendar.YEAR) == c1.get(Calendar.YEAR)
+                && c3.get(Calendar.DAY_OF_YEAR) == c1.get(Calendar.DAY_OF_YEAR)) {
+            holder.dayTextView.setText("Morgen");
+        } else if (c3.get(Calendar.YEAR) == c2.get(Calendar.YEAR)
+                && c3.get(Calendar.DAY_OF_YEAR) == c2.get(Calendar.DAY_OF_YEAR)) {
+            holder.dayTextView.setText("Übermorgen");
+        } else {
+            holder.dayTextView.setText("Irgendwann");
+        }
+
+
+        // TODO Name des owners einfügen (siehe to-do)
+        //holder.datumView.setText(dfDate.format(event.getDate()) + " " + dfTime.format(event.getDate()));
+        holder.datumView.setText(dfTime.format(event.getDate()));
+        holder.townView.setText(event.getPlace());
 
         if (event.getMaxParticipants() == 0) {
             holder.participantView.setText(String.valueOf(participants));

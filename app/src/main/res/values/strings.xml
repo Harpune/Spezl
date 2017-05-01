@@ -34,7 +34,7 @@
     <string name="logout">Logout</string>
     <string name="text_description">Beschreibung</string>
     <string name="text_time">Uhrzeit</string>
-    <string name="text_max_participants">Wie viele Teilnehmer?</string>
+    <string name="text_max_participants">Wie viele Teilnehmer? Zähle dich selbst auch als Teilnehmer</string>
     <string name="text_delete_tag">Delete Tag</string>
     <string name="text_new">Neu</string>
     <string name="text_tag">Tags</string>
@@ -60,4 +60,5 @@
     <string name="text_new_password">Neues Passwort</string>
     <string name="text_check_new_password">Neues Passwort erneut eingeben</string>
     <string name="text_agb_confirmation">Ich bestätige, die AGB gelesen zu haben.</string>
+    <string name="text_place">Ortsbeschreibung</string>
 </resources>
