@@ -59,7 +59,7 @@
     <string name="text_reset_password_short">Passwort ändern</string>
     <string name="text_new_password">Neues Passwort</string>
     <string name="text_check_new_password">Neues Passwort erneut eingeben</string>
-    <string name="text_agb_confirmation">Ich bestätige, die AGB gelesen zu haben.</string>
+    <string name="text_agb_confirmation">Ich bestätige, Datenschutzerklärung und Nutzungsbedingungen gelesen zu haben.</string>
     <string name="text_place">Ortsbeschreibung</string>
     <string name="text_cancel">Nein, doch nicht.</string>
     <string name="text_continue">Ja, weiter gehts!</string>

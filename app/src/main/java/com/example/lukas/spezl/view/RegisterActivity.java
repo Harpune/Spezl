@@ -1,7 +1,9 @@
 package com.example.lukas.spezl.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -240,11 +242,22 @@ public class RegisterActivity extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            loadingPanel.setVisibility(View.GONE);
+
                             FirebaseAuth.getInstance().signOut();
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
+                            new AlertDialog.Builder(RegisterActivity.this)
+                                    .setIcon(R.drawable.pic_owl_active)
+                                    .setTitle("Geschafft!")
+                                    .setMessage("Bitte bestätige deine E-Mail")
+                                    .setPositiveButton("Los Spezln", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                            loadingPanel.setVisibility(View.GONE);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    }).show();
+
                         } else {
                             loadingPanel.setVisibility(View.GONE);
                             Toast.makeText(RegisterActivity.this, "Der Benutzer konnte nicht angelegt werden", Toast.LENGTH_LONG).show();
@@ -264,7 +277,7 @@ public class RegisterActivity extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "E-Mail send", Toast.LENGTH_SHORT).show();
+                           Log.d("EMAIL_VERIFICATION", "E-Mail send");
                         } else {
 
                             Toast.makeText(getApplicationContext(), "E-Mail DIDNOT send", Toast.LENGTH_SHORT).show();

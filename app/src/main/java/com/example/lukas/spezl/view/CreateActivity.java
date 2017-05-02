@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -148,6 +149,19 @@ public class CreateActivity extends Activity {
             return;
         }
 
+        Calendar now  = Calendar.getInstance();
+        Log.d("CALENDER", "Now: " + now.getTimeInMillis());
+        Log.d("CALENDER", "Then: " + mCalendar.getTimeInMillis());
+        if (mCalendar.getTime().getTime() < now.getTime().getTime()) {// TODO check if chosen date is in the past..
+            mDateLayout.setError("Dein Event ist in der Vergangenheit");
+            mTimeLayout.setError("Wähle mindestens den jetzigen Termin");
+            now.add(Calendar.MINUTE, 1);
+            updateDate(now);
+            updateTime(now);
+            mDateText.requestFocus();
+            return;
+        }
+
         if (place.matches("")) {
             mPlaceLayout.setError("Wohin geht's?");
             mPlaceText.requestFocus();
@@ -238,7 +252,7 @@ public class CreateActivity extends Activity {
                 mCalendar.set(Calendar.YEAR, year);
                 mCalendar.set(Calendar.MONTH, monthOfYear);
                 mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateDate();
+                updateDate(mCalendar);
             }
         };
 
@@ -261,11 +275,11 @@ public class CreateActivity extends Activity {
     /**
      * Update the editTextField with chosen date.
      */
-    private void updateDate() {
+    private void updateDate(Calendar calendar) {
         String dateFormat = "EEEE, d MMMM yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
 
-        mDateText.setText(sdf.format(mCalendar.getTime()));
+        mDateText.setText(sdf.format(calendar.getTime()));
     }
 
     /**
@@ -277,7 +291,7 @@ public class CreateActivity extends Activity {
             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
                 mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 mCalendar.set(Calendar.MINUTE, minute);
-                updateTime();
+                updateTime(mCalendar);
             }
         };
 
@@ -297,10 +311,10 @@ public class CreateActivity extends Activity {
     /**
      * Update the editTextField with chosen time.
      */
-    private void updateTime() {
+    private void updateTime(Calendar calendar) {
         String timeFormat = "kk:mm";
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat, Locale.getDefault());
-        String oClock = sdf.format(mCalendar.getTime()) + getString(R.string.text_oclock);
+        String oClock = sdf.format(calendar.getTime()) + getString(R.string.text_oclock);
         mTimeText.setText(oClock);
     }
 }
