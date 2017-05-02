@@ -145,6 +145,7 @@ public class DecisionActivity extends AppCompatActivity {
                         break;
                     case R.id.settings:
                         Intent settingsIntent = new Intent(getApplicationContext(), AGBActivity.class);
+                        settingsIntent.putExtra("SETUP_TOOLBAR", true);
                         startActivity(settingsIntent);
                         mDrawerLayout.closeDrawers();
                         break;

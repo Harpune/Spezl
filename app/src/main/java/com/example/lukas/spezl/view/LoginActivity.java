@@ -147,13 +147,13 @@ public class LoginActivity extends Activity {
 
         if (user.isEmailVerified()) {
             // user is verified, so you can finish this activity or send user to activity which you want.
-            Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Auf die Spezl! Fertig! Los!", Toast.LENGTH_SHORT).show();
             return true;
         } else {
             // email is not verified, so just prompt the message to the user and restart this activity.
             // NOTE: don't forget to log out the user.
             FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Please verify your Account", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Bestätige bitte zuerst deine E-Mail Adresse", Toast.LENGTH_SHORT).show();
             return false;
         }
     }

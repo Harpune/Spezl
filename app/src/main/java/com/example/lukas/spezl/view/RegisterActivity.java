@@ -316,6 +316,7 @@ public class RegisterActivity extends Activity {
 
     public void showAGB(View view) {
         Intent intent = new Intent(RegisterActivity.this, AGBActivity.class);
+        intent.putExtra("SETUP_TOOLBAR", false);
         startActivityForResult(intent, TAG_AGB);
     }
 

@@ -8,12 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.Spanned;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,34 +29,57 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class AGBActivity extends AppCompatActivity {
 
+    private DatabaseReference mRefUser;
+    private FirebaseUser fireUser;
+
     private String privacyPolicy, termsOfUse;
+    private String password = "";
+    private String uid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agb);
 
+        // Read the strings in method in the end, because they are too long.
         readStrings();
 
+        // Check if intent comes from RegisterActivity or DecisionActivity and enable/disable
+        // the "Delete-User"-function.
+        Intent intent = getIntent();
+        boolean setupToolbar = intent.getBooleanExtra("SETUP_TOOLBAR", false);
+        Log.d("SETUP_TOOLBAR", "" + setupToolbar);
+
+        // Sertup the toolbar, if needed.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setTitle(R.string.text_settings);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        if (setupToolbar) {
+            setSupportActionBar(toolbar);
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            }
         }
 
+        // Find the views.
         TextView privacyPolicyView = (TextView) findViewById(R.id.privacyPolicy);
         TextView termsOfUseView = (TextView) findViewById(R.id.termsOfUse);
 
+        // Setup the Views.
         privacyPolicyView.setText(privacyPolicy);
         termsOfUseView.setText(termsOfUse);
 
+        // Set RESULT_OK, therefore the user read the AGB.
         setResult(RESULT_OK);
     }
 
+    /**
+     * Inflates the menu in the toolbar.
+     * @param menu The mnu layout clicked.
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -64,12 +87,17 @@ public class AGBActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Handle clicks on the item of the toolbar.
+     * @param item Clicked menu-item.
+     * @return boolean.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.delete_user:
-
+                // Ask user if he is sure.
                 new AlertDialog.Builder(this)
                         .setIcon(R.drawable.pic_owl_active)
                         .setTitle("Acount löschen")
@@ -77,63 +105,107 @@ public class AGBActivity extends AppCompatActivity {
                         .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Toast.makeText(AGBActivity.this, "Delete user comes here!", Toast.LENGTH_LONG).show();
+                                // Show dialog for user input.
+                                initializeDialog();
                             }
                         })
-                        .setNegativeButton("Nein", null)
+                        .setNegativeButton("Nein", null) // nothing when canceled.
                         .show();
-
-                /*
-                TODO Delete user and his events/participations!
-                */
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void deleteUser(){
-        final FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
+    /**
+     * Show the AlertDialog for user input.
+     * Get the password of the user.
+     */
+    public void initializeDialog() {
+        fireUser = FirebaseAuth.getInstance().getCurrentUser();// current user.
+        mRefUser = FirebaseDatabase.getInstance().getReference("users");// reference to the user node.
+        //DatabaseReference mRefEvent = FirebaseDatabase.getInstance().getReference("events"); //reference to the event node.
 
-        DatabaseReference mRefUser = FirebaseDatabase.getInstance().getReference("users");
-        DatabaseReference mRefEvent = FirebaseDatabase.getInstance().getReference("events");
+        // Setup dialog.
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Benutzer löschen");
+        alert.setMessage("Geben Sie ihr Passort ein, um Ihren Account zu löschen.");
+        alert.setIcon(R.drawable.pic_owl_active);
 
-        assert fireUser != null;
-        mRefUser.child(fireUser.getUid()).removeValue();
+        // Set an EditText view to get user password.
+        final EditText passwordView = new EditText(this);
+        passwordView.setHint(R.string.text_password);
+        passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
+        alert.setView(passwordView); // Add EditText to alertView.
 
-        // Get auth credentials from the user for re-authentication. The example below shows
-        // email and password credentials but there are multiple possible providers,
-        // such as GoogleAuthProvider or FacebookAuthProvider.
-        AuthCredential credential = EmailAuthProvider.getCredential("user@example.com", "password1234");
-        // Prompt the user to re-provide their sign-in credentials
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                password = passwordView.getText().toString().trim(); // get user input.
+
+                if (password.equals("") || password.length() < 6) { // check the input
+                    Toast.makeText(AGBActivity.this, "Gib bitte dein Passwort ein", Toast.LENGTH_LONG).show();
+                } else {
+                    Log.d("DELETE_USER", "User Email: " + fireUser.getEmail());
+                    deleteUser(); // delete user.
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", null); // Do nothing on cancel.
+        alert.show();
+    }
+
+    /**
+     * Method to delete a user.
+     */
+    public void deleteUser() {
+        uid = fireUser.getUid(); // Save uid, because its gone as soon as user is deleted.
+        mRefUser.child(uid).removeValue(); // Remove the user-node first. Afterwards the permissions are missing.
+        AuthCredential credential = EmailAuthProvider.getCredential(fireUser.getEmail(), password);
+
+        // Reauthenticate the user.
         fireUser.reauthenticate(credential)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        fireUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d("ASDA", "User account deleted.");
-                                }
-                            }
-                        });
+                        if (task.isSuccessful()) { // successfull? -> delete User.
+                            fireUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) { // successfill -> SignOut and go to WelcomeActivity.
+                                        Log.d("DELETE_USER", "User account deleted: " + uid);
+                                        Toast.makeText(AGBActivity.this, "Benutzer wurde gelöscht!", Toast.LENGTH_LONG).show();
 
+                                        FirebaseAuth.getInstance().signOut();
+                                        Intent intent = new Intent(AGBActivity.this, WelcomeActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear every Activity.
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Toast.makeText(AGBActivity.this, "Benutzer konnte nicht gelöscht werden... Versuchen Sie es erneut.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(AGBActivity.this, "Das war nicht dein Passwort", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
-
-        FirebaseAuth.getInstance().signOut();
-        Intent intent = new Intent(AGBActivity.this, WelcomeActivity.class);
-        startActivity(intent);
     }
 
+    /**
+     * Handles the toolbar-onBackPress.
+     * @return boolean.
+     */
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
     }
 
+    /**
+     * Strings saved in code for format sake.
+     */
     public void readStrings() {
         privacyPolicy = "Datenschutzerklärung App-Spezl\n" +
                 "\n" +
