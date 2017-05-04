@@ -49,7 +49,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.AGBActivity" />
-        <activity android:name=".view.ConfirmationActivity"></activity>
+        <activity android:name=".view.ConfirmationActivity" />
+        <activity android:name=".view.MyEventsActivity"></activity>
     </application>
 
 </manifest>

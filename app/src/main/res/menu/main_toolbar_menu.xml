@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/delete_user"
+        android:id="@+id/delete"
         android:icon="@drawable/ic_delete_forever_white"
         android:title="@string/text_delete_user"
         app:showAsAction="always" />

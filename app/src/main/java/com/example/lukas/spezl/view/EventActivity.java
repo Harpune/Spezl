@@ -1,13 +1,12 @@
 package com.example.lukas.spezl.view;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,13 +27,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,6 +82,8 @@ public class EventActivity extends AppCompatActivity {
 
     // Owner of the Event.
     private User user = new User();
+
+    private String filename = "events";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +161,9 @@ public class EventActivity extends AppCompatActivity {
                                         .child(eventCategory)
                                         .child(eventId);
                                 mDatabaseRef.removeValue();
+
+                                deleteLocalEvent();
+
                                 onBackPressed();
                             }
                         }
@@ -185,6 +186,9 @@ public class EventActivity extends AppCompatActivity {
                                         .child("participantIds")
                                         .child(key);
                                 mDatabaseRef.removeValue();
+
+                                //deleteLocalEvent();
+
                                 onBackPressed();
                             }
                         }
@@ -207,13 +211,63 @@ public class EventActivity extends AppCompatActivity {
                                     .child("participantIds")
                                     .push();
                             mDatabaseRef.setValue(fireUser.getUid());
+
+                            storeLocalEvent();
+
                             onBackPressed();
                         }
                     })
                     .setNegativeButton("Nein", null)
                     .show();
         }
+    }
 
+    public void deleteLocalEvent(){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+        ArrayList<Event> events = getAllLocalEvents();
+        if(events == null){
+            events = new ArrayList<>();
+        }
+
+        for(Event event: events){
+            if(event.getuId().equals(eventId)){
+                events.remove(event);
+                break;
+            }
+        }
+
+        String json = new Gson().toJson(events);
+
+        editor.putString(fireUser.getUid(), json);
+        editor.apply();
+    }
+
+    public ArrayList<Event> getAllLocalEvents(){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(fireUser.getUid(), "");
+        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
+        Log.d("TAG","jsonEvents = " + json);
+        return gson.fromJson(json, type);
+    }
+
+    public void storeLocalEvent(){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+        ArrayList<Event> events = getAllLocalEvents();
+        if(events == null){
+            events = new ArrayList<>();
+        }
+        events.add(event);
+        Log.d("STORE_EVENT","storeEvents = " + events);
+
+        String json = new Gson().toJson(events);
+
+        editor.putString(fireUser.getUid(), json);
+        editor.apply();
     }
 
     public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {

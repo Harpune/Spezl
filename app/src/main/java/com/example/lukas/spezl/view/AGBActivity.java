@@ -96,7 +96,7 @@ public class AGBActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.delete_user:
+            case R.id.delete:
                 // Ask user if he is sure.
                 new AlertDialog.Builder(this)
                         .setIcon(R.drawable.pic_owl_active)

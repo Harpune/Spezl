@@ -5,12 +5,15 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,11 +32,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class CreateActivity extends AppCompatActivity {
@@ -48,6 +56,10 @@ public class CreateActivity extends AppCompatActivity {
     private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mPlaceLayout, mTownLayput, mAddressLayout, mMaxParticipentsLayout;
 
     private String category = "Entspannt";
+
+    private Event event = new Event();
+
+    private FirebaseUser fireUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +98,7 @@ public class CreateActivity extends AppCompatActivity {
         mAddressLayout = (TextInputLayout) findViewById(R.id.input_layout_address);
         mMaxParticipentsLayout = (TextInputLayout) findViewById(R.id.input_layout_max_participants);
 
-        // Get the intent if the user comes from CategoryActivity.
+        // Get the intent if the fireUser comes from CategoryActivity.
         Intent intent = getIntent();
         if (intent.hasExtra(TAG_CATEGORY)) {
             category = intent.getStringExtra(TAG_CATEGORY);
@@ -214,8 +226,8 @@ public class CreateActivity extends AppCompatActivity {
         loadingPanel.setVisibility(View.VISIBLE);
 
         //Create the event from the given information.
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Event event = new Event();
+        fireUser = FirebaseAuth.getInstance().getCurrentUser();
+
         event.setName(name);
         event.setDescription(description);
         event.setDate(dateTime);
@@ -226,10 +238,9 @@ public class CreateActivity extends AppCompatActivity {
         event.setAddress(address);
         event.setCategory(category);
 
-        //Add user data to the event
-        assert user != null;
-        event.setOwnerId(user.getUid());
-
+        //Add fireUser data to the event
+        assert fireUser != null;
+        event.setOwnerId(fireUser.getUid());
 
         // Create database connection and reference.
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -239,7 +250,12 @@ public class CreateActivity extends AppCompatActivity {
         DatabaseReference newEvent = mDatabase.getReference("events")
                 .child(category)
                 .push();
+
+        // Set Id of the event.
         final String key = newEvent.getKey();
+        event.setuId(key);
+
+        // Upload the event to firebase.
         newEvent.setValue(event).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -250,11 +266,22 @@ public class CreateActivity extends AppCompatActivity {
                             .child(key)
                             .child("participantIds")
                             .push();
-                    addOwner.setValue(user.getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                    //
+                    String key = addOwner.getKey();
+                    HashMap<String, String> hashMap = new HashMap<>();
+                    hashMap.put(key, fireUser.getUid());
+                    event.setParticipantIds(hashMap);
+
+                    addOwner.setValue(fireUser.getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                // Store the event locally
+                                storeEvent();
+
                                 loadingPanel.setVisibility(View.GONE);
+
                                 // Start MainActivity.
                                 new AlertDialog.Builder(CreateActivity.this)
                                         .setIcon(R.drawable.pic_owl_active)
@@ -361,6 +388,33 @@ public class CreateActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat, Locale.getDefault());
         String oClock = sdf.format(calendar.getTime()) + getString(R.string.text_oclock);
         mTimeText.setText(oClock);
+    }
+
+    public ArrayList<Event> getAllEvents(){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(fireUser.getUid(), "");
+        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
+        Log.d("TAG","jsonEvents = " + json);
+        return gson.fromJson(json, type);
+    }
+
+    public void storeEvent(){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+
+        ArrayList<Event> events = getAllEvents();
+        if(events == null){
+            events = new ArrayList<>();
+        }
+        events.add(event);
+        Log.d("STORE_EVENT","storeEvents = " + events);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(events);
+
+        editor.putString(fireUser.getUid(), json);
+        editor.apply();
     }
 
     @Override

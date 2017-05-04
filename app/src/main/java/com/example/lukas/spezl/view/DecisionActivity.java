@@ -165,7 +165,8 @@ public class DecisionActivity extends AppCompatActivity {
                         mDrawerLayout.closeDrawers();
                         break;
                     case R.id.myEvents:
-                        Toast.makeText(getApplicationContext(), "Meine Events", Toast.LENGTH_SHORT).show();
+                        Intent myEventsIntent = new Intent(getApplicationContext(), MyEventsActivity.class);
+                        startActivity(myEventsIntent);
                         mDrawerLayout.closeDrawers();
                         break;
                     case R.id.settings:
