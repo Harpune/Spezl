@@ -65,4 +65,5 @@
     <string name="text_continue">Ja, weiter gehts!</string>
     <string name="text_delete_user">Benutzer löschen</string>
     <string name="text_my_event">Meine Events</string>
+    <string name="text_place_short">Ort</string>
 </resources>

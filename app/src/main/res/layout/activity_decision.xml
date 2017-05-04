@@ -28,9 +28,9 @@
 
                 <ImageButton
                     android:id="@+id/owl_button"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:scaleType="centerCrop"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:scaleType="fitCenter"
                     android:onClick="showCurrentEvents"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/app_name"

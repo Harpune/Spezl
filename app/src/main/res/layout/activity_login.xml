@@ -41,6 +41,7 @@
                     android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="120"
                     android:hint="@string/text_email"
                     android:inputType="textEmailAddress" />
 
@@ -55,6 +56,7 @@
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="25"
                     android:hint="@string/text_password"
                     android:inputType="textPassword" />
 

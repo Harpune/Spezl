@@ -1,24 +1,28 @@
 package com.example.lukas.spezl.view;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.lukas.spezl.model.Event;
 import com.example.lukas.spezl.R;
+import com.example.lukas.spezl.model.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,15 +34,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
-public class CreateActivity extends Activity {
+public class CreateActivity extends AppCompatActivity {
     private final String TAG_CATEGORY = "TAG_CATEGORY";
 
     private Calendar mCalendar = Calendar.getInstance();
 
     private EditText mNameText, mDescriptionText, mDateText, mTimeText, mPlaceText, mTownText, mAddressText, mMaxParticipentsText;
+
+    private RelativeLayout loadingPanel;
 
     private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mPlaceLayout, mTownLayput, mAddressLayout, mMaxParticipentsLayout;
 
@@ -48,6 +53,19 @@ public class CreateActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        // Implement toolbar.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.text_create_event);
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
+
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
 
         // Get all necessary views from the Layout.
         mNameText = (EditText) findViewById(R.id.input_name);
@@ -77,7 +95,7 @@ public class CreateActivity extends Activity {
         //Setup spinner with categories
         Spinner mSpinner = (Spinner) findViewById(R.id.spinner);
         final String[] categories = new String[]{"Entspannt", "Feiern", "Sport", "Kochen", "Diskussion", "Kultur"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories);
         mSpinner.setAdapter(adapter);
 
         // Set adapterPosition to the value from the intent. Default: Entspannt.
@@ -123,7 +141,6 @@ public class CreateActivity extends Activity {
         mAddressLayout.setErrorEnabled(false);
         mMaxParticipentsLayout.setErrorEnabled(false);
 
-
         //Check the input for wrong input.
         if (name.matches("")) {
             mNameLayout.setError("Gib bitte deinen Namen für deine Veranstaltung an");
@@ -149,15 +166,13 @@ public class CreateActivity extends Activity {
             return;
         }
 
-        Calendar now  = Calendar.getInstance();
-        Log.d("CALENDER", "Now: " + now.getTimeInMillis());
-        Log.d("CALENDER", "Then: " + mCalendar.getTimeInMillis());
-        if (mCalendar.getTime().getTime() < now.getTime().getTime()) {// TODO check if chosen date is in the past..
-            mDateLayout.setError("Dein Event ist in der Vergangenheit");
-            mTimeLayout.setError("Wähle mindestens den jetzigen Termin");
-            now.add(Calendar.MINUTE, 1);
-            updateDate(now);
-            updateTime(now);
+        Calendar nowDate = Calendar.getInstance();
+        if (nowDate.compareTo(mCalendar) > 0) {//TODO
+            mDateLayout.setError("Wähle einen Zeitpunkt weiter in der Zukunft.");
+            mTimeLayout.setError("Siehe oben");
+            nowDate.add(Calendar.HOUR, 2);
+            updateDate(nowDate);
+            updateTime(nowDate);
             mDateText.requestFocus();
             return;
         }
@@ -196,6 +211,8 @@ public class CreateActivity extends Activity {
             e.printStackTrace();
         }
 
+        loadingPanel.setVisibility(View.VISIBLE);
+
         //Create the event from the given information.
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Event event = new Event();
@@ -214,31 +231,59 @@ public class CreateActivity extends Activity {
         event.setOwnerId(user.getUid());
 
 
-
         // Create database connection and reference.
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseRef = mDatabase.getReference();
+        final DatabaseReference mDatabaseRef = mDatabase.getReference();
 
         // Push the event and create own uid.
         DatabaseReference newEvent = mDatabase.getReference("events")
                 .child(category)
                 .push();
-        newEvent.setValue(event);
-        String key = newEvent.getKey();
-        DatabaseReference addOwner = mDatabaseRef
-                .child("events")
-                .child(category)
-                .child(key)
-                .child("participantIds")
-                .push();
-        addOwner.setValue(user.getUid());
+        final String key = newEvent.getKey();
+        newEvent.setValue(event).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    DatabaseReference addOwner = mDatabaseRef
+                            .child("events")
+                            .child(category)
+                            .child(key)
+                            .child("participantIds")
+                            .push();
+                    addOwner.setValue(user.getUid()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                loadingPanel.setVisibility(View.GONE);
+                                // Start MainActivity.
+                                new AlertDialog.Builder(CreateActivity.this)
+                                        .setIcon(R.drawable.pic_owl_active)
+                                        .setTitle("Geschafft!")
+                                        .setMessage("Event wurde erstellt")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Und los", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Intent intent = new Intent(CreateActivity.this, DecisionActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        })
+                                        .show();
+                            } else {
+                                Toast.makeText(CreateActivity.this, "Da lief etwas schief...", Toast.LENGTH_LONG).show();
+                                loadingPanel.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+                } else {
+                    Toast.makeText(CreateActivity.this, "Das Event konnte nicht erstellt werden. Versuche es erneut.", Toast.LENGTH_LONG).show();
+                    loadingPanel.setVisibility(View.GONE);
+                }
 
-
-        // Start MainActivity.
-        Intent intent = new Intent(CreateActivity.this, DecisionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+            }
+        });
     }
 
     /**
@@ -316,5 +361,11 @@ public class CreateActivity extends Activity {
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat, Locale.getDefault());
         String oClock = sdf.format(calendar.getTime()) + getString(R.string.text_oclock);
         mTimeText.setText(oClock);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }

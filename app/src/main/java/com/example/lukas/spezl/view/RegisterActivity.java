@@ -5,10 +5,13 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -35,7 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends AppCompatActivity {
     // TAG for AGB
     private final int TAG_AGB = 1;
 
@@ -66,6 +69,17 @@ public class RegisterActivity extends Activity {
 
         // Instanciate the FirebaseAuthentication.
         mAuth = FirebaseAuth.getInstance();
+
+        // Implement toolbar.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.text_register);
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        }
 
         // Find the views.
         mFirstNameText = (EditText) findViewById(R.id.input_first_name);
@@ -340,5 +354,11 @@ public class RegisterActivity extends Activity {
                 checkBox.setChecked(true);
             }
         }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

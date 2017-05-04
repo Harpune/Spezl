@@ -1,7 +1,10 @@
 package com.example.lukas.spezl.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,12 +25,16 @@ import com.example.lukas.spezl.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 public class DecisionActivity extends AppCompatActivity {
     private final String TAG_CATEGORY = "TAG_CATEGORY";
 
     private FirebaseUser fireUser;
 
-    private ImageButton owl, relaxButton, partyButton, sportButton, cookButton, dicussionButton, cultureButton;
+    private ImageButton owl, relaxButton, partyButton, sportButton, cookButton, discussionButton, cultureButton;
 
     private DrawerLayout mDrawerLayout;
 
@@ -46,15 +53,26 @@ public class DecisionActivity extends AppCompatActivity {
         partyButton = (ImageButton) findViewById(R.id.pic_party);
         sportButton = (ImageButton) findViewById(R.id.pic_sport);
         cookButton = (ImageButton) findViewById(R.id.pic_cook);
-        dicussionButton = (ImageButton) findViewById(R.id.pic_discussion);
+        discussionButton = (ImageButton) findViewById(R.id.pic_discussion);
         cultureButton = (ImageButton) findViewById(R.id.pic_culture);
-
+/*
         relaxButton.setBackground(resize(R.drawable.entspannt));
         partyButton.setBackground(resize(R.drawable.feiern));
         sportButton.setBackground(resize(R.drawable.sport));
         cookButton.setBackground(resize(R.drawable.kochen));
-        dicussionButton.setBackground(resize(R.drawable.diskussion));
+        discussionButton.setBackground(resize(R.drawable.diskussion));
         cultureButton.setBackground(resize(R.drawable.kultur));
+*/
+        try {
+            relaxButton.setBackground(getAssetImage(this, "entspannt"));
+            partyButton.setBackground(getAssetImage(this, "feiern"));
+            sportButton.setBackground(getAssetImage(this, "sport"));
+            cookButton.setBackground(getAssetImage(this, "kochen"));
+            discussionButton.setBackground(getAssetImage(this, "diskussion"));
+            cultureButton.setBackground(getAssetImage(this, "kultur"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         initDrawerLayout();
     }
@@ -62,8 +80,15 @@ public class DecisionActivity extends AppCompatActivity {
     private Drawable resize(int image) {
         Drawable drawable = getDrawable(image);
         Bitmap b = ((BitmapDrawable) drawable).getBitmap();
-        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 500, 500, false);
+        Bitmap bitmapResized = Bitmap.createScaledBitmap(b, 250, 250, false);
         return new BitmapDrawable(getResources(), bitmapResized);
+    }
+
+    public static Drawable getAssetImage(Context context, String filename) throws IOException {
+        AssetManager assets = context.getResources().getAssets();
+        InputStream buffer = new BufferedInputStream((assets.open("drawable/" + filename + ".png")));
+        Bitmap bitmap = BitmapFactory.decodeStream(buffer);
+        return new BitmapDrawable(context.getResources(), bitmap);
     }
 
     public void showRelaxEvents(View view) {

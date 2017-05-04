@@ -1,9 +1,11 @@
 package com.example.lukas.spezl.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -11,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,7 +66,10 @@ public class EventActivity extends AppCompatActivity {
 
     // Views.
     private TextView mDescriptionText, mDateText, mPlaceText, mParticipantsText, mNotificationTextView;
+
+    //ImageButtons
     private FloatingActionButton fab;
+    private ImageButton imageButton;
     // The Adapter of the RecyclerView responsible for the Users.
     private UserAdapter mUserAdapter;
 
@@ -116,6 +128,8 @@ public class EventActivity extends AppCompatActivity {
         mParticipantsText = (TextView) findViewById(R.id.text_event_participants);
         mDescriptionText = (TextView) findViewById(R.id.text_event_description);
         mNotificationTextView = (TextView) findViewById(R.id.notificationTextView);
+
+        //imageButton = (ImageButton) findViewById(R.id.imageButton);
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
         // Set the title and the Views with intent-information.
@@ -211,6 +225,7 @@ public class EventActivity extends AppCompatActivity {
         return null;
     }
 
+
     /**
      * Check if user should be able to join the event.
      *
@@ -238,19 +253,23 @@ public class EventActivity extends AppCompatActivity {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Das ist dein Event! \n\nKlicke auf das Icon um das Event in den Sand zu setzen.");
                     fab.setImageResource(R.drawable.ic_delete_forever_white);
+                    //imageButton.setImageResource(R.drawable.pic_owl_inactive);
                 } else if (userAlreadyParticipates()) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Du nimmst schon teil. Klicke auf das X um auszutreten.");
                     fab.setImageResource(R.drawable.ic_close_white_24);
+                    //imageButton.setImageResource(R.drawable.pic_owl_inactive);
                 } else if (eventMaxParticipants == 0) {
                     // unendlich Viele Teilnhemer zulassen
                 } else if (eventMaxParticipants <= eventAmountPaticipants) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Dieses Event ist leider voll.");
                     fab.setVisibility(View.GONE);
+                    //imageButton.setVisibility(View.GONE);
                 } else {
                     fab.setImageResource(R.drawable.ic_check_white_24);
                     mNotificationTextView.setVisibility(View.GONE);
+                    //imageButton.setImageResource(R.drawable.pic_owl_active);
                 }
 
                 DateFormat dfDate = android.text.format.DateFormat.getDateFormat(EventActivity.this);
