@@ -31,7 +31,6 @@
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:scaleType="fitCenter"
-                    android:onClick="showCurrentEvents"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/pic_owl_active" />

@@ -2,14 +2,12 @@ package com.example.lukas.spezl.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +15,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -26,17 +23,12 @@ import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.controller.StorageController;
-import com.example.lukas.spezl.model.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 public class DecisionActivity extends AppCompatActivity {
     private final String TAG_CATEGORY = "TAG_CATEGORY";
@@ -57,6 +49,20 @@ public class DecisionActivity extends AppCompatActivity {
         fireUser = FirebaseAuth.getInstance().getCurrentUser();
 
         owl = (ImageButton) findViewById(R.id.owl_button);
+        hasCurrentEvents();
+        owl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(StorageController.getAllLocalEvents(DecisionActivity.this).size() > 0){
+                    Intent intent = new Intent(DecisionActivity.this, MyEventsActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(DecisionActivity.this, CreateActivity.class);
+                    startActivity(intent);
+                }
+
+            }
+        });
 
         relaxButton = (ImageButton) findViewById(R.id.pic_relax);
         partyButton = (ImageButton) findViewById(R.id.pic_party);
@@ -219,14 +225,17 @@ public class DecisionActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void showCurrentEvents(View view) {
+    public void hasCurrentEvents() {
         if(StorageController.getAllLocalEvents(this).size() > 0){
             owl.setImageResource(R.drawable.pic_owl_active);
-            Intent intent = new Intent(DecisionActivity.this, MyEventsActivity.class);
-            startActivity(intent);
         } else {
             owl.setImageResource(R.drawable.pic_owl_inactive);
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hasCurrentEvents();
     }
 }
