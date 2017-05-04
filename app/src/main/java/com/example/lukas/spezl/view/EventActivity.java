@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
+import com.example.lukas.spezl.controller.StorageController;
 import com.example.lukas.spezl.controller.UserAdapter;
 import com.example.lukas.spezl.model.Event;
 import com.example.lukas.spezl.model.User;
@@ -162,8 +163,8 @@ public class EventActivity extends AppCompatActivity {
                                         .child(eventId);
                                 mDatabaseRef.removeValue();
 
-                                deleteLocalEvent();
-
+                                //deleteLocalEvent();
+                                StorageController.deleteLocalEvent(event, EventActivity.this);
                                 onBackPressed();
                             }
                         }
@@ -188,7 +189,7 @@ public class EventActivity extends AppCompatActivity {
                                 mDatabaseRef.removeValue();
 
                                 //deleteLocalEvent();
-
+                                StorageController.deleteLocalEvent(event, EventActivity.this);
                                 onBackPressed();
                             }
                         }
@@ -212,62 +213,15 @@ public class EventActivity extends AppCompatActivity {
                                     .push();
                             mDatabaseRef.setValue(fireUser.getUid());
 
-                            storeLocalEvent();
+                            //storeLocalEvent();
 
+                            StorageController.storeLocalEvent(event, EventActivity.this);
                             onBackPressed();
                         }
                     })
                     .setNegativeButton("Nein", null)
                     .show();
         }
-    }
-
-    public void deleteLocalEvent(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-
-        ArrayList<Event> events = getAllLocalEvents();
-        if(events == null){
-            events = new ArrayList<>();
-        }
-
-        for(Event event: events){
-            if(event.getuId().equals(eventId)){
-                events.remove(event);
-                break;
-            }
-        }
-
-        String json = new Gson().toJson(events);
-
-        editor.putString(fireUser.getUid(), json);
-        editor.apply();
-    }
-
-    public ArrayList<Event> getAllLocalEvents(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Gson gson = new Gson();
-        String json = sharedPrefs.getString(fireUser.getUid(), "");
-        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-        Log.d("TAG","jsonEvents = " + json);
-        return gson.fromJson(json, type);
-    }
-
-    public void storeLocalEvent(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-
-        ArrayList<Event> events = getAllLocalEvents();
-        if(events == null){
-            events = new ArrayList<>();
-        }
-        events.add(event);
-        Log.d("STORE_EVENT","storeEvents = " + events);
-
-        String json = new Gson().toJson(events);
-
-        editor.putString(fireUser.getUid(), json);
-        editor.apply();
     }
 
     public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
@@ -278,7 +232,6 @@ public class EventActivity extends AppCompatActivity {
         }
         return null;
     }
-
 
     /**
      * Check if user should be able to join the event.
@@ -300,7 +253,7 @@ public class EventActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 event = dataSnapshot.getValue(Event.class);
                 event.setuId(dataSnapshot.getKey());
-                Log.d("EVENT_FROM_SERVER", event.toString());
+                Log.d("EVENT_FROM_SERVER", event.toString());//TODO Button wie hannes will
 
                 //Check if user should be able to participate.
                 if (fireUser.getUid().equals(ownerId)) {

@@ -1,38 +1,28 @@
 package com.example.lukas.spezl.view;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.controller.EventAdapter;
+import com.example.lukas.spezl.controller.StorageController;
 import com.example.lukas.spezl.model.Event;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.lang.reflect.Array;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class MyEventsActivity extends AppCompatActivity {
     private FirebaseUser fireUser;
@@ -70,34 +60,66 @@ public class MyEventsActivity extends AppCompatActivity {
         fireUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // Get the Events.
-        getAllLocalEventsFromUser();
+        //getAllLocalEventsFromUser();
+        events.clear();
+        events.addAll(StorageController.getAllLocalEvents(this));
         //deleteAllEvents();
     }
 
-    public void deleteAllEvents() {
-        PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
-        Log.d("EVENTS", "deleted");
+
+
+    /**
+     * Inflates the menu in the toolbar.
+     * @param menu The mnu layout clicked.
+     * @return boolean
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_toolbar_menu, menu);
+        return true;
     }
 
-    public void getAllLocalEventsFromUser() {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String json = sharedPrefs.getString(fireUser.getUid(), "");
-        Type type = new TypeToken<ArrayList<Event>>() {
-        }.getType();
-
-        events.clear();
-        List<Event> eventsFromJson = new Gson().fromJson(json, type);
-
-        if (eventsFromJson != null) {
-            events.addAll(eventsFromJson);
-            eventAdapter.notifyDataSetChanged();
+    /**
+     * Handle clicks on the item of the toolbar.
+     * @param item Clicked menu-item.
+     * @return boolean.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.delete:
+                // Ask user if he is sure.
+                new AlertDialog.Builder(this)
+                        .setIcon(R.drawable.pic_owl_active)
+                        .setTitle("Alle Events löschen")
+                        .setMessage("Möchtest du wirklich deine lokalen Events löschen? Deine aktiven Events bleiben trotzdem online.")
+                        .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // Show dialog for user input.
+                                //deleteAllEvents();
+                                StorageController.deleteAllEvents(MyEventsActivity.this);
+                                events.clear();
+                                eventAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("Nein", null) // nothing when canceled.
+                        .show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        getAllLocalEventsFromUser();
+        events.clear();
+        events.addAll(StorageController.getAllLocalEvents(this));
+        eventAdapter.notifyDataSetChanged();
+        //getAllLocalEventsFromUser();
     }
 
     @Override

@@ -101,7 +101,7 @@ public class AGBActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this)
                         .setIcon(R.drawable.pic_owl_active)
                         .setTitle("Acount löschen")
-                        .setMessage("Möchtest du wirklich keinen Account löschen? Das kann nicht rückgängig gemacht werden.")
+                        .setMessage("Möchtest du wirklich deinen Account löschen? Das kann nicht rückgängig gemacht werden.")
                         .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

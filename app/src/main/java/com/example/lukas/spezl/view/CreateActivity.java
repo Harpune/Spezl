@@ -25,6 +25,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
+import com.example.lukas.spezl.controller.StorageController;
 import com.example.lukas.spezl.model.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -142,7 +143,6 @@ public class CreateActivity extends AppCompatActivity {
         String address = mAddressText.getText().toString().trim();
         String maxParticipantsString = mMaxParticipentsText.getText().toString().trim();
 
-
         // Disable all error notifications of the TextInputLayouts.
         mNameLayout.setErrorEnabled(false);
         mDescriptionLayout.setErrorEnabled(false);
@@ -152,6 +152,17 @@ public class CreateActivity extends AppCompatActivity {
         mTownLayput.setErrorEnabled(false);
         mAddressLayout.setErrorEnabled(false);
         mMaxParticipentsLayout.setErrorEnabled(false);
+
+        //Build the date.
+        Date dateTime = null;
+        String dateFormat = date + time;
+        SimpleDateFormat format = new SimpleDateFormat("EEEE, d MMMM yyyyHH:mm", Locale.getDefault());
+        try {
+            dateTime = format.parse(dateFormat);
+            mCalendar.setTime(dateTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         //Check the input for wrong input.
         if (name.matches("")) {
@@ -179,10 +190,15 @@ public class CreateActivity extends AppCompatActivity {
         }
 
         Calendar nowDate = Calendar.getInstance();
-        if (nowDate.compareTo(mCalendar) > 0) {//TODO
+
+        long now = nowDate.getTimeInMillis();
+        long than = mCalendar.getTimeInMillis();
+
+        // Check if date is in the past.
+        if (than < now) {
             mDateLayout.setError("Wähle einen Zeitpunkt weiter in der Zukunft.");
             mTimeLayout.setError("Siehe oben");
-            nowDate.add(Calendar.HOUR, 2);
+            nowDate.add(Calendar.HOUR, 1);
             updateDate(nowDate);
             updateTime(nowDate);
             mDateText.requestFocus();
@@ -211,16 +227,6 @@ public class CreateActivity extends AppCompatActivity {
         if (maxParticipants > 8) {
             mMaxParticipentsLayout.setError("Maximal 8 Teilnehmer. Wähle 0 wenn es egal ist, wie viele kommen!");
             return;
-        }
-
-        //Build the date.
-        Date dateTime = null;
-        String dateFormat = date + time;
-        SimpleDateFormat format = new SimpleDateFormat("EEEE, d MMMM yyyykk:mm", Locale.getDefault());
-        try {
-            dateTime = format.parse(dateFormat);
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
         loadingPanel.setVisibility(View.VISIBLE);
@@ -278,7 +284,8 @@ public class CreateActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 // Store the event locally
-                                storeEvent();
+                                //storeEvent();
+                                StorageController.storeLocalEvent(event, CreateActivity.this);
 
                                 loadingPanel.setVisibility(View.GONE);
 
@@ -384,37 +391,10 @@ public class CreateActivity extends AppCompatActivity {
      * Update the editTextField with chosen time.
      */
     private void updateTime(Calendar calendar) {
-        String timeFormat = "kk:mm";
+        String timeFormat = "HH:mm";
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat, Locale.getDefault());
         String oClock = sdf.format(calendar.getTime()) + getString(R.string.text_oclock);
         mTimeText.setText(oClock);
-    }
-
-    public ArrayList<Event> getAllEvents(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Gson gson = new Gson();
-        String json = sharedPrefs.getString(fireUser.getUid(), "");
-        Type type = new TypeToken<ArrayList<Event>>() {}.getType();
-        Log.d("TAG","jsonEvents = " + json);
-        return gson.fromJson(json, type);
-    }
-
-    public void storeEvent(){
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPrefs.edit();
-
-        ArrayList<Event> events = getAllEvents();
-        if(events == null){
-            events = new ArrayList<>();
-        }
-        events.add(event);
-        Log.d("STORE_EVENT","storeEvents = " + events);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(events);
-
-        editor.putString(fireUser.getUid(), json);
-        editor.apply();
     }
 
     @Override

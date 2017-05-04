@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -219,16 +220,15 @@ public class RegisterActivity extends AppCompatActivity {
                         } else {
                             FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
                             if (fireUser == null) {
-                                Toast.makeText(getApplicationContext(), "User is null", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Benutzer konnte nicht angelegt werden", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Send verification mail
+                                sendVerificationEmail(fireUser);
+
+                                // Create a new User!
+                                createNewUser(fireUser);
                             }
-
-                            // Send verification mail
-                            sendVerificationEmail(fireUser);
-
-                            // Create a new User!
-                            createNewUser(fireUser);
-
-
+                            loadingPanel.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -246,6 +246,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         Log.d("NEW_USER", user.toString());
         Log.d("NEW_USER", fireUser.getEmail());
+
+        // Set DisplayName to FirebaseUser for Display.
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(firstName + " " + lastName).build();
+        fireUser.updateProfile(profileUpdates);
 
         // Create database connection and reference.
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference();
@@ -266,7 +271,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                                            loadingPanel.setVisibility(View.GONE);
+
                                             startActivity(intent);
                                             finish();
                                         }
@@ -291,7 +296,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                           Log.d("EMAIL_VERIFICATION", "E-Mail send");
+                            Log.d("EMAIL_VERIFICATION", "E-Mail send");
                         } else {
 
                             Toast.makeText(getApplicationContext(), "E-Mail DIDNOT send", Toast.LENGTH_SHORT).show();
