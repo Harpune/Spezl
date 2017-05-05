@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -50,13 +51,16 @@ public class CreateActivity extends AppCompatActivity {
 
     private Calendar mCalendar = Calendar.getInstance();
 
-    private EditText mNameText, mDescriptionText, mDateText, mTimeText, mPlaceText, mTownText, mAddressText, mMaxParticipentsText;
+    private EditText mNameText, mDescriptionText, mDateText, mTimeText, mPlaceText, mTownText, mAddressText;
 
     private RelativeLayout loadingPanel;
 
-    private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mPlaceLayout, mTownLayput, mAddressLayout, mMaxParticipentsLayout;
+    private ScrollView scrollView;
+
+    private TextInputLayout mNameLayout, mDescriptionLayout, mDateLayout, mTimeLayout, mPlaceLayout, mTownLayput, mAddressLayout;
 
     private String category = "Entspannt";
+    private Double maxParticipants = 0.0;
 
     private Event event = new Event();
 
@@ -79,6 +83,7 @@ public class CreateActivity extends AppCompatActivity {
         }
 
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         // Get all necessary views from the Layout.
         mNameText = (EditText) findViewById(R.id.input_name);
@@ -88,7 +93,6 @@ public class CreateActivity extends AppCompatActivity {
         mPlaceText = (EditText) findViewById(R.id.input_place);
         mTownText = (EditText) findViewById(R.id.input_town);
         mAddressText = (EditText) findViewById(R.id.input_address);
-        mMaxParticipentsText = (EditText) findViewById(R.id.input_max_participants);
 
         mNameLayout = (TextInputLayout) findViewById(R.id.input_layout_name);
         mDescriptionLayout = (TextInputLayout) findViewById(R.id.input_layout_description);
@@ -97,35 +101,17 @@ public class CreateActivity extends AppCompatActivity {
         mPlaceLayout = (TextInputLayout) findViewById(R.id.input_layout_place);
         mTownLayput = (TextInputLayout) findViewById(R.id.input_layout_town);
         mAddressLayout = (TextInputLayout) findViewById(R.id.input_layout_address);
-        mMaxParticipentsLayout = (TextInputLayout) findViewById(R.id.input_layout_max_participants);
 
         // Get the intent if the fireUser comes from CategoryActivity.
         Intent intent = getIntent();
         if (intent.hasExtra(TAG_CATEGORY)) {
             category = intent.getStringExtra(TAG_CATEGORY);
         }
+        //Setup spinner with categories.
+        setupCategorySpinner();
 
-        //Setup spinner with categories
-        Spinner mSpinner = (Spinner) findViewById(R.id.spinner);
-        final String[] categories = new String[]{"Entspannt", "Feiern", "Sport", "Kochen", "Diskussion", "Kultur"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories);
-        mSpinner.setAdapter(adapter);
-
-        // Set adapterPosition to the value from the intent. Default: Entspannt.
-        int spinnerPosition = adapter.getPosition(category);
-        mSpinner.setSelection(spinnerPosition);
-
-        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
-                category = categories[pos];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                Toast.makeText(getApplicationContext(), "Keine Kategorie ausgewählt", Toast.LENGTH_SHORT).show();
-            }
-        });
+        //Setup spinner with participants.
+        setupParticipantSpinner();
 
         // Get the dates.
         getDateFromUser();
@@ -141,7 +127,6 @@ public class CreateActivity extends AppCompatActivity {
         String place = mPlaceText.getText().toString().trim();
         String town = mTownText.getText().toString().trim();
         String address = mAddressText.getText().toString().trim();
-        String maxParticipantsString = mMaxParticipentsText.getText().toString().trim();
 
         // Disable all error notifications of the TextInputLayouts.
         mNameLayout.setErrorEnabled(false);
@@ -151,7 +136,6 @@ public class CreateActivity extends AppCompatActivity {
         mPlaceLayout.setErrorEnabled(false);
         mTownLayput.setErrorEnabled(false);
         mAddressLayout.setErrorEnabled(false);
-        mMaxParticipentsLayout.setErrorEnabled(false);
 
         //Build the date.
         Date dateTime = null;
@@ -168,24 +152,28 @@ public class CreateActivity extends AppCompatActivity {
         if (name.matches("")) {
             mNameLayout.setError("Gib bitte deinen Namen für deine Veranstaltung an");
             mNameText.requestFocus();
+            focusOnView(mNameLayout);
             return;
         }
 
         if (description.matches("")) {
             mDescriptionLayout.setError("Eine Beschreibung wäre bestimmt nicht schlecht");
             mDescriptionText.requestFocus();
+            focusOnView(mDescriptionLayout);
             return;
         }
 
         if (date.matches("")) {
             mDateLayout.setError("Man muss doch wissen, wann es statt findet");
             mDateText.requestFocus();
+            focusOnView(mDateLayout);
             return;
         }
 
         if (time.matches("")) {
             mTimeLayout.setError("Wann genau?");
             mTimeText.requestFocus();
+            focusOnView(mTimeLayout);
             return;
         }
 
@@ -202,32 +190,25 @@ public class CreateActivity extends AppCompatActivity {
             updateDate(nowDate);
             updateTime(nowDate);
             mDateText.requestFocus();
+            focusOnView(mTimeLayout);
             return;
         }
 
         if (place.matches("")) {
             mPlaceLayout.setError("Wohin geht's?");
             mPlaceText.requestFocus();
+            focusOnView(mPlaceLayout);
             return;
         }
 
         if (town.matches("")) {
             mTownLayput.setError("In Tumbuktu?");
             mTownText.requestFocus();
+            focusOnView(mTownLayput);
             return;
         }
 
-        Double maxParticipants;
-        if (maxParticipantsString.matches("")) {
-            maxParticipants = 0d;
-        } else {
-            maxParticipants = Double.parseDouble(maxParticipantsString);
-        }
-
-        if (maxParticipants > 8) {
-            mMaxParticipentsLayout.setError("Maximal 8 Teilnehmer. Wähle 0 wenn es egal ist, wie viele kommen!");
-            return;
-        }
+        // TODO Max partivipants
 
         loadingPanel.setVisibility(View.VISIBLE);
 
@@ -273,7 +254,7 @@ public class CreateActivity extends AppCompatActivity {
                             .child("participantIds")
                             .push();
 
-                    //
+                    // Create HashMap with owner-id.
                     String key = addOwner.getKey();
                     HashMap<String, String> hashMap = new HashMap<>();
                     hashMap.put(key, fireUser.getUid());
@@ -395,6 +376,66 @@ public class CreateActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(timeFormat, Locale.getDefault());
         String oClock = sdf.format(calendar.getTime()) + getString(R.string.text_oclock);
         mTimeText.setText(oClock);
+    }
+
+    private void setupParticipantSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_participants);
+        final String[] participants = new String[]{"2", "3", "4", "5", "6", "7", "8", "Offen"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, participants);
+        spinner.setAdapter(adapter);
+
+        // Set adapterPosition to the value from the intent. Default: Entspannt.
+        int spinnerPosition = adapter.getPosition("Offen");
+        spinner.setSelection(spinnerPosition);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                if (participants[pos].equals("Offen")) {
+                    maxParticipants = 0.0;
+                } else {
+                    maxParticipants = Double.parseDouble(participants[pos]);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(getApplicationContext(), "Keine Kategorie ausgewählt", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setupCategorySpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_category);
+        final String[] categories = new String[]{"Entspannt", "Feiern", "Sport", "Kochen", "Diskussion", "Kultur"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        spinner.setAdapter(adapter);
+
+        // Set adapterPosition to the value from the intent. Default: Entspannt.
+        int spinnerPosition = adapter.getPosition(category);
+        spinner.setSelection(spinnerPosition);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long id) {
+                category = categories[pos];
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Toast.makeText(getApplicationContext(), "Keine Kategorie ausgewählt", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void focusOnView(final TextInputLayout view){
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("FOCUS_VIEW", "" + view.getTop());
+                scrollView.smoothScrollTo(0, view.getTop());
+            }
+        });
     }
 
     @Override

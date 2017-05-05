@@ -16,6 +16,7 @@ import android.view.MenuItem;
 
 import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.controller.EventAdapter;
+import com.example.lukas.spezl.controller.MyEventAdapter;
 import com.example.lukas.spezl.controller.StorageController;
 import com.example.lukas.spezl.model.Event;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +28,7 @@ import java.util.List;
 public class MyEventsActivity extends AppCompatActivity {
     private FirebaseUser fireUser;
 
-    private EventAdapter eventAdapter;
+    private MyEventAdapter eventAdapter;
 
     private List<Event> events = new ArrayList<>();
 
@@ -49,7 +50,7 @@ public class MyEventsActivity extends AppCompatActivity {
 
         // Implement recyclerView.
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        eventAdapter = new EventAdapter(events, this);
+        eventAdapter = new MyEventAdapter(events, this);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));

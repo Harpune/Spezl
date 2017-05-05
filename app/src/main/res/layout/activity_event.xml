@@ -31,6 +31,20 @@
                     app:layout_collapseMode="pin"
                     app:titleTextColor="@android:color/white" />
 
+                <RelativeLayout
+                    android:id="@+id/loadingPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <ProgressBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true" />
+                </RelativeLayout>
+
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
@@ -118,7 +132,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/recycler_view_padding"
                     android:text="@string/text_description"
-                    android:textSize="10dp" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/text_event_description"
@@ -126,32 +140,33 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/recycler_view_padding" />
 
+                <Button
+                    android:id="@+id/join_event_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="joinEvent"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:text="@string/text_join_event"
+                    android:textColor="@android:color/white" />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
+
+
     <!--
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:scaleType="fitCenter"
             android:onClick="joinEvent"
-            android:src="@drawable/pic_owl_active"
-            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_close_white_24"
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end" />
-    -->
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:onClick="joinEvent"
-        android:src="@drawable/ic_close_white_24"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end" />
 
+    -->
 </android.support.design.widget.CoordinatorLayout>
 
 

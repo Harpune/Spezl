@@ -34,7 +34,7 @@
     <string name="logout">Logout</string>
     <string name="text_description">Beschreibung</string>
     <string name="text_time">Uhrzeit</string>
-    <string name="text_max_participants">Wie viele Teilnehmer? Zähle dich selbst auch als Teilnehmer</string>
+    <string name="text_max_participants">Zähle dich selbst auch als Teilnehmer</string>
     <string name="text_delete_tag">Delete Tag</string>
     <string name="text_new">Neu</string>
     <string name="text_tag">Tags</string>
@@ -66,4 +66,5 @@
     <string name="text_delete_user">Benutzer löschen</string>
     <string name="text_my_event">Meine Events</string>
     <string name="text_place_short">Ort</string>
+    <string name="text_participants">Teilnehmer</string>
 </resources>

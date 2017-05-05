@@ -7,12 +7,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,27 +68,18 @@ public class EventActivity extends AppCompatActivity {
     // Views.
     private TextView mDescriptionText, mDateText, mPlaceText, mParticipantsText, mNotificationTextView;
 
-    //ImageButtons
-    private FloatingActionButton fab;
-    private ImageButton imageButton;
-    // The Adapter of the RecyclerView responsible for the Users.
-    private UserAdapter mUserAdapter;
+    // Loading Panel.
+    private RelativeLayout loadingPanel;
 
-    // List of the Users.
-    private List<User> users = new ArrayList<>();
+    //ImageButtons
+    private Button joinEventButton;
 
     // Global Database.
     private FirebaseDatabase mDatabase;
-
     private FirebaseUser fireUser;
 
     // Current event.
     private Event event = new Event();
-
-    // Owner of the Event.
-    private User user = new User();
-
-    private String filename = "events";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +102,6 @@ public class EventActivity extends AppCompatActivity {
 
         fireUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Read the Event
-        readEvent();
-
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(eventName);
@@ -128,8 +120,9 @@ public class EventActivity extends AppCompatActivity {
         mDescriptionText = (TextView) findViewById(R.id.text_event_description);
         mNotificationTextView = (TextView) findViewById(R.id.notificationTextView);
 
-        //imageButton = (ImageButton) findViewById(R.id.imageButton);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+
+        joinEventButton = (Button) findViewById(R.id.join_event_button);
 
         // Set the title and the Views with intent-information.
         mDescriptionText.setText(eventDescription);
@@ -139,6 +132,9 @@ public class EventActivity extends AppCompatActivity {
         } else {
             mPlaceText.setText(eventTown + ", " + eventAddress);
         }
+
+        // Read the Event
+        readEvent();
     }
 
     /**
@@ -246,6 +242,8 @@ public class EventActivity extends AppCompatActivity {
      * Read the participant ids deposited in the event object.
      */
     public void readEvent() {
+        loadingPanel.setVisibility(View.VISIBLE);
+
         mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mDatabaseRef = mDatabase.getReference("events").child(eventCategory).child(eventId);
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -259,24 +257,25 @@ public class EventActivity extends AppCompatActivity {
                 if (fireUser.getUid().equals(ownerId)) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Das ist dein Event! \n\nKlicke auf das Icon um das Event in den Sand zu setzen.");
-                    fab.setImageResource(R.drawable.ic_delete_forever_white);
-                    //imageButton.setImageResource(R.drawable.pic_owl_inactive);
+                    joinEventButton.setText("Löschen");
+                    joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), android.R.color.holo_red_dark, null));
                 } else if (userAlreadyParticipates()) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
-                    mNotificationTextView.setText("Du nimmst schon teil. Klicke auf das X um auszutreten.");
-                    fab.setImageResource(R.drawable.ic_close_white_24);
-                    //imageButton.setImageResource(R.drawable.pic_owl_inactive);
+                    mNotificationTextView.setText("Du nimmst schon teil. Klicke auf \"Verlassen\" um auszutreten.");
+                    joinEventButton.setText("Verlassen");
+                    joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
                 } else if (eventMaxParticipants == 0) {
                     // unendlich Viele Teilnhemer zulassen
+                    joinEventButton.setText("Teilnehmen");
+                    joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
                 } else if (eventMaxParticipants <= eventAmountPaticipants) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Dieses Event ist leider voll.");
-                    fab.setVisibility(View.GONE);
-                    //imageButton.setVisibility(View.GONE);
+                    joinEventButton.setVisibility(View.GONE);
                 } else {
-                    fab.setImageResource(R.drawable.ic_check_white_24);
                     mNotificationTextView.setVisibility(View.GONE);
-                    //imageButton.setImageResource(R.drawable.pic_owl_active);
+                    joinEventButton.setText("Teilnehmen");
+                    joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
                 }
 
                 DateFormat dfDate = android.text.format.DateFormat.getDateFormat(EventActivity.this);
@@ -301,11 +300,14 @@ public class EventActivity extends AppCompatActivity {
                 } else {
                     mPlaceText.setText(event.getTown() + ". " + event.getPlace());
                 }
+
+                loadingPanel.setVisibility(View.GONE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(getApplicationContext(), "Da ist etwas falsch gelaufen", Toast.LENGTH_SHORT).show();
+                loadingPanel.setVisibility(View.GONE);
             }
         });
     }
@@ -315,40 +317,4 @@ public class EventActivity extends AppCompatActivity {
         finish();
         return true;
     }
-
-    /**
-     * Read the User information from the given ids.
-     *
-     * @param participants The ids of the participants in a list.
-     */
-    public void readParticipants(List<String> participants) {
-        for (int i = 0; i < participants.size(); i++) {
-            DatabaseReference mDatabaseRef = mDatabase.getReference("users").child(participants.get(i));
-            final int finalI = i; //for final sake.
-            mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    User user = dataSnapshot.getValue(User.class); // read the user.
-                    if (user != null) {
-                        user.setUserId(dataSnapshot.getKey()); // add the userId to the user itself.
-                        Log.d("GET_USERS-user", user.toString());
-                        if (finalI == 0) { // the owner of the event.
-                            //TODO wohin mit dem besitzer?
-                        } else {
-                            users.add(user); // add user to the list.
-                            mUserAdapter.notifyItemChanged(finalI); // notify the adapter the new user.
-                        }
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(getApplicationContext(), "Da ist etwas falsch gelaufen", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-
 }
