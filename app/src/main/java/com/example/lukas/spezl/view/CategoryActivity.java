@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -85,8 +86,10 @@ public class CategoryActivity extends AppCompatActivity {
      */
     public void getRecyclerViewData() {
         mSwipeRefreshLayout.setRefreshing(true);
-        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference("events").child(category);
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        Log.d("CATEGORY", category);
+        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference("events");
+        Query query = mDatabaseRef.orderByChild("category").equalTo(category);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 events.clear();
@@ -115,6 +118,12 @@ public class CategoryActivity extends AppCompatActivity {
         Intent intent = new Intent(CategoryActivity.this, CreateActivity.class);
         intent.putExtra(TAG_CATEGORY, category);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getRecyclerViewData();
     }
 
     @Override

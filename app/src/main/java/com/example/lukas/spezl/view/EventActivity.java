@@ -154,8 +154,8 @@ public class EventActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
                             if (key != null) {
-                                DatabaseReference mDatabaseRef = mDatabase.getReference("events")
-                                        .child(eventCategory)
+                                DatabaseReference mDatabaseRef = mDatabase
+                                        .getReference("events")
                                         .child(eventId);
                                 mDatabaseRef.removeValue();
 
@@ -178,7 +178,6 @@ public class EventActivity extends AppCompatActivity {
                             String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
                             if (key != null) {
                                 DatabaseReference mDatabaseRef = mDatabase.getReference("events")
-                                        .child(eventCategory)
                                         .child(eventId)
                                         .child("participantIds")
                                         .child(key);
@@ -203,7 +202,6 @@ public class EventActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             DatabaseReference mDatabaseRef = mDatabase.getReference("events")
-                                    .child(eventCategory)
                                     .child(eventId)
                                     .child("participantIds")
                                     .push();
@@ -244,14 +242,16 @@ public class EventActivity extends AppCompatActivity {
     public void readEvent() {
         loadingPanel.setVisibility(View.VISIBLE);
 
+        Log.d("EVENT_FROM_SERVER", eventId + " " + eventCategory);
+
         mDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseRef = mDatabase.getReference("events").child(eventCategory).child(eventId);
+        DatabaseReference mDatabaseRef = mDatabase.getReference("events").child(eventId);
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 event = dataSnapshot.getValue(Event.class);
                 event.setuId(dataSnapshot.getKey());
-                Log.d("EVENT_FROM_SERVER", event.toString());//TODO Button wie hannes will
+                Log.d("EVENT_FROM_SERVER", event.toString());
 
                 //Check if user should be able to participate.
                 if (fireUser.getUid().equals(ownerId)) {

@@ -234,9 +234,7 @@ public class CreateActivity extends AppCompatActivity {
         final DatabaseReference mDatabaseRef = mDatabase.getReference();
 
         // Push the event and create own uid.
-        DatabaseReference newEvent = mDatabase.getReference("events")
-                .child(category)
-                .push();
+        DatabaseReference newEvent = mDatabase.getReference("events").push();
 
         // Set Id of the event.
         final String key = newEvent.getKey();
@@ -249,7 +247,6 @@ public class CreateActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     DatabaseReference addOwner = mDatabaseRef
                             .child("events")
-                            .child(category)
                             .child(key)
                             .child("participantIds")
                             .push();
