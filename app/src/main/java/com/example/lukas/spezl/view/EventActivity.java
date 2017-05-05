@@ -146,7 +146,7 @@ public class EventActivity extends AppCompatActivity {
         if (event.getParticipantIds().size() <= 1
                 && event.getParticipantIds().values().toArray()[0].equals(fireUser.getUid())) {
             new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.pic_owl_active)
+                    .setIcon(R.drawable.pic_owl_icon)
                     .setTitle("Event absagen")
                     .setMessage("Willst du wirklich das Event löschen?")
                     .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
@@ -169,7 +169,7 @@ public class EventActivity extends AppCompatActivity {
                     .show();
         } else if (userAlreadyParticipates()) {
             new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.pic_owl_active)
+                    .setIcon(R.drawable.pic_owl_icon)
                     .setTitle("Event absagen")
                     .setMessage("Willst du wirklich dem Event nicht mehr teilnehemen?")
                     .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
@@ -195,7 +195,7 @@ public class EventActivity extends AppCompatActivity {
 
         } else {
             new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.pic_owl_active)
+                    .setIcon(R.drawable.pic_owl_icon)
                     .setTitle("Du nimmst teil!")
                     .setMessage("Bist du dir sicher?")
                     .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
@@ -287,7 +287,14 @@ public class EventActivity extends AppCompatActivity {
 
                 // Setup the views.
                 mDateText.setText(simpleDateFormat.format(event.getDate()) + " um " + simpleTimeFormat.format(event.getDate()));
-                mDescriptionText.setText(event.getDescription());
+
+                if(event.getDescription().equals("")){
+                    TextView descriptionLabel = (TextView) findViewById(R.id.label_event_description);
+                    descriptionLabel.setVisibility(View.GONE);
+                    mDescriptionText.setVisibility(View.GONE);
+                } else {
+                    mDescriptionText.setText(event.getDescription());
+                }
 
                 if (event.getMaxParticipants() == 0) {
                     mParticipantsText.setText(event.getParticipantIds().size() + " Teilnehmer");

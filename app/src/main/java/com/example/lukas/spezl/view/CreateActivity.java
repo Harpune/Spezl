@@ -156,13 +156,6 @@ public class CreateActivity extends AppCompatActivity {
             return;
         }
 
-        if (description.matches("")) {
-            mDescriptionLayout.setError("Eine Beschreibung wäre bestimmt nicht schlecht");
-            mDescriptionText.requestFocus();
-            focusOnView(mDescriptionLayout);
-            return;
-        }
-
         if (date.matches("")) {
             mDateLayout.setError("Man muss doch wissen, wann es statt findet");
             mDateText.requestFocus();
@@ -269,7 +262,7 @@ public class CreateActivity extends AppCompatActivity {
 
                                 // Start MainActivity.
                                 new AlertDialog.Builder(CreateActivity.this)
-                                        .setIcon(R.drawable.pic_owl_active)
+                                        .setIcon(R.drawable.pic_owl_icon)
                                         .setTitle("Geschafft!")
                                         .setMessage("Event wurde erstellt")
                                         .setCancelable(false)

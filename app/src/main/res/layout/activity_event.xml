@@ -128,6 +128,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/label_event_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="@dimen/recycler_view_padding"

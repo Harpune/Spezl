@@ -99,7 +99,7 @@ public class AGBActivity extends AppCompatActivity {
             case R.id.delete:
                 // Ask user if he is sure.
                 new AlertDialog.Builder(this)
-                        .setIcon(R.drawable.pic_owl_active)
+                        .setIcon(R.drawable.pic_owl_icon)
                         .setTitle("Acount löschen")
                         .setMessage("Möchtest du wirklich deinen Account löschen? Das kann nicht rückgängig gemacht werden.")
                         .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
@@ -130,7 +130,7 @@ public class AGBActivity extends AppCompatActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Benutzer löschen");
         alert.setMessage("Geben Sie ihr Passort ein, um Ihren Account zu löschen.");
-        alert.setIcon(R.drawable.pic_owl_active);
+        alert.setIcon(R.drawable.pic_owl_icon);
 
         // Set an EditText view to get user password.
         final EditText passwordView = new EditText(this);

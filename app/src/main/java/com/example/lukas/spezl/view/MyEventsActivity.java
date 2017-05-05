@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyEventsActivity extends AppCompatActivity {
-    private FirebaseUser fireUser;
-
     private MyEventAdapter eventAdapter;
 
     private List<Event> events = new ArrayList<>();
@@ -58,16 +56,10 @@ public class MyEventsActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(eventAdapter);
 
-        fireUser = FirebaseAuth.getInstance().getCurrentUser();
-
         // Get the Events.
-        //getAllLocalEventsFromUser();
         events.clear();
         events.addAll(StorageController.getAllLocalEvents(this));
-        //deleteAllEvents();
     }
-
-
 
     /**
      * Inflates the menu in the toolbar.
@@ -93,7 +85,7 @@ public class MyEventsActivity extends AppCompatActivity {
             case R.id.delete:
                 // Ask user if he is sure.
                 new AlertDialog.Builder(this)
-                        .setIcon(R.drawable.pic_owl_active)
+                        .setIcon(R.drawable.pic_owl_icon)
                         .setTitle("Alle Events löschen")
                         .setMessage("Möchtest du wirklich deine lokalen Events löschen? Deine aktiven Events bleiben trotzdem online.")
                         .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
@@ -120,7 +112,6 @@ public class MyEventsActivity extends AppCompatActivity {
         events.clear();
         events.addAll(StorageController.getAllLocalEvents(this));
         eventAdapter.notifyDataSetChanged();
-        //getAllLocalEventsFromUser();
     }
 
     @Override
@@ -128,6 +119,4 @@ public class MyEventsActivity extends AppCompatActivity {
         finish();
         return true;
     }
-
-
 }
