@@ -201,8 +201,6 @@ public class CreateActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO Max partivipants
-
         loadingPanel.setVisibility(View.VISIBLE);
 
         //Create the event from the given information.

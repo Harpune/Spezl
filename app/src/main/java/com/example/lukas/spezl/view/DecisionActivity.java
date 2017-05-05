@@ -96,8 +96,18 @@ public class DecisionActivity extends AppCompatActivity {
 
                     Calendar c2 = Calendar.getInstance();// date
                     c2.setTime(event.getDate());
-
+                    /* // Genau
                     if (c1.getTimeInMillis() > c2.getTimeInMillis()) {
+                        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance()
+                                .getReference("events")
+                                .child(event.getuId());
+                        mDatabaseRef.removeValue();
+                        Log.d("SPEZL", "Abgelaufenes Event löschen: success");
+                    }
+                    */
+
+                    if (c1.get(Calendar.YEAR) > c2.get(Calendar.YEAR)
+                            && c1.get(Calendar.DAY_OF_YEAR) > c2.get(Calendar.DAY_OF_YEAR)) {
                         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance()
                                 .getReference("events")
                                 .child(event.getuId());

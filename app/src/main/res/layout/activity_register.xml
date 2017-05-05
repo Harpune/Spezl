@@ -171,6 +171,7 @@
                     android:onClick="showAGB"
                     android:textColor="@android:color/holo_blue_dark"
                     android:layout_height="wrap_content"
+                    android:textStyle=""
                     android:layout_gravity="center_vertical"
                     android:text="@string/text_agb_confirmation" />
             </LinearLayout>

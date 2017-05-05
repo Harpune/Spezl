@@ -64,9 +64,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mEventAdapter);
 
-        //TODO search icon and functionality
-        //TODO add drawer layout icon
-
         //getRecyclerViewDataTest();
         getRecyclerViewData();
 
@@ -110,27 +107,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_toolbar_menu, menu);
-        return true;
-    }
-    TODO Options hinzufügen
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.logout:
-                mAuth.signOut();
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-                return true;
-            default:
-                return false;
-        }
-    }
-*/
     public void getEvent(View view) {
         Intent intent = new Intent(this, CreateActivity.class);
         startActivity(intent);

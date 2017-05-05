@@ -1,6 +1,5 @@
 package com.example.lukas.spezl.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -21,8 +20,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.lukas.spezl.model.User;
 import com.example.lukas.spezl.R;
+import com.example.lukas.spezl.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -63,8 +62,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //TODO name zu firebase user hinzufügen
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
@@ -162,7 +159,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (email.matches("")) {
-            mEmailLayout.setError("Wir wollen deine Daten!");
+            mEmailLayout.setError("Wie wär’s mit einer Mailadresse?");
             mEmailText.requestFocus();
             return;
         }
