@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
@@ -112,6 +113,13 @@ public class EventActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
+        collapsingToolbarLayout.setTitle(eventName);
+        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
+        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
+        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
+        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
 
         // Initialize the Views.
         mDateText = (TextView) findViewById(R.id.text_event_date);
@@ -256,7 +264,7 @@ public class EventActivity extends AppCompatActivity {
                 //Check if user should be able to participate.
                 if (fireUser.getUid().equals(ownerId)) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
-                    mNotificationTextView.setText("Das ist dein Event! \n\nKlicke auf das Icon um das Event in den Sand zu setzen.");
+                    mNotificationTextView.setText("Das ist dein Event! \n\nKlicke auf den Button um das Event in den Sand zu setzen.\n");
                     joinEventButton.setText("Löschen");
                     joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), android.R.color.holo_red_dark, null));
                 } else if (userAlreadyParticipates()) {

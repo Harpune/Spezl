@@ -3,33 +3,23 @@ package com.example.lukas.spezl.view;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.lukas.spezl.R;
-import com.example.lukas.spezl.controller.EventAdapter;
-import com.example.lukas.spezl.controller.MyEventAdapter;
-import com.example.lukas.spezl.controller.StorageController;
+import com.example.lukas.spezl.controller.PagerAdapter;
 import com.example.lukas.spezl.model.Event;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyEventsActivity extends AppCompatActivity {
-    private MyEventAdapter eventAdapter;
-
-    private List<Event> events = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,31 +36,29 @@ public class MyEventsActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         }
 
-        // Implement recyclerView.
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        eventAdapter = new MyEventAdapter(events, this);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(eventAdapter);
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
 
-        // Get the Events.
-        events.clear();
-        events.addAll(StorageController.getAllLocalEvents(this));
-    }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
 
-    /**
-     * Inflates the menu in the toolbar.
-     * @param menu The mnu layout clicked.
-     * @return boolean
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_toolbar_menu, menu);
-        return true;
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     /**
@@ -93,9 +81,7 @@ public class MyEventsActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 // Show dialog for user input.
                                 //deleteAllEvents();
-                                StorageController.deleteAllEvents(MyEventsActivity.this);
-                                events.clear();
-                                eventAdapter.notifyDataSetChanged();
+                                //StorageController.deleteAllLocalEvents(MyEventsActivity.this);
                             }
                         })
                         .setNegativeButton("Nein", null) // nothing when canceled.
@@ -109,14 +95,16 @@ public class MyEventsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        events.clear();
-        events.addAll(StorageController.getAllLocalEvents(this));
-        eventAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

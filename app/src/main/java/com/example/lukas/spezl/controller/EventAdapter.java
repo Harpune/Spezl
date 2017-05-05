@@ -131,8 +131,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventHolder>
 
 
         // TODO Name des owners einfügen (siehe to-do)
-        //holder.datumView.setText(dfDate.format(event.getDate()) + " " + dfTime.format(event.getDate()));
-        holder.datumView.setText(dfTime.format(event.getDate()));
+        holder.datumView.setText(dfDate.format(event.getDate()) + " " + dfTime.format(event.getDate()));
+        //holder.datumView.setText(dfTime.format(event.getDate()));
         holder.townView.setText(event.getPlace());
 
         if (event.getMaxParticipants() == 0) {

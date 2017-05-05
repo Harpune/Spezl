@@ -79,7 +79,7 @@ public class StorageController {
         editor.apply();
     }
 
-    public static void deleteAllEvents(Context context) {
+    public static void deleteAllLocalEvents(Context context) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().clear().apply();
         Log.d("STORAGE_CONTROLLER", "All deleted");
     }

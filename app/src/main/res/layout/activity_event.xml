@@ -22,14 +22,15 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/logo_2"
                 android:fitsSystemWindows="true"
+                app:collapsedTitleTextAppearance="@android:color/white"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:titleTextColor="@android:color/white" />
+                    android:title="@string/text_new_event"
+                    app:layout_collapseMode="pin" />
 
                 <RelativeLayout
                     android:id="@+id/loadingPanel"
@@ -146,8 +147,8 @@
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:onClick="joinEvent"
                     android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:onClick="joinEvent"
                     android:text="@string/text_join_event"
                     android:textColor="@android:color/white" />
 

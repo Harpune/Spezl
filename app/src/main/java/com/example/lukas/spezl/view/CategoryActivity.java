@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.lukas.spezl.controller.EventAdapter;
+import com.example.lukas.spezl.controller.StorageController;
 import com.example.lukas.spezl.model.Event;
 import com.example.lukas.spezl.R;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +26,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class CategoryActivity extends AppCompatActivity {
@@ -101,6 +104,15 @@ public class CategoryActivity extends AppCompatActivity {
                     event.setuId(key);
                     events.add(event);
                 }
+
+                // Sort by date.
+                Collections.sort(events, new Comparator<Event>() {
+                    public int compare(Event e1, Event e2) {
+                        if (e1.getDate() == null || e2.getDate() == null)
+                            return 0;
+                        return e1.getDate().compareTo(e2.getDate());
+                    }
+                });
 
                 // Notify adapter and stop refreshing
                 eventAdapter.notifyDataSetChanged();
