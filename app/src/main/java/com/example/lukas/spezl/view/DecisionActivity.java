@@ -50,8 +50,6 @@ public class DecisionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decision);
 
-        deleteExpiredEvents();
-
         fireUser = FirebaseAuth.getInstance().getCurrentUser();
 
         ImageButton owl = (ImageButton) findViewById(R.id.owl_button);
@@ -82,47 +80,6 @@ public class DecisionActivity extends AppCompatActivity {
         }
 
         initDrawerLayout();
-    }
-
-    private void deleteExpiredEvents() {
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference("events");
-        mRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Event event = postSnapshot.getValue(Event.class);
-
-                    Calendar c1 = Calendar.getInstance();// now
-
-                    Calendar c2 = Calendar.getInstance();// date
-                    c2.setTime(event.getDate());
-                    /* // Genau
-                    if (c1.getTimeInMillis() > c2.getTimeInMillis()) {
-                        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance()
-                                .getReference("events")
-                                .child(event.getuId());
-                        mDatabaseRef.removeValue();
-                        Log.d("SPEZL", "Abgelaufenes Event löschen: success");
-                    }
-                    */
-
-                    if (c1.get(Calendar.YEAR) > c2.get(Calendar.YEAR)
-                            && c1.get(Calendar.DAY_OF_YEAR) > c2.get(Calendar.DAY_OF_YEAR)) {
-                        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance()
-                                .getReference("events")
-                                .child(event.getuId());
-                        mDatabaseRef.removeValue();
-                        Log.d("SPEZL", "Abgelaufenes Event löschen: success");
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("SPEZL", "Abgelaufenes Event löschen: failed");
-            }
-        });
     }
 
     public static Drawable getAssetImage(Context context, String filename) throws IOException {

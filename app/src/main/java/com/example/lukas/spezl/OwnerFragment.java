@@ -1,5 +1,7 @@
 package com.example.lukas.spezl;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -36,6 +38,8 @@ public class OwnerFragment extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private Context context;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +69,13 @@ public class OwnerFragment extends Fragment {
         getRecyclerViewData();
 
         return view;
-
-
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     public void getRecyclerViewData() {
         swipeRefreshLayout.setRefreshing(true);
@@ -96,7 +103,7 @@ public class OwnerFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(getContext(), "Daten konnten nicht gelesen werden", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Daten konnten nicht gelesen werden", Toast.LENGTH_LONG).show();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

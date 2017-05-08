@@ -61,37 +61,6 @@ public class MyEventsActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Handle clicks on the item of the toolbar.
-     * @param item Clicked menu-item.
-     * @return boolean.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.delete:
-                // Ask user if he is sure.
-                new AlertDialog.Builder(this)
-                        .setIcon(R.drawable.pic_owl_icon)
-                        .setTitle("Alle Events löschen")
-                        .setMessage("Möchtest du wirklich deine lokalen Events löschen? Deine aktiven Events bleiben trotzdem online.")
-                        .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // Show dialog for user input.
-                                //deleteAllEvents();
-                                //StorageController.deleteAllLocalEvents(MyEventsActivity.this);
-                            }
-                        })
-                        .setNegativeButton("Nein", null) // nothing when canceled.
-                        .show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -101,10 +70,5 @@ public class MyEventsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
@@ -44,6 +45,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     // Firebase Authentication.
     private FirebaseAuth mAuth;
+
+    // ScrollView
+    private ScrollView scrollView;
 
     // Calender for the Date.
     private Calendar mCalendar = Calendar.getInstance();
@@ -109,6 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordCheckLayout = (TextInputLayout) findViewById(R.id.input_layout_check_password);
 
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+        scrollView =(ScrollView) findViewById(R.id.scrollView);
         checkBox = (CheckBox) findViewById(R.id.agb_checkBox);
 
         // Get date from user.
@@ -135,20 +140,17 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordLayout.setErrorEnabled(false);
         mPasswordCheckLayout.setErrorEnabled(false);
 
-        if (!checkBox.isChecked()) {
-            Toast.makeText(RegisterActivity.this, "Bitte bestätige die AGB", Toast.LENGTH_LONG).show();
-            return;
-        }
-
         if (firstName.matches("")) {
             mFirstNameLayout.setError("Gib bitte deinen Vornamen an!");
             mFirstNameText.requestFocus();
+            focusOnView(mFirstNameLayout);
             return;
         }
 
         if (lastName.matches("")) {
             mLastNameLayout.setError("Wie lautet dein Nachname?");
             mLastNameText.requestFocus();
+            focusOnView(mLastNameLayout);
             return;
         }
 
@@ -161,24 +163,28 @@ public class RegisterActivity extends AppCompatActivity {
         if (email.matches("")) {
             mEmailLayout.setError("Wie wär’s mit einer Mailadresse?");
             mEmailText.requestFocus();
+            focusOnView(mEmailLayout);
             return;
         }
 
         if (age.matches("")) {
             mAgeLayout.setError("So jung siehst du nicht aus...");
             mAgeText.requestFocus();
+            focusOnView(mAgeLayout);
             return;
         }
 
         if (password.matches("")) {
             mPasswordLayout.setError("Bitte gib wenigstens ein Passwort ein!");
             mPasswordText.requestFocus();
+            focusOnView(mPasswordLayout);
             return;
         }
 
         if (password.length() < 6) {
             mPasswordLayout.setError("Das Passwort muss länger als 6 Buchstaben sein");
             mPasswordText.requestFocus();
+            focusOnView(mFirstNameLayout);
             return;
         }
 
@@ -186,6 +192,12 @@ public class RegisterActivity extends AppCompatActivity {
             mPasswordLayout.setError("Deine Passwörter stimmen nicht überein!");
             mPasswordCheckLayout.setError("Der über mir hat recht.");
             mPasswordText.requestFocus();
+            focusOnView(mPasswordLayout);
+            return;
+        }
+
+        if (!checkBox.isChecked()) {
+            Toast.makeText(RegisterActivity.this, "Bitte bestätige die AGB", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -225,7 +237,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 // Create a new User!
                                 createNewUser(fireUser);
                             }
-                            loadingPanel.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -262,13 +273,15 @@ public class RegisterActivity extends AppCompatActivity {
                             FirebaseAuth.getInstance().signOut();
                             new AlertDialog.Builder(RegisterActivity.this)
                                     .setIcon(R.drawable.pic_owl_active)
+                                    .setCancelable(false)
                                     .setTitle("Geschafft!")
                                     .setMessage("Bitte bestätige deine E-Mail")
                                     .setPositiveButton("Los Spezln", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                            loadingPanel.setVisibility(View.GONE);
 
+                                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                             startActivity(intent);
                                             finish();
                                         }
@@ -362,5 +375,15 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void focusOnView(final TextInputLayout view){
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("FOCUS_VIEW", "" + view.getTop());
+                scrollView.smoothScrollTo(0, view.getTop());
+            }
+        });
     }
 }

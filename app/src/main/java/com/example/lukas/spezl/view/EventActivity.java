@@ -2,30 +2,23 @@ package com.example.lukas.spezl.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.controller.StorageController;
-import com.example.lukas.spezl.controller.UserAdapter;
 import com.example.lukas.spezl.model.Event;
-import com.example.lukas.spezl.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,15 +26,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -64,7 +52,7 @@ public class EventActivity extends AppCompatActivity {
     //The EventData.
     private String eventId, ownerId, eventCategory;
     private Integer eventMaxParticipants;
-    private int eventAmountPaticipants;
+    private int eventAmountParticipants;
 
     // Views.
     private TextView mDescriptionText, mDateText, mPlaceText, mParticipantsText, mNotificationTextView;
@@ -92,7 +80,7 @@ public class EventActivity extends AppCompatActivity {
         eventId = intent.getStringExtra(TAG_EVENT_ID);
         String eventDescription = intent.getStringExtra(TAG_DESCRIPTION);
         Double maxParticipants = intent.getDoubleExtra(TAG_MAX_PARTICIPANTS, 0);
-        eventAmountPaticipants = intent.getIntExtra(TAG_AMOUNT_PARTICIPANTS, 0);
+        eventAmountParticipants = intent.getIntExtra(TAG_AMOUNT_PARTICIPANTS, 0);
         String eventTown = intent.getStringExtra(TAG_EVENT_TOWN);
         String eventAddress = intent.getStringExtra(TAG_EVENT_ADDRESS);
         String eventName = intent.getStringExtra(TAG_EVENT_NAME);
@@ -134,7 +122,7 @@ public class EventActivity extends AppCompatActivity {
 
         // Set the title and the Views with intent-information.
         mDescriptionText.setText(eventDescription);
-        mParticipantsText.setText(eventAmountPaticipants + "/" + eventMaxParticipants + " Teilnehmer");
+        mParticipantsText.setText(eventAmountParticipants + "/" + eventMaxParticipants + " Teilnehmer");
         if (eventAddress.equals("")) {
             mPlaceText.setText(eventTown);
         } else {
@@ -276,7 +264,7 @@ public class EventActivity extends AppCompatActivity {
                     // unendlich Viele Teilnhemer zulassen
                     joinEventButton.setText("Teilnehmen");
                     joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
-                } else if (eventMaxParticipants <= eventAmountPaticipants) {
+                } else if (eventMaxParticipants <= eventAmountParticipants) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Dieses Event ist leider voll.");
                     joinEventButton.setVisibility(View.GONE);
