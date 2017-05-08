@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -40,6 +42,7 @@ import java.util.Calendar;
 public class DecisionActivity extends AppCompatActivity {
 
     private final String TAG_CATEGORY = "TAG_CATEGORY";
+    private final String TAG_REGISTER = "TAG_REGISTER";
 
     private FirebaseUser fireUser;
 
@@ -129,6 +132,8 @@ public class DecisionActivity extends AppCompatActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle mDrawerToggle;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        toolbar.setTitle(getResources().getString(R.string.app_name));
 
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -147,7 +152,7 @@ public class DecisionActivity extends AppCompatActivity {
                 }
             };
             mDrawerToggle.setDrawerIndicatorEnabled(true);
-            mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_menu_white);
+            mDrawerToggle.setHomeAsUpIndicator(R.drawable.ic_menu);
             mDrawerLayout.addDrawerListener(mDrawerToggle);
             mDrawerToggle.syncState();
         }
@@ -158,20 +163,22 @@ public class DecisionActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.profile:
-                        Intent profileIntent = new Intent(getApplicationContext(), ResetPasswordActivity.class);
+                        Intent profileIntent = new Intent(getApplicationContext(), RegisterActivity.class);
+                        profileIntent.putExtra(TAG_REGISTER, "TAG_REGISTER");
                         startActivity(profileIntent);
-                        mDrawerLayout.closeDrawers();
+                        break;
+                    case R.id.change_password:
+                        Intent registerIntent = new Intent(getApplicationContext(), ResetPasswordActivity.class);
+                        startActivity(registerIntent);
                         break;
                     case R.id.myEvents:
                         Intent myEventsIntent = new Intent(getApplicationContext(), MyEventsActivity.class);
                         startActivity(myEventsIntent);
-                        mDrawerLayout.closeDrawers();
                         break;
                     case R.id.settings:
                         Intent settingsIntent = new Intent(getApplicationContext(), AGBActivity.class);
                         settingsIntent.putExtra("SETUP_TOOLBAR", true);
                         startActivity(settingsIntent);
-                        mDrawerLayout.closeDrawers();
                         break;
                     case R.id.createEvent:
                         Intent createIntent = new Intent(getApplicationContext(), CreateActivity.class);

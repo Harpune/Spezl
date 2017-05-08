@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -74,12 +75,12 @@ public class CreateActivity extends AppCompatActivity {
         // Implement toolbar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.text_create_event);
-        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24);
         }
 
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
@@ -187,17 +188,17 @@ public class CreateActivity extends AppCompatActivity {
             return;
         }
 
+        if (town.matches("")) {
+            mTownLayput.setError("Wo findet dein Event statt?");
+            mTownText.requestFocus();
+            focusOnView(mTownLayput);
+            return;
+        }
+
         if (place.matches("")) {
             mPlaceLayout.setError("Wohin geht's?");
             mPlaceText.requestFocus();
             focusOnView(mPlaceLayout);
-            return;
-        }
-
-        if (town.matches("")) {
-            mTownLayput.setError("In Tumbuktu?");
-            mTownText.requestFocus();
-            focusOnView(mTownLayput);
             return;
         }
 

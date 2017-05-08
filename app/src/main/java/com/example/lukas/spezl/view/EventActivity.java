@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -94,12 +95,12 @@ public class EventActivity extends AppCompatActivity {
         // Setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(eventName);
-        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24);
         }
 
         CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
@@ -254,7 +255,7 @@ public class EventActivity extends AppCompatActivity {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Das ist dein Event! \n\nKlicke auf den Button um das Event in den Sand zu setzen.\n");
                     joinEventButton.setText("Löschen");
-                    joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), android.R.color.holo_red_dark, null));
+                    joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
                 } else if (userAlreadyParticipates()) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
                     mNotificationTextView.setText("Du nimmst schon teil. Klicke auf \"Verlassen\" um auszutreten.");

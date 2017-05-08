@@ -1,6 +1,5 @@
 package com.example.lukas.spezl;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.lukas.spezl.controller.EventAdapter;
 import com.example.lukas.spezl.model.Event;
-import com.example.lukas.spezl.view.MyEventsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,6 +46,7 @@ public class OwnerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_owner, container, false);
+
         // Implement recyclerView.
         eventAdapter = new EventAdapter(events, getActivity());
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);

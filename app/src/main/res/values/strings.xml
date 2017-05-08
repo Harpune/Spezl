@@ -8,12 +8,12 @@
     <string name="text_name">Name</string>
     <string name="text_first_name">Vorname</string>
     <string name="text_last_name">Nachname</string>
-    <string name="text_age">Alter</string>
+    <string name="text_age">Geburtsdatum</string>
     <string name="text_town">Stadt</string>
     <string name="text_register">Registrieren</string>
     <string name="header">Header</string>
-    <string name="text_create_event">Create Event</string>
-    <string name="text_join_event">Join Event</string>
+    <string name="text_create_event">Event erstellen</string>
+    <string name="text_join_event">Event beitreten</string>
 
     <string name="text_relax">Entspannt</string>
     <string name="text_party">Feiern</string>
@@ -22,7 +22,7 @@
     <string name="text_discussion">Diskussion</string>
     <string name="text_culture">Kultur</string>
 
-    <string name="text_date">Datum</string>
+    <string name="text_date">Datum (Heute, morgen, übermorgen)</string>
     <string name="text_start_time">Startzeit</string>
     <string name="text_end_time">Endzeit</string>
     <string name="text_duration">Dauer</string>
@@ -30,7 +30,7 @@
     <string name="auth_failed">Da ist etwas schief gelaufen.</string>
     <string name="auth_weak_password">Das Passwort ist leider zu schwach!</string>
     <string name="auth_invalid_email">Deine Email ist leider nicht gültig</string>
-    <string name="auth_user_exists">Der Benutzer existiert schon.</string>
+    <string name="auth_user_exists">Für diese Mailadresse existiert bereits ein Account.</string>
     <string name="logout">Logout</string>
     <string name="text_description">Beschreibung</string>
     <string name="text_time">Uhrzeit</string>
@@ -38,8 +38,8 @@
     <string name="text_delete_tag">Delete Tag</string>
     <string name="text_new">Neu</string>
     <string name="text_tag">Tags</string>
-    <string name="text_female">Frau</string>
-    <string name="text_male">Mann</string>
+    <string name="text_female">Weiblein</string>
+    <string name="text_male">Männlein</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="text_welcome">Hi Spezl</string>
@@ -60,15 +60,13 @@
     <string name="text_new_password">Neues Passwort</string>
     <string name="text_check_new_password">Neues Passwort erneut eingeben</string>
     <string name="text_agb_confirmation"><u>Ich bestätige, Datenschutzerklärung und Nutzungsbedingungen gelesen zu haben.</u></string>
-    <string name="text_place">Ortsbeschreibung</string>
+    <string name="text_place">Ortsbeschreibung z.B. Nightclub, Laura’s Garten, Cafe, …</string>
     <string name="text_cancel">Nein, doch nicht.</string>
     <string name="text_continue">Ja, weiter gehts!</string>
     <string name="text_delete_user">Benutzer löschen</string>
     <string name="text_my_event">Meine Events</string>
     <string name="text_place_short">Ort</string>
     <string name="text_participants">Teilnehmer</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_owner">Ersteller</string>
     <string name="text_agb">Datenschutz und Nutzung</string>
 </resources>

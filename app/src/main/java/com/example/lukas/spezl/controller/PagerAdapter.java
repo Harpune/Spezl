@@ -8,13 +8,12 @@ import com.example.lukas.spezl.OwnerFragment;
 import com.example.lukas.spezl.ParticipantFragment;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
-    private String[] tabTitles = new String[]{"Owner", "Participants"};
 
-    int mNumOfTabs;
+    // Name of the tabs
+    private String[] tabTitles = new String[]{"Ersteller", "Teilnehmer"};
 
-    public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+    public PagerAdapter(FragmentManager fm) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
     }
 
     @Override
@@ -37,6 +36,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return mNumOfTabs;
+        return tabTitles.length;
     }
 }

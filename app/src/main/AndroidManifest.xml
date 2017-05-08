@@ -18,15 +18,8 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".view.MainActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.DecisionActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".view.DateActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".view.CreateActivity"
             android:screenOrientation="portrait" />
@@ -49,8 +42,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.AGBActivity" />
-        <activity android:name=".view.ConfirmationActivity" />
-        <activity android:name=".view.MyEventsActivity"></activity>
+        <activity android:name=".view.MyEventsActivity" />
     </application>
 
 </manifest>

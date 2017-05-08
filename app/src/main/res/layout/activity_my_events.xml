@@ -22,20 +22,10 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
-            app:tabSelectedTextColor="@android:color/white"
-            app:tabTextColor="@color/colorAccent">
+            android:elevation="2dp"
+            app:tabSelectedTextColor="@color/colorAccent"
+            app:tabTextColor="@color/colorPrimaryDark">
 
-            <android.support.design.widget.TabItem
-                android:id="@+id/ownerTab"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Deine" />
-
-            <android.support.design.widget.TabItem
-                android:id="@+id/participantsTab"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Meine" />
         </android.support.design.widget.TabLayout>
 
     </android.support.v4.view.ViewPager>

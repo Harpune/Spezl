@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -52,14 +53,14 @@ public class AGBActivity extends AppCompatActivity {
 
         // Sertup the toolbar, if needed.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
         toolbar.setTitle(R.string.text_settings);
         if (setupToolbar) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                 getSupportActionBar().setDisplayShowHomeEnabled(true);
-                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+                getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24);
             }
         }
 

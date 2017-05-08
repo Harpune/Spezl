@@ -8,6 +8,11 @@
             android:title="@string/text_profile" />
 
         <item
+            android:id="@+id/change_password"
+            android:icon="@drawable/ic_action_lock_open"
+            android:title="@string/text_change_password" />
+
+        <item
             android:id="@+id/myEvents"
             android:icon="@drawable/ic_format_list_numbered"
             android:title="@string/text_my_event" />

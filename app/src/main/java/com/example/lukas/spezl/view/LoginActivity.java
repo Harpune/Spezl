@@ -101,7 +101,7 @@ public class LoginActivity extends Activity {
         }
 
         if (password.length() < 6) {
-            mPasswordLayout.setError("Das Passwort ist zu kurz.");
+            mPasswordLayout.setError("Anmeldedaten nicht korrekt");
             mPasswordText.requestFocus();
             return;
         }
@@ -117,7 +117,7 @@ public class LoginActivity extends Activity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
                             loadingPanel.setVisibility(View.GONE);
-                            Toast.makeText(LoginActivity.this, "E-Mail und Passwort stimmen nicht überein!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Anmeldedaten nicht korrekt", Toast.LENGTH_SHORT).show();
                         } else {
                             loadingPanel.setVisibility(View.GONE);
 
@@ -147,7 +147,7 @@ public class LoginActivity extends Activity {
 
         if (user.isEmailVerified()) {
             // user is verified, so you can finish this activity or send user to activity which you want.
-            Toast.makeText(LoginActivity.this, "Auf die Spezl! Fertig! Los!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Auf die Spezl! Fertig! Los!", Toast.LENGTH_LONG).show();
             return true;
         } else {
             // email is not verified, so just prompt the message to the user and restart this activity.
