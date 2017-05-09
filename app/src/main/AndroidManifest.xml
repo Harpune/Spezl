@@ -43,6 +43,7 @@
         </activity>
         <activity android:name=".view.AGBActivity" />
         <activity android:name=".view.MyEventsActivity" />
+        <activity android:name=".view.ProfileActivity"></activity>
     </application>
 
 </manifest>

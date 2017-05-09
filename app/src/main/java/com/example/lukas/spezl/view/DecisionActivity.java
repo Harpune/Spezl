@@ -163,7 +163,7 @@ public class DecisionActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.profile:
-                        Intent profileIntent = new Intent(getApplicationContext(), RegisterActivity.class);
+                        Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
                         profileIntent.putExtra(TAG_REGISTER, "TAG_REGISTER");
                         startActivity(profileIntent);
                         break;

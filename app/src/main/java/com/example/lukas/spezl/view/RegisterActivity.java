@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
@@ -40,6 +41,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -82,25 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Implement toolbar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        // Check for intent.
-        Intent intent = getIntent();
-        if (intent.hasExtra(TAG_REGISTER)) {
-            toolbar.setTitle(R.string.text_profile);
-            setupUser();
-        } else {
-            toolbar.setTitle(R.string.text_register);
-        }
-
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24);
-        }
-
-
+        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
 
         // Find the views.
         mFirstNameText = (EditText) findViewById(R.id.input_first_name);
@@ -132,47 +117,19 @@ public class RegisterActivity extends AppCompatActivity {
         mPasswordCheckLayout = (TextInputLayout) findViewById(R.id.input_layout_check_password);
 
         mAGBLayout = (LinearLayout) findViewById(R.id.agb_layout);
-        loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         checkBox = (CheckBox) findViewById(R.id.agb_checkBox);
 
+        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24);
+        }
+
         // Get date from user.
         getDateFromUser();
-    }
-
-    private void setupUser() {
-        final FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
-
-
-        assert fireUser != null;
-        DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference("users");
-        mDatabaseRef.child(fireUser.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                String[] firstLast = user.getUsername().split("\\s+");
-
-                mFirstNameText.setText(firstLast[0]);
-                mLastNameText.setText(firstLast[1]);
-                mEmailText.setText(user.getEmail());
-                DateFormat df = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-                mAgeText.setText(df.format(user.getAge()));
-
-                mPasswordLayout.setVisibility(View.GONE);
-                mPasswordCheckLayout.setVisibility(View.GONE);
-                mAGBLayout.setVisibility(View.GONE);
-                mRadioGroup.setVisibility(View.GONE);
-
-                Log.d("EDIT_USER", "success");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("EDIT_USER", "failed");
-            }
-        });
-
-
     }
 
     /**

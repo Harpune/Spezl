@@ -69,4 +69,5 @@
     <string name="text_participants">Teilnehmer</string>
     <string name="text_owner">Ersteller</string>
     <string name="text_agb">Datenschutz und Nutzung</string>
+    <string name="text_change">Ändern</string>
 </resources>

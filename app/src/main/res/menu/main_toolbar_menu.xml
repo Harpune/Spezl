@@ -3,8 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/change_password"
+        android:icon="@drawable/ic_action_lock_closed_black_18"
+        android:title="@string/text_change_password"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/delete"
-        android:icon="@drawable/ic_delete_forever_white"
+        android:icon="@drawable/ic_delete_forever"
         android:title="@string/text_delete_user"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>
