@@ -14,9 +14,9 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:elevation="2dp"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorPrimary"
+            android:elevation="2dp" />
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -211,6 +211,7 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true" />
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimary" />
     </RelativeLayout>
 </RelativeLayout>

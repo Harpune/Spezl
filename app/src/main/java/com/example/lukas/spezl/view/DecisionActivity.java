@@ -44,16 +44,16 @@ public class DecisionActivity extends AppCompatActivity {
     private final String TAG_CATEGORY = "TAG_CATEGORY";
     private final String TAG_REGISTER = "TAG_REGISTER";
 
-    private FirebaseUser fireUser;
-
     private DrawerLayout mDrawerLayout;
+
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decision);
 
-        fireUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         ImageButton owl = (ImageButton) findViewById(R.id.owl_button);
         owl.setOnClickListener(new View.OnClickListener() {
@@ -82,7 +82,7 @@ public class DecisionActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        initDrawerLayout();
+        initDrawerLayout(firebaseUser);
     }
 
     public static Drawable getAssetImage(Context context, String filename) throws IOException {
@@ -128,7 +128,7 @@ public class DecisionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void initDrawerLayout() {
+    private void initDrawerLayout(FirebaseUser firebaseUser) {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle mDrawerToggle;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -157,17 +157,12 @@ public class DecisionActivity extends AppCompatActivity {
             mDrawerToggle.syncState();
         }
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.profile:
-                        Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
-                        profileIntent.putExtra(TAG_REGISTER, "TAG_REGISTER");
-                        startActivity(profileIntent);
-                        break;
-                    case R.id.change_password:
                         Intent registerIntent = new Intent(getApplicationContext(), ResetPasswordActivity.class);
                         startActivity(registerIntent);
                         break;
@@ -199,10 +194,7 @@ public class DecisionActivity extends AppCompatActivity {
             }
         });
 
-        View header = navigationView.getHeaderView(0);
-        TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-        mUsernameTextField.setText(fireUser.getDisplayName());
-
+        displayUsername();
     }
 
     @Override
@@ -215,8 +207,35 @@ public class DecisionActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void displayUsername() {
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.child(firebaseUser.getUid()).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String username = dataSnapshot.getValue(String.class);
+
+                    View header = navigationView.getHeaderView(0);
+                    TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
+                    mUsernameTextField.setText(username);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                View header = navigationView.getHeaderView(0);
+                TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
+                mUsernameTextField.setText("");
+            }
+        });
+    }
+
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
+
+        displayUsername();
     }
 }

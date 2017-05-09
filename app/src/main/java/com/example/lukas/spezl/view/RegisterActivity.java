@@ -357,7 +357,7 @@ public class RegisterActivity extends AppCompatActivity {
                 int mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterActivity.this, R.style.TimePicker, mDateSetListener, mYear, mMonth, mDay);
 
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + 1000);
                 datePickerDialog.show();
             }
         });

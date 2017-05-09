@@ -69,5 +69,7 @@
     <string name="text_participants">Teilnehmer</string>
     <string name="text_owner">Ersteller</string>
     <string name="text_agb">Datenschutz und Nutzung</string>
-    <string name="text_change">Ändern</string>
+    <string name="text_change_profile">Profil ändern</string>
+    <string name="text_accept">Übernehmen</string>
+    <string name="text_change_profile_label">Zum Ändern deiner Profildaten drücke auf den Button</string>
 </resources>

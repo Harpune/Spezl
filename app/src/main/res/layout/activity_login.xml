@@ -41,9 +41,9 @@
                     android:id="@+id/input_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="120"
                     android:hint="@string/text_email"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="textEmailAddress"
+                    android:maxLength="120" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -56,9 +56,9 @@
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="25"
                     android:hint="@string/text_password"
-                    android:inputType="textPassword" />
+                    android:inputType="textPassword"
+                    android:maxLength="25" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -108,7 +108,8 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true" />
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimary" />
     </RelativeLayout>
 
 
