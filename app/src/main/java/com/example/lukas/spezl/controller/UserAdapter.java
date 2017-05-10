@@ -1,5 +1,6 @@
 package com.example.lukas.spezl.controller;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,17 +12,19 @@ import android.widget.TextView;
 import com.example.lukas.spezl.model.User;
 import com.example.lukas.spezl.R;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
     private List<User> userList;
+    private Context context;
 
-    public class UserHolder extends RecyclerView.ViewHolder {
-        public TextView nameView, ageView;
-        public ImageView userImageView;
+    class UserHolder extends RecyclerView.ViewHolder {
+        TextView nameView, ageView;
+        ImageView userImageView;
 
-        public UserHolder(View view) {
+        UserHolder(View view) {
             super(view);
             nameView = (TextView) view.findViewById(R.id.text_name);
             ageView = (TextView) view.findViewById(R.id.text_age);
@@ -29,8 +32,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         }
     }
 
-    public UserAdapter(List<User> userList) {
+    public UserAdapter(List<User> userList, Context context) {
         this.userList = userList;
+        this.context = context;
     }
 
     @Override
@@ -42,15 +46,41 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
     @Override
     public void onBindViewHolder(final UserHolder holder, int position) {
+        // Get user from position.
         User user = userList.get(position);
-        Log.d("onBindViewHolder", user.getUserId());
-        holder.nameView.setText(user.getUsername());
-        holder.ageView.setText(String.valueOf(user.getAge()));
 
+        // Add values to views.
+        holder.nameView.setText(user.getUsername());
+
+        // Display day of birth as number not as date.
+        Calendar birthday = Calendar.getInstance();
+        birthday.setTime(user.getAge());
+        holder.ageView.setText(getAge(birthday) + " Jahre alt");
+
+        // Change icons for sex.
+        if(user.isSex() == null){
+            holder.userImageView.setImageResource(R.drawable.ic_person);
+        } else if (user.isSex()) {
+            holder.userImageView.setImageResource(R.drawable.ic_male);
+        } else {
+            holder.userImageView.setImageResource(R.drawable.ic_female);
+        } 
     }
 
     @Override
     public int getItemCount() {
         return userList.size();
+    }
+
+    private String getAge(Calendar birthday) {
+        Calendar today = Calendar.getInstance();
+
+        int age = today.get(Calendar.YEAR) - birthday.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < birthday.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        return "" + age;
     }
 }

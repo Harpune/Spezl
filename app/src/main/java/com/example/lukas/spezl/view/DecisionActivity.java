@@ -210,32 +210,16 @@ public class DecisionActivity extends AppCompatActivity {
     public void displayUsername() {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(firebaseUser.getUid()).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String username = dataSnapshot.getValue(String.class);
+        assert firebaseUser != null;
+        View header = navigationView.getHeaderView(0);
+        TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
+        mUsernameTextField.setText(firebaseUser.getDisplayName());
 
-                    View header = navigationView.getHeaderView(0);
-                    TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-                    mUsernameTextField.setText(username);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                View header = navigationView.getHeaderView(0);
-                TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-                mUsernameTextField.setText("");
-            }
-        });
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-
         displayUsername();
     }
 }

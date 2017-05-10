@@ -9,6 +9,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
+import com.example.lukas.spezl.controller.EventAdapter;
 import com.example.lukas.spezl.controller.StorageController;
+import com.example.lukas.spezl.controller.UserAdapter;
 import com.example.lukas.spezl.model.Event;
+import com.example.lukas.spezl.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +37,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -50,13 +59,18 @@ public class EventActivity extends AppCompatActivity {
 
     private final int REQUEST_CODE = 1;
 
+    private int count = 0;
+
+    private List<User> users = new ArrayList<>();
+    private UserAdapter userAdapter;
+
     //The EventData.
     private String eventId, ownerId, eventCategory;
     private Integer eventMaxParticipants;
     private int eventAmountParticipants;
 
     // Views.
-    private TextView mDescriptionText, mDateText, mPlaceText, mParticipantsText, mNotificationTextView;
+    private TextView mDescriptionText, mDateText, mTownText, mPlaceText, mParticipantsText, mNotificationTextView;
 
     // Loading Panel.
     private RelativeLayout loadingPanel;
@@ -103,15 +117,9 @@ public class EventActivity extends AppCompatActivity {
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24);
         }
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout)findViewById(R.id.toolbar_layout);
-        collapsingToolbarLayout.setTitle(eventName);
-        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
-        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
-        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
-        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.ToolbarColoredBackArrow);
-
         // Initialize the Views.
         mDateText = (TextView) findViewById(R.id.text_event_date);
+        mTownText = (TextView) findViewById(R.id.text_event_town);
         mPlaceText = (TextView) findViewById(R.id.text_event_place);
         mParticipantsText = (TextView) findViewById(R.id.text_event_participants);
         mDescriptionText = (TextView) findViewById(R.id.text_event_description);
@@ -130,8 +138,43 @@ public class EventActivity extends AppCompatActivity {
             mPlaceText.setText(eventTown + ", " + eventAddress);
         }
 
+        // Setup RecyclerView Displaying the users participating.
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        userAdapter = new UserAdapter(users, this);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(userAdapter);
+
         // Read the Event
         readEvent();
+    }
+
+    public void getRecyclerViewData() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        for (final String current : event.getParticipantIds().values()) {
+            databaseReference.child(current).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+
+                    if (user != null) {
+                        Log.d("USER", user.toString());
+                        users.add(user);
+                        userAdapter.notifyItemChanged(count);
+                        count++;
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("READ_USERS", "failed");
+                }
+            });
+        }
     }
 
     /**
@@ -284,14 +327,9 @@ public class EventActivity extends AppCompatActivity {
 
                 // Setup the views.
                 mDateText.setText(simpleDateFormat.format(event.getDate()) + " um " + simpleTimeFormat.format(event.getDate()));
+                mPlaceText.setText(event.getPlace());
+                mDescriptionText.setText(event.getDescription());
 
-                if(event.getDescription().equals("")){
-                    TextView descriptionLabel = (TextView) findViewById(R.id.label_event_description);
-                    descriptionLabel.setVisibility(View.GONE);
-                    mDescriptionText.setVisibility(View.GONE);
-                } else {
-                    mDescriptionText.setText(event.getDescription());
-                }
 
                 if (event.getMaxParticipants() == 0) {
                     mParticipantsText.setText(event.getParticipantIds().size() + " Teilnehmer");
@@ -299,11 +337,13 @@ public class EventActivity extends AppCompatActivity {
                     mParticipantsText.setText(event.getParticipantIds().size() + "/" + event.getMaxParticipants().intValue() + " Teilnehmer");
                 }
 
-                if (event.getAddress().equals("")) {
-                    mPlaceText.setText(event.getTown() + ", " + event.getAddress() + ". " + event.getPlace());
+                if (!event.getAddress().equals("")) {
+                    mTownText.setText(event.getTown() + ", " + event.getAddress());
                 } else {
-                    mPlaceText.setText(event.getTown() + ". " + event.getPlace());
+                    mTownText.setText(event.getTown() + ". " + event.getPlace());
                 }
+
+                getRecyclerViewData();
 
                 loadingPanel.setVisibility(View.GONE);
             }

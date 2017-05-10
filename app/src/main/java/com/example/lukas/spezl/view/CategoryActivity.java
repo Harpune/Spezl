@@ -18,6 +18,8 @@ import android.view.View;
 import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.controller.EventAdapter;
 import com.example.lukas.spezl.model.Event;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -114,8 +117,8 @@ public class CategoryActivity extends AppCompatActivity {
                     Log.d("DELETE_EVENT", "Date: " + date.get(Calendar.YEAR) + " " + date.get(Calendar.DAY_OF_YEAR));
                     Log.d("DELETE_EVENT", "Yesterday: " + tooLate.get(Calendar.YEAR) + " " + tooLate.get(Calendar.DAY_OF_YEAR));
 
-                    if(date.get(Calendar.YEAR) <= tooLate.get(Calendar.YEAR)
-                            && date.get(Calendar.DAY_OF_YEAR) <= tooLate.get(Calendar.DAY_OF_YEAR)){
+                    if (date.get(Calendar.YEAR) <= tooLate.get(Calendar.YEAR)
+                            && date.get(Calendar.DAY_OF_YEAR) <= tooLate.get(Calendar.DAY_OF_YEAR)) {
                         deleteExpiredEvents(key);
                     } else {
                         event.setuId(key);
@@ -149,7 +152,7 @@ public class CategoryActivity extends AppCompatActivity {
         mRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Log.d("DELETE_EVENT", "Event deleted: success");
                 } else {
                     Log.d("DELETE_EVENT", "Event deleted: failed");

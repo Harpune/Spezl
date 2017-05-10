@@ -51,6 +51,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     private Button changeProfileButton;
 
+    private TextView mUserEmail;
+
     private boolean profileChangeable = false;
 
     private RelativeLayout loadingPanel;
@@ -72,6 +74,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
 
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
+
+        mUserEmail = (TextView) findViewById(R.id.user_email);
 
         mOldPasswordText = (EditText) findViewById(R.id.input_old_password);
         mFirstPasswordText = (EditText) findViewById(R.id.input_password);
@@ -109,17 +113,19 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 } else {
 
                     final EditText editText = new EditText(ResetPasswordActivity.this);
-                    editText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
 
                     new AlertDialog.Builder(ResetPasswordActivity.this)
                             .setIcon(R.drawable.pic_owl_icon)
                             .setTitle("Bist du dir sicher?")
-                            .setMessage("Gib dein Passwort ein, wenn du deine Profildaten wirklich ändern willst.")
                             .setView(editText)
+                            .setMessage("Danach musst du dich erneut einloggen.")
                             .setCancelable(false)
                             .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    snackbar.dismiss();
                                     changeProfile(editText.getText().toString());
                                 }
                             })
@@ -142,8 +148,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
 
     public void changeProfile(String password) {
-
-
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         assert firebaseUser != null;
@@ -199,12 +203,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                             Log.d("UPDATE_PROFILE", "setValue: success");
 
                                             loadingPanel.setVisibility(View.GONE);
-                                            snackbar.dismiss();
+
+                                            FirebaseAuth.getInstance().signOut();
+
+                                            Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            startActivity(intent);
+                                            finish();
                                         } else {
                                             Log.d("UPDATE_PROFILE", "setValue: failed");
 
                                             loadingPanel.setVisibility(View.GONE);
-                                            snackbar.dismiss();
                                         }
                                     }
                                 });
@@ -214,7 +223,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
                                 Toast.makeText(ResetPasswordActivity.this, "Der Name konnte nicht geändert werden.", Toast.LENGTH_SHORT).show();
                                 loadingPanel.setVisibility(View.GONE);
-                                snackbar.dismiss();
                             }
 
                         }
@@ -277,31 +285,13 @@ public class ResetPasswordActivity extends AppCompatActivity {
     }
 
     public void getUserData() {
-
-        loadingPanel.setVisibility(View.VISIBLE);
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(firebaseUser.getUid()).child("username").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String username = dataSnapshot.getValue(String.class);
-
-                    String[] firstLast = username.split("\\s+");
-                    mFirstNameText.setText(firstLast[0]);
-                    mLastNameText.setText(firstLast[1]);
-
-                }
-                loadingPanel.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "Der Benutzer konnten icht gelesen werden.", Toast.LENGTH_SHORT).show();
-                loadingPanel.setVisibility(View.GONE);
-            }
-        });
+        assert firebaseUser != null;
+        String[] firstLast = firebaseUser.getDisplayName().split("\\s+");
+        mFirstNameText.setText(firstLast[0]);
+        mLastNameText.setText(firstLast[1]);
+        mUserEmail.setText(firebaseUser.getEmail());
     }
 
     @Override

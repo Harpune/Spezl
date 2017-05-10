@@ -157,6 +157,13 @@ public class CreateActivity extends AppCompatActivity {
             return;
         }
 
+        if (description.matches("")) {
+            mDescriptionLayout.setError("Gib genaueres über dein Event an.");
+            mDescriptionText.requestFocus();
+            focusOnView(mDescriptionLayout);
+            return;
+        }
+
         if (date.matches("")) {
             mDateLayout.setError("Man muss doch wissen, wann es statt findet");
             mDateText.requestFocus();
