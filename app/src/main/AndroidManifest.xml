@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.lukas.spezl">
+    package="com.dhbw.project.spezl">
 
     <application
         android:allowBackup="true"
@@ -10,30 +10,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.LoginActivity"
+            android:name="com.dhbw.project.spezl.view.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".view.RegisterActivity"
+            android:name="com.dhbw.project.spezl.view.RegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".view.DecisionActivity"
+            android:name="com.dhbw.project.spezl.view.DecisionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.CreateActivity"
+            android:name="com.dhbw.project.spezl.view.CreateActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.EventActivity"
+            android:name="com.dhbw.project.spezl.view.EventActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.CategoryActivity"
+            android:name="com.dhbw.project.spezl.view.CategoryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.ResetPasswordActivity"
+            android:name="com.dhbw.project.spezl.view.ResetPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.WelcomeActivity"
+            android:name="com.dhbw.project.spezl.view.WelcomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,9 +41,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.AGBActivity" />
-        <activity android:name=".view.MyEventsActivity" />
-        <activity android:name=".view.ProfileActivity" />
+        <activity android:name="com.dhbw.project.spezl.view.AGBActivity" />
+        <activity android:name="com.dhbw.project.spezl.view.MyEventsActivity" />
+        <activity android:name="com.dhbw.project.spezl.view.ProfileActivity" />
     </application>
 
 </manifest>

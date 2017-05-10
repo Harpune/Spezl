@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context="com.example.lukas.spezl.view.AGBActivity">
+        tools:context="com.dhbw.project.spezl.com.dhbw.lukas.spezl.view.AGBActivity">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
