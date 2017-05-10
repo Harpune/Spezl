@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhbw.project.spezl.model.User;
@@ -75,6 +77,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Instanciate the FirebaseAuthentication.
         mAuth = FirebaseAuth.getInstance();
+
+        // Change font.
+        TextView registerText = (TextView) findViewById(R.id.register_label);
+        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/AmaticSC-Regular.ttf");
+        registerText.setTypeface(typeFace);
 
         // Implement toolbar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

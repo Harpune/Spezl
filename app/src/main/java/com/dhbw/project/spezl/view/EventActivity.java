@@ -305,7 +305,7 @@ public class EventActivity extends AppCompatActivity {
                 //Check if user should be able to participate.
                 if (fireUser.getUid().equals(ownerId)) {
                     mNotificationTextView.setVisibility(View.VISIBLE);
-                    mNotificationTextView.setText("Das ist dein Event! \n\nKlicke auf den Button um das Event in den Sand zu setzen.\n");
+                    mNotificationTextView.setText("Das ist mein Event! \nKlicke auf den Button um das Event in den Sand zu setzen.\n");
                     joinEventButton.setText("Löschen");
                     joinEventButton.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.colorAccent, null));
                 } else if (userAlreadyParticipates()) {

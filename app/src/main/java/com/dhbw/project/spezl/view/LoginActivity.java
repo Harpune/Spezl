@@ -2,6 +2,7 @@ package com.dhbw.project.spezl.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhbw.project.spezl.R;
@@ -31,6 +33,11 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Change font.
+        TextView registerText = (TextView) findViewById(R.id.login_label);
+        Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/AmaticSC-Regular.ttf");
+        registerText.setTypeface(typeFace);
 
         // Find Views in Layout
         mEmailText = (EditText) findViewById(R.id.input_email);

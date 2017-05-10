@@ -16,9 +16,20 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:elevation="2dp"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"/>
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            android:elevation="2dp">
+
+            <TextView
+                android:id="@+id/decision_label"
+                android:textSize="18pt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/app_name" />
+
+        </android.support.v7.widget.Toolbar>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -31,9 +42,9 @@
                 android:id="@+id/owl_button"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:scaleType="fitCenter"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/app_name"
+                android:scaleType="fitCenter"
                 android:src="@drawable/pic_owl_active" />
 
         </LinearLayout>
@@ -51,91 +62,92 @@
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/pic_relax"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
-                    android:id="@+id/pic_relax"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackground"
                     android:onClick="showRelaxEvents"
                     android:scaleType="fitCenter" />
-            <ImageButton
+
+                <ImageButton
+                    android:id="@+id/pic_party"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="showPartyEvents"
+                    android:scaleType="fitCenter" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:id="@+id/pic_party"
                 android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="showPartyEvents"
-                android:scaleType="fitCenter"/>
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/pic_sport"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="showSportEvents"
+                    android:scaleType="fitCenter" />
+
+                <ImageButton
+                    android:id="@+id/pic_cook"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="showCookEvents"
+                    android:scaleType="fitCenter" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/pic_discussion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="showDiscussionEvents"
+                    android:scaleType="fitCenter" />
+
+                <ImageButton
+                    android:id="@+id/pic_culture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="showCultureEvents"
+                    android:scaleType="fitCenter" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:id="@+id/pic_sport"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="showSportEvents"
-                android:scaleType="fitCenter"/>
-
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:id="@+id/pic_cook"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="showCookEvents"
-                android:scaleType="fitCenter" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:id="@+id/pic_discussion"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="showDiscussionEvents"
-                android:scaleType="fitCenter"/>
-
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:id="@+id/pic_culture"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="showCultureEvents"
-                android:scaleType="fitCenter" />
-
-        </LinearLayout>
-
-
     </LinearLayout>
-</LinearLayout>
 
-<android.support.design.widget.NavigationView
-    android:id="@+id/navigation_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    app:headerLayout="@layout/nav_header"
-    app:menu="@menu/menu_navigation" />
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/menu_navigation" />
 </android.support.v4.widget.DrawerLayout>

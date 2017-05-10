@@ -76,4 +76,6 @@
 
     <string name="long_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam Lorem ipsum dolor sit amet, consetetur sadipscing elit Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam</string>
     <string name="text_admin_delete_event">[Admin] Event löschen</string>
+    <string name="text_new_here">Neu hier ...</string>
+    <string name="text_welcome_back">Willkommen zurück</string>
 </resources>

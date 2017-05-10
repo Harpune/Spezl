@@ -32,10 +32,11 @@
                 android:id="@+id/register_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:gravity="center_horizontal"
-                android:text="Neu hier ..."
-                android:textSize="14pt" />
+                android:text="@string/text_new_here"
+                android:textSize="24pt" />
 
 
             <android.support.design.widget.TextInputLayout
