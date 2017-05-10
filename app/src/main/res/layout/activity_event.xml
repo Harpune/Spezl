@@ -23,16 +23,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:padding="@dimen/recycler_view_padding"
                 android:layout_marginBottom="@dimen/recycler_view_padding"
-                android:orientation="vertical">
+                android:background="@color/colorAccent"
+                android:orientation="vertical"
+                android:padding="@dimen/recycler_view_padding">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -44,113 +43,132 @@
                     android:id="@+id/text_event_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/long_text"
-                    android:background="@color/colorAccent"/>
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/notificationTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:gravity="center_vertical">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_access_time" />
-
-                <TextView
-                    android:id="@+id/text_event_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:background="@color/colorAccent"
+                    android:text="@string/long_text" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:gravity="center_vertical">
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:orientation="vertical">
 
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_location" />
 
                 <TextView
-                    android:id="@+id/text_event_town"
+                    android:id="@+id/notificationTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:gravity="center_vertical">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_location" />
+                    android:textColor="@color/colorAccent"
+                    android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/text_event_place"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="3dp"
-                android:gravity="center_vertical">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_people" />
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/text_event_participants"
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_access_time" />
+
+                    <TextView
+                        android:id="@+id/text_event_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_location" />
+
+                    <TextView
+                        android:id="@+id/text_event_town"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_location" />
+
+                    <TextView
+                        android:id="@+id/text_event_place"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical">
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_people" />
+
+                    <TextView
+                        android:id="@+id/text_event_participants"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin" />
+
+                <Button
+                    android:id="@+id/join_event_button"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:onClick="joinEvent"
+                    android:text="@string/text_join_event"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/delete_event_button_admin"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:text="@string/text_admin_delete_event"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:visibility="gone" />
 
             </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <Button
-                android:id="@+id/join_event_button"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:onClick="joinEvent"
-                android:text="@string/text_join_event"
-                android:textColor="@android:color/white" />
-
         </LinearLayout>
     </ScrollView>
 

@@ -258,11 +258,13 @@ public class RegisterActivity extends AppCompatActivity {
         // Build the user-object.
         User user = new User();
         user.setUserId(fireUser.getUid());
-        user.setUsername(firstName + " " + lastName);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setSex(sex);
         user.setEmail(email);
         user.setAge(mCalendar.getTime());
         user.setImageUri("");
+        user.setAdmin(false);
 
         Log.d("NEW_USER", user.toString());
         Log.d("NEW_USER", fireUser.getEmail());

@@ -75,4 +75,5 @@
     <string name="text_change_profile_label">Zum Ändern deiner Profildaten drücke auf den Button</string>
 
     <string name="long_text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam Lorem ipsum dolor sit amet, consetetur sadipscing elit Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam</string>
+    <string name="text_admin_delete_event">[Admin] Event löschen</string>
 </resources>

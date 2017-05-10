@@ -50,7 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         User user = userList.get(position);
 
         // Add values to views.
-        holder.nameView.setText(user.getUsername());
+        holder.nameView.setText(user.getFirstName());
 
         // Display day of birth as number not as date.
         Calendar birthday = Calendar.getInstance();
@@ -58,13 +58,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         holder.ageView.setText(getAge(birthday) + " Jahre alt");
 
         // Change icons for sex.
-        if(user.isSex() == null){
+        if(user.getSex() == null){
             holder.userImageView.setImageResource(R.drawable.ic_person);
-        } else if (user.isSex()) {
+        } else if (user.getSex()) {
             holder.userImageView.setImageResource(R.drawable.ic_male);
         } else {
             holder.userImageView.setImageResource(R.drawable.ic_female);
-        } 
+        }
     }
 
     @Override

@@ -1,13 +1,19 @@
 package com.example.lukas.spezl.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +25,10 @@ import android.widget.Toast;
 
 import com.example.lukas.spezl.R;
 import com.example.lukas.spezl.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     private RelativeLayout loadingPanel;
     private RadioGroup mRadioGroup;
 
-    private User user = new User();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,19 +91,17 @@ public class ProfileActivity extends AppCompatActivity {
         mEmailLayout.setErrorEnabled(false);
         mAgeLayout.setErrorEnabled(false);
 
-        String[] firstLast = user.getUsername().split("\\s+");
-
-        if(firstName.equals("")){
+        if (firstName.equals("")) {
             mFirstNameLayout.setError("Gib deinen neuen Vornamen an.");
             return;
         }
 
-        if(lastName.equals("")){
+        if (lastName.equals("")) {
             mLastNameLayout.setError("Gib deinen neuen Nachnamen an.");
             return;
         }
 
-        if(email.equals("")){
+        if (email.equals("")) {
             mEmailLayout.setError("Gib eine E-Mailadresse an.");
             return;
         }
@@ -116,12 +124,7 @@ public class ProfileActivity extends AppCompatActivity {
         mFirstNameText.setText(firstLast[0]);
         mLastNameText.setText(firstLast[1]);
         mEmailText.setText(fireUser.getEmail());
-
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+
 }

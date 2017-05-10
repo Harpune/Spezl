@@ -185,6 +185,7 @@ public class DecisionActivity extends AppCompatActivity {
                         mDrawerLayout.closeDrawers();
                         FirebaseAuth.getInstance().signOut();
                         Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                        logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear every Activity.
                         startActivity(logoutIntent);
                         finish();
                         break;

@@ -102,7 +102,7 @@ public class OwnerFragment extends Fragment {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(context, "Daten konnten nicht gelesen werden", Toast.LENGTH_LONG).show();
+                Log.d("RecyclerView", "Couldn't read data");
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +60,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private RelativeLayout loadingPanel;
 
     private Snackbar snackbar;
+
+    private DatabaseReference mRefUser;
+    private FirebaseUser fireUser;
+
+    private String password = "";
+    private String uid = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -294,16 +302,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
         mUserEmail.setText(firebaseUser.getEmail());
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     public void enableProfileViews(boolean enable) {
         mFirstNameText.setFocusable(enable);
         mFirstNameText.setClickable(enable);
@@ -318,4 +316,130 @@ public class ResetPasswordActivity extends AppCompatActivity {
         profileChangeable = enable;
     }
 
+    /**
+     * Inflates the menu in the toolbar.
+     *
+     * @param menu The mnu layout clicked.
+     * @return boolean
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_toolbar_menu, menu);
+        return true;
+    }
+
+    /**
+     * Handle clicks on the item of the toolbar.
+     *
+     * @param item Clicked menu-item.
+     * @return boolean.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.delete:
+                // Ask user if he is sure.
+                new android.support.v7.app.AlertDialog.Builder(this)
+                        .setIcon(R.drawable.pic_owl_icon)
+                        .setTitle("Acount löschen")
+                        .setMessage("Möchtest du wirklich deinen Account löschen? Das kann nicht rückgängig gemacht werden.")
+                        .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // Show dialog for user input.
+                                initializeDialog();
+                            }
+                        })
+                        .setNegativeButton("Nein", null) // nothing when canceled.
+                        .show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Show the AlertDialog for user input.
+     * Get the password of the user.
+     */
+    public void initializeDialog() {
+        fireUser = FirebaseAuth.getInstance().getCurrentUser();// current user.
+        mRefUser = FirebaseDatabase.getInstance().getReference("users");// reference to the user node.
+        //DatabaseReference mRefEvent = FirebaseDatabase.getInstance().getReference("events"); //reference to the event node.
+
+        // Setup dialog.
+        android.support.v7.app.AlertDialog.Builder alert = new android.support.v7.app.AlertDialog.Builder(this);
+        alert.setTitle("Benutzer löschen");
+        alert.setMessage("Geben Sie ihr Passort ein, um Ihren Account zu löschen.");
+        alert.setIcon(R.drawable.pic_owl_icon);
+
+        // Set an EditText view to get user password.
+        final EditText passwordView = new EditText(this);
+        passwordView.setHint(R.string.text_password);
+        passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        alert.setView(passwordView); // Add EditText to alertView.
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                password = passwordView.getText().toString().trim(); // get user input.
+
+                if (password.equals("") || password.length() < 6) { // check the input
+                    Toast.makeText(ResetPasswordActivity.this, "Gib bitte dein Passwort ein", Toast.LENGTH_LONG).show();
+                } else {
+                    Log.d("DELETE_USER", "User Email: " + fireUser.getEmail());
+                    deleteUser(); // delete user.
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", null); // Do nothing on cancel.
+        alert.show();
+    }
+
+    /**
+     * Method to delete a user.
+     */
+    public void deleteUser() {
+        uid = fireUser.getUid(); // Save uid, because its gone as soon as user is deleted.
+        mRefUser.child(uid).removeValue(); // Remove the user-node first. Afterwards the permissions are missing.
+        AuthCredential credential = EmailAuthProvider.getCredential(fireUser.getEmail(), password);
+
+        // Reauthenticate the user.
+        fireUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) { // successfull? -> delete User.
+                            fireUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) { // successfill -> SignOut and go to WelcomeActivity.
+                                        Log.d("DELETE_USER", "User account deleted: " + uid);
+                                        Toast.makeText(ResetPasswordActivity.this, "Benutzer wurde gelöscht!", Toast.LENGTH_LONG).show();
+
+                                        FirebaseAuth.getInstance().signOut();
+                                        Intent intent = new Intent(ResetPasswordActivity.this, WelcomeActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear every Activity.
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        Toast.makeText(ResetPasswordActivity.this, "Benutzer konnte nicht gelöscht werden... Versuchen Sie es erneut.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            Toast.makeText(ResetPasswordActivity.this, "Das war nicht dein Passwort", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

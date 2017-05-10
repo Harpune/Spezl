@@ -76,7 +76,7 @@ public class EventActivity extends AppCompatActivity {
     private RelativeLayout loadingPanel;
 
     //ImageButtons
-    private Button joinEventButton;
+    private Button joinEventButton, adminDeleteButton;
 
     // Global Database.
     private FirebaseDatabase mDatabase;
@@ -128,6 +128,7 @@ public class EventActivity extends AppCompatActivity {
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
 
         joinEventButton = (Button) findViewById(R.id.join_event_button);
+        adminDeleteButton = (Button) findViewById(R.id.delete_event_button_admin);
 
         // Set the title and the Views with intent-information.
         mDescriptionText.setText(eventDescription);
@@ -154,6 +155,7 @@ public class EventActivity extends AppCompatActivity {
 
     public void getRecyclerViewData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+
         for (final String current : event.getParticipantIds().values()) {
             databaseReference.child(current).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -177,6 +179,81 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
+    public void deleteEvent(View view) {
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.pic_owl_icon)
+                .setTitle("Event absagen")
+                .setMessage("Willst du wirklich das Event löschen?")
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
+                        if (key != null) {
+                            DatabaseReference mDatabaseRef = mDatabase
+                                    .getReference("events")
+                                    .child(eventId);
+                            mDatabaseRef.removeValue();
+
+                            //deleteLocalEvent();
+                            StorageController.deleteLocalEvent(event, EventActivity.this);
+                            onBackPressed();
+                        }
+                    }
+                })
+                .setNegativeButton("Nein", null)
+                .show();
+    }
+
+    public void leaveEvent(){
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.pic_owl_icon)
+                .setTitle("Event absagen")
+                .setMessage("Willst du wirklich dem Event nicht mehr teilnehemen?")
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
+                        if (key != null) {
+                            DatabaseReference mDatabaseRef = mDatabase.getReference("events")
+                                    .child(eventId)
+                                    .child("participantIds")
+                                    .child(key);
+                            mDatabaseRef.removeValue();
+
+                            //deleteLocalEvent();
+                            StorageController.deleteLocalEvent(event, EventActivity.this);
+                            onBackPressed();
+                        }
+                    }
+                })
+                .setNegativeButton("Nein", null)
+                .show();
+    }
+
+    public void addUserToEvent(){
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.pic_owl_icon)
+                .setTitle("Du nimmst teil!")
+                .setMessage("Bist du dir sicher?")
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        DatabaseReference mDatabaseRef = mDatabase.getReference("events")
+                                .child(eventId)
+                                .child("participantIds")
+                                .push();
+                        mDatabaseRef.setValue(fireUser.getUid());
+
+                        //storeLocalEvent();
+
+                        StorageController.storeLocalEvent(event, EventActivity.this);
+                        onBackPressed();
+                    }
+                })
+                .setNegativeButton("Nein", null)
+                .show();
+    }
+
     /**
      * Triggered when fab is clicked.
      *
@@ -185,76 +262,11 @@ public class EventActivity extends AppCompatActivity {
     public void joinEvent(final View view) {
         if (event.getParticipantIds().size() <= 1
                 && event.getParticipantIds().values().toArray()[0].equals(fireUser.getUid())) {
-            new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.pic_owl_icon)
-                    .setTitle("Event absagen")
-                    .setMessage("Willst du wirklich das Event löschen?")
-                    .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
-                            if (key != null) {
-                                DatabaseReference mDatabaseRef = mDatabase
-                                        .getReference("events")
-                                        .child(eventId);
-                                mDatabaseRef.removeValue();
-
-                                //deleteLocalEvent();
-                                StorageController.deleteLocalEvent(event, EventActivity.this);
-                                onBackPressed();
-                            }
-                        }
-                    })
-                    .setNegativeButton("Nein", null)
-                    .show();
+            deleteEvent(null);
         } else if (userAlreadyParticipates()) {
-            new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.pic_owl_icon)
-                    .setTitle("Event absagen")
-                    .setMessage("Willst du wirklich dem Event nicht mehr teilnehemen?")
-                    .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
-                            if (key != null) {
-                                DatabaseReference mDatabaseRef = mDatabase.getReference("events")
-                                        .child(eventId)
-                                        .child("participantIds")
-                                        .child(key);
-                                mDatabaseRef.removeValue();
-
-                                //deleteLocalEvent();
-                                StorageController.deleteLocalEvent(event, EventActivity.this);
-                                onBackPressed();
-                            }
-                        }
-                    })
-                    .setNegativeButton("Nein", null)
-                    .show();
-
-
+            leaveEvent();
         } else {
-            new AlertDialog.Builder(this)
-                    .setIcon(R.drawable.pic_owl_icon)
-                    .setTitle("Du nimmst teil!")
-                    .setMessage("Bist du dir sicher?")
-                    .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            DatabaseReference mDatabaseRef = mDatabase.getReference("events")
-                                    .child(eventId)
-                                    .child("participantIds")
-                                    .push();
-                            mDatabaseRef.setValue(fireUser.getUid());
-
-                            //storeLocalEvent();
-
-                            StorageController.storeLocalEvent(event, EventActivity.this);
-                            onBackPressed();
-                        }
-                    })
-                    .setNegativeButton("Nein", null)
-                    .show();
+            addUserToEvent();
         }
     }
 
