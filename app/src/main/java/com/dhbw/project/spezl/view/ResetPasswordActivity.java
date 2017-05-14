@@ -434,6 +434,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Delete User from Database before deleting him from Auth.
+     */
     public void deleteUserFromDatabase() {
         final DatabaseReference mDataRef = FirebaseDatabase.getInstance().getReference("events");
         mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -442,9 +445,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Event currentEvent = postSnapshot.getValue(Event.class);
                     if (currentEvent != null) {
-                        Log.d("Current Event 1", currentEvent.toString());
-                        if (currentEvent.getOwnerId().equals(fireUser.getUid())) {
-                            Log.d("Current Event 2", currentEvent.toString());
+                        if (currentEvent.getOwnerId().equals(fireUser.getUid())) { // Event from owner
                             FirebaseDatabase.getInstance().getReference("events")
                                     .child(currentEvent.getuId())
                                     .removeValue();

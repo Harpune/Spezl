@@ -48,9 +48,6 @@
             android:name=".view.MyEventsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.ProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".view.MainActivity"
             android:screenOrientation="portrait" />
     </application>
