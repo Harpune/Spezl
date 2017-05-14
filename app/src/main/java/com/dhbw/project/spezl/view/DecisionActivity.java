@@ -177,6 +177,12 @@ public class DecisionActivity extends AppCompatActivity {
                         startActivity(createIntent);
                         mDrawerLayout.closeDrawers();
                         break;
+                    case R.id.showIntro:
+                        Intent introIntent = new Intent(getApplicationContext(), WelcomeActivity.class);
+                        introIntent.putExtra("SHOW_INTRO", true);
+                        startActivity(introIntent);
+                        mDrawerLayout.closeDrawers();
+                        break;
                     case R.id.logout:
                         Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawers();

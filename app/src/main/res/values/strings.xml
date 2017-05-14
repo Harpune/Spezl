@@ -78,4 +78,11 @@
     <string name="text_admin_delete_event">[Admin] Event löschen</string>
     <string name="text_new_here">Neu hier ...</string>
     <string name="text_welcome_back">Willkommen zurück</string>
+    <string name="text_next">Weiter</string>
+    <string name="text_skip">Überspringen</string>
+    <string name="text_welcome_slide">Willkommen bei Spezl</string>
+    <string name="text_choose_category">Wähle eine Kategorie!</string>
+    <string name="text_welcome_slide_3">Erstelle ein neues Event oder nimm an bereits erstellen teil!</string>
+    <string name="text_welcome_slide_4">Nimm nur mit einem Klick teil</string>
+    <string name="text_intro">Zeige das Intro</string>
 </resources>

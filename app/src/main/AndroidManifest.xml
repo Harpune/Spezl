@@ -4,46 +4,55 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.dhbw.project.spezl.view.LoginActivity"
+            android:name=".view.LoginActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.dhbw.project.spezl.view.RegisterActivity"
+            android:name=".view.RegisterActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.dhbw.project.spezl.view.DecisionActivity"
+            android:name=".view.DecisionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.dhbw.project.spezl.view.CreateActivity"
+            android:name=".view.CreateActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.dhbw.project.spezl.view.EventActivity"
+            android:name=".view.EventActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.dhbw.project.spezl.view.CategoryActivity"
+            android:name=".view.CategoryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.dhbw.project.spezl.view.ResetPasswordActivity"
+            android:name=".view.ResetPasswordActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.dhbw.project.spezl.view.WelcomeActivity"
+            android:name=".view.WelcomeActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.dhbw.project.spezl.view.AGBActivity" />
-        <activity android:name="com.dhbw.project.spezl.view.MyEventsActivity" />
-        <activity android:name="com.dhbw.project.spezl.view.ProfileActivity" />
+        <activity
+            android:name=".view.AGBActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.MyEventsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

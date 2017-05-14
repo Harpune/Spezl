@@ -13,14 +13,21 @@
             android:title="@string/text_my_event" />
 
         <item
+            android:id="@+id/createEvent"
+            android:icon="@drawable/ic_action_add"
+            android:title="@string/text_new_event" />
+    </group>
+
+    <group android:id="@+id/settingsGroup">
+        <item
             android:id="@+id/settings"
             android:icon="@drawable/ic_action_settings"
             android:title="@string/text_agb" />
 
         <item
-            android:id="@+id/createEvent"
-            android:icon="@drawable/ic_action_add"
-            android:title="@string/text_new_event" />
+            android:id="@+id/showIntro"
+            android:icon="@drawable/ic_info_outline_black_24dp"
+            android:title="@string/text_intro" />
     </group>
 
     <group android:id="@+id/logoutGroup">
