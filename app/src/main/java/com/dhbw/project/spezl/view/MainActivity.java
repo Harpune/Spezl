@@ -14,6 +14,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    // Firebase Auth for FirebaseUser.
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Check if FirebaseUser is logged in.
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -37,9 +41,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        // Get Firebase Instance.
         mAuth = FirebaseAuth.getInstance();
 
         setContentView(R.layout.activity_main);
+
         // Change font.
         TextView welcomeText = (TextView) findViewById(R.id.text_welcome);
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/AmaticSC-Regular.ttf");
@@ -47,22 +53,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Start intent to Login Activity.
+     *
+     * @param view Login Button.
+     */
     public void toLoginActivity(View view) {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Start intent to Register Activity.
+     *
+     * @param view Register Button.
+     */
     public void toRegisterActivity(View view) {
         Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Check if user is logged in.
+     */
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
 
+    /**
+     * Check if user is logged in.
+     */
     @Override
     public void onStop() {
         super.onStop();

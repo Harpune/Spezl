@@ -36,10 +36,20 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WelcomeActivity extends AppCompatActivity {
+
+    // Viewpager with slides.
     private ViewPager viewPager;
+
+    // Layout with the dots.
     private LinearLayout dotsLayout;
+
+    // Int with slides.
     private int[] layouts;
+
+    // Button to skip or next.
     private Button btnSkip, btnNext;
+
+    // PrefManager for check if user never started the app before.
     private PrefManager prefManager;
 
 
@@ -48,6 +58,7 @@ public class WelcomeActivity extends AppCompatActivity {
         // Checking for first time launch - before calling setContentView()
         prefManager = new PrefManager(this);
 
+        // If user want to show the Intro again.
         boolean showIntro = false;
         Intent intent = getIntent();
         if (intent.hasExtra("SHOW_INTRO")) {
@@ -55,6 +66,7 @@ public class WelcomeActivity extends AppCompatActivity {
             Log.d("SHOW_INTRO", "" + showIntro);
         }
 
+        // Check if user lauchnes the app for the first time.
         if (!prefManager.isFirstTimeLaunch()) {
             if (showIntro) {
                 showIntro();
@@ -66,33 +78,40 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Show the slides.
+     */
     public void showIntro() {
-        // Making notification bar transparent
+        // Making notification bar transparent.
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         setContentView(R.layout.activity_welcome);
 
+        // Find the views.
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
 
+        // Find the slides.
         layouts = new int[]{R.layout.welcome_slide1,
                 R.layout.welcome_slide2,
                 R.layout.welcome_slide3,
                 R.layout.welcome_slide4};
 
-        // adding bottom dots
+        // adding bottom dots.
         addBottomDots(0);
 
-        // making notification bar transparent
+        // making notification bar transparent.
         changeStatusBarColor();
 
+        // Setup viewPager.
         MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
+        // Setup skipButton.
         btnSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +119,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         });
 
+        // Setup nextButton.
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +147,9 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Launch Main Activity.
+     */
     private void launchHomeScreen() {
         prefManager.setFirstTimeLaunch(false);
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
@@ -135,6 +158,11 @@ public class WelcomeActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Add Buttons to the LinearLayout.
+     *
+     * @param currentPage Current Page.
+     */
     private void addBottomDots(int currentPage) {
         TextView[] dots = new TextView[layouts.length];
 
@@ -157,6 +185,10 @@ public class WelcomeActivity extends AppCompatActivity {
             dots[currentPage].setTextColor(ContextCompat.getColor(WelcomeActivity.this, R.color.colorAccent));
     }
 
+    /**
+     * @param i item number.
+     * @return curren Item.
+     */
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;
     }
@@ -192,7 +224,7 @@ public class WelcomeActivity extends AppCompatActivity {
     };
 
     /**
-     * View pager adapter
+     * View pager adapter.
      */
     private class MyViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
@@ -208,21 +240,21 @@ public class WelcomeActivity extends AppCompatActivity {
             container.addView(view);
 
             Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/AmaticSC-Regular.ttf");
-            ImageView icon1 = (ImageView) view.findViewById(R.id.icon1);
-            ImageView icon2 = (ImageView) view.findViewById(R.id.icon2);
-            ImageView icon3 = (ImageView) view.findViewById(R.id.icon3);
-            ImageView icon4 = (ImageView) view.findViewById(R.id.icon4);
-            ImageView icon5 = (ImageView) view.findViewById(R.id.icon5);
-            ImageView icon6 = (ImageView) view.findViewById(R.id.icon6);
+
             switch (position) {
-                case 0:
+                case 0://First Slide
                     TextView label0 = (TextView) view.findViewById(R.id.app_name_label);
                     label0.setTypeface(typeFace);
                     break;
                 case 1:
                     TextView label1 = (TextView) view.findViewById(R.id.app_name_label);
                     label1.setTypeface(typeFace);
-
+                    ImageView icon1 = (ImageView) view.findViewById(R.id.icon1);
+                    ImageView icon2 = (ImageView) view.findViewById(R.id.icon2);
+                    ImageView icon3 = (ImageView) view.findViewById(R.id.icon3);
+                    ImageView icon4 = (ImageView) view.findViewById(R.id.icon4);
+                    ImageView icon5 = (ImageView) view.findViewById(R.id.icon5);
+                    ImageView icon6 = (ImageView) view.findViewById(R.id.icon6);
                     try {
                         icon1.setBackground(getAssetImage(WelcomeActivity.this, "icon1"));
                         icon2.setBackground(getAssetImage(WelcomeActivity.this, "icon2"));
