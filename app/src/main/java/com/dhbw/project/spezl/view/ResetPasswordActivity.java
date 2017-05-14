@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dhbw.project.spezl.R;
+import com.dhbw.project.spezl.model.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -30,8 +31,15 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class ResetPasswordActivity extends AppCompatActivity {
     private final String TAG = "1";
@@ -70,6 +78,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        // Find the views.
         loadingPanel = (RelativeLayout) findViewById(R.id.loadingPanel);
 
         mUserEmail = (TextView) findViewById(R.id.user_email);
@@ -235,12 +244,17 @@ public class ResetPasswordActivity extends AppCompatActivity {
         });
     }
 
-
+    /**
+     * Change the password of the user.
+     *
+     * @param view Change Password button.
+     */
     public void changePassword(View view) {
         String oldString = mOldPasswordText.getText().toString().trim();
         String firstString = mFirstPasswordText.getText().toString().trim();
         final String newString = mNewPasswordText.getText().toString().trim();
 
+        // Check input.
         if (firstString.equals("") || oldString.equals("") || newString.equals("")) {
             Toast.makeText(this, "Gib bitte ein Passwort an, wenn du es ändern willst.", Toast.LENGTH_SHORT).show();
         }
@@ -281,6 +295,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Get firebase user data.
+     */
     public void getUserData() {
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -291,6 +308,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         mUserEmail.setText(firebaseUser.getEmail());
     }
 
+    /**
+     * Enable the Views.
+     *
+     * @param enable if views should be enabled.
+     */
     public void enableProfileViews(boolean enable) {
         mFirstNameText.setFocusable(enable);
         mFirstNameText.setClickable(enable);
@@ -367,7 +389,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         // Set an EditText view to get user password.
         final EditText passwordView = new EditText(this);
         passwordView.setHint(R.string.text_password);
-        passwordView.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        passwordView.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         alert.setView(passwordView); // Add EditText to alertView.
 
@@ -383,7 +405,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 }
             }
         });
-        alert.setNegativeButton("Cancel", null); // Do nothing on cancel.
+        alert.setNegativeButton("Nein", null); // Do nothing on cancel.
         alert.show();
     }
 
@@ -391,8 +413,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
      * Method to delete a user.
      */
     public void deleteUser() {
+        loadingPanel.setVisibility(View.VISIBLE);
         uid = fireUser.getUid(); // Save uid, because its gone as soon as user is deleted.
         mRefUser.child(uid).removeValue(); // Remove the user-node first. Afterwards the permissions are missing.
+        assert fireUser != null;
         AuthCredential credential = EmailAuthProvider.getCredential(fireUser.getEmail(), password);
 
         // Reauthenticate the user.
@@ -401,28 +425,86 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) { // successfull? -> delete User.
-                            fireUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) { // successfill -> SignOut and go to WelcomeActivity.
-                                        Log.d("DELETE_USER", "User account deleted: " + uid);
-                                        Toast.makeText(ResetPasswordActivity.this, "Benutzer wurde gelöscht!", Toast.LENGTH_LONG).show();
-
-                                        FirebaseAuth.getInstance().signOut();
-                                        Intent intent = new Intent(ResetPasswordActivity.this, WelcomeActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear every Activity.
-                                        startActivity(intent);
-                                        finish();
-                                    } else {
-                                        Toast.makeText(ResetPasswordActivity.this, "Benutzer konnte nicht gelöscht werden... Versuchen Sie es erneut.", Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
+                            deleteUserFromDatabase();
                         } else {
+                            loadingPanel.setVisibility(View.GONE);
                             Toast.makeText(ResetPasswordActivity.this, "Das war nicht dein Passwort", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
+    }
+
+    public void deleteUserFromDatabase() {
+        final DatabaseReference mDataRef = FirebaseDatabase.getInstance().getReference("events");
+        mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Event currentEvent = postSnapshot.getValue(Event.class);
+                    if (currentEvent != null) {
+                        Log.d("Current Event 1", currentEvent.toString());
+                        if (currentEvent.getOwnerId().equals(fireUser.getUid())) {
+                            Log.d("Current Event 2", currentEvent.toString());
+                            FirebaseDatabase.getInstance().getReference("events")
+                                    .child(currentEvent.getuId())
+                                    .removeValue();
+                        }
+
+                        String key = getKeyByValue(currentEvent.getParticipantIds(), fireUser.getUid());
+                        if (key != null) {
+                            FirebaseDatabase.getInstance().getReference("events")
+                                    .child(currentEvent.getuId())
+                                    .child("participantIds")
+                                    .child(key)
+                                    .removeValue();
+                        }
+                    }
+                }
+                deleteUserFromAuth();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("DELETE_USER", databaseError.toString());
+            }
+        });
+    }
+
+    public void deleteUserFromAuth() {
+        fireUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) { // successfill -> SignOut and go to WelcomeActivity.
+                    Log.d("DELETE_USER", "User account deleted: " + uid);
+                    Toast.makeText(ResetPasswordActivity.this, "Benutzer wurde gelöscht!", Toast.LENGTH_LONG).show();
+                    loadingPanel.setVisibility(View.GONE);
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(ResetPasswordActivity.this, WelcomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear every Activity.
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+        loadingPanel.setVisibility(View.GONE);
+    }
+
+    /**
+     * Look for the key by having the value
+     *
+     * @param map   Key.
+     * @param value Value.
+     * @param <T>   String.
+     * @param <E>   STring.
+     * @return Key with Value.
+     */
+    public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
+        for (Map.Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
 
