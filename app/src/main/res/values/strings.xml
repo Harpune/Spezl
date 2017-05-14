@@ -26,7 +26,7 @@
     <string name="text_start_time">Startzeit</string>
     <string name="text_end_time">Endzeit</string>
     <string name="text_duration">Dauer</string>
-    <string name="text_oclock"> Uhr</string>
+    <string name="text_oclock">&#160;Uhr</string>
     <string name="auth_failed">Da ist etwas schief gelaufen.</string>
     <string name="auth_weak_password">Das Passwort ist leider zu schwach!</string>
     <string name="auth_invalid_email">Deine Email ist leider nicht gültig</string>

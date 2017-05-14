@@ -38,7 +38,7 @@ public class AGBActivity extends AppCompatActivity {
         // Sertup the toolbar, if needed.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        toolbar.setTitle(R.string.text_settings);
+        toolbar.setTitle("Datenschutz und Nutzung");
         if (setupToolbar) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {

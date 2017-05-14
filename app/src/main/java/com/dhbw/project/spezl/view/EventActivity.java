@@ -126,6 +126,12 @@ public class EventActivity extends AppCompatActivity {
 
         joinEventButton = (Button) findViewById(R.id.join_event_button);
         adminDeleteButton = (Button) findViewById(R.id.delete_event_button_admin);
+        adminDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteEvent();
+            }
+        });
 
         // Set the title and the Views with intent-information.
         mDescriptionText.setText(eventDescription);
@@ -148,8 +154,14 @@ public class EventActivity extends AppCompatActivity {
 
         // Read the Event
         readEvent();
+
+        // Check if current user is admin.
+        // checkForAdmin();
     }
 
+    /**
+     * Read the users participating from the event.getParticipantIds().
+     */
     public void getRecyclerViewData() {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
 
@@ -164,7 +176,6 @@ public class EventActivity extends AppCompatActivity {
                         users.add(user);
                         userAdapter.notifyItemChanged(count);
                         count++;
-
                     }
                 }
 
@@ -174,9 +185,37 @@ public class EventActivity extends AppCompatActivity {
                 }
             });
         }
+        loadingPanel.setVisibility(View.GONE);
     }
 
-    public void deleteEvent(View view) {
+    /**
+     * Check if current user is admin. If so make deleteButton visible.
+     */
+    public void checkForAdmin() {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        assert firebaseUser != null;
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.child(firebaseUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User currentUser = dataSnapshot.getValue(User.class);
+
+                if (currentUser != null && currentUser.isAdmin()) {
+                    adminDeleteButton.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("CheckForAdmin", "Couldn't read Admin.");
+            }
+        });
+    }
+
+    /**
+     * Delete the current event.
+     */
+    public void deleteEvent() {
         new AlertDialog.Builder(this)
                 .setIcon(R.drawable.pic_owl_icon)
                 .setTitle("Event absagen")
@@ -191,8 +230,7 @@ public class EventActivity extends AppCompatActivity {
                                     .child(eventId);
                             mDatabaseRef.removeValue();
 
-                            //deleteLocalEvent();
-                            StorageController.deleteLocalEvent(event, EventActivity.this);
+                            //StorageController.deleteLocalEvent(event, EventActivity.this);
                             onBackPressed();
                         }
                     }
@@ -201,7 +239,10 @@ public class EventActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void leaveEvent(){
+    /**
+     * LEave the current event.
+     */
+    public void leaveEvent() {
         new AlertDialog.Builder(this)
                 .setIcon(R.drawable.pic_owl_icon)
                 .setTitle("Event absagen")
@@ -217,8 +258,7 @@ public class EventActivity extends AppCompatActivity {
                                     .child(key);
                             mDatabaseRef.removeValue();
 
-                            //deleteLocalEvent();
-                            StorageController.deleteLocalEvent(event, EventActivity.this);
+                            //StorageController.deleteLocalEvent(event, EventActivity.this);
                             onBackPressed();
                         }
                     }
@@ -227,7 +267,10 @@ public class EventActivity extends AppCompatActivity {
                 .show();
     }
 
-    public void addUserToEvent(){
+    /**
+     * User joins the event.
+     */
+    public void addUserToEvent() {
         new AlertDialog.Builder(this)
                 .setIcon(R.drawable.pic_owl_icon)
                 .setTitle("Du nimmst teil!")
@@ -241,9 +284,7 @@ public class EventActivity extends AppCompatActivity {
                                 .push();
                         mDatabaseRef.setValue(fireUser.getUid());
 
-                        //storeLocalEvent();
-
-                        StorageController.storeLocalEvent(event, EventActivity.this);
+                        //StorageController.storeLocalEvent(event, EventActivity.this);
                         onBackPressed();
                     }
                 })
@@ -259,7 +300,7 @@ public class EventActivity extends AppCompatActivity {
     public void joinEvent(final View view) {
         if (event.getParticipantIds().size() <= 1
                 && event.getParticipantIds().values().toArray()[0].equals(fireUser.getUid())) {
-            deleteEvent(null);
+            deleteEvent();
         } else if (userAlreadyParticipates()) {
             leaveEvent();
         } else {
@@ -267,6 +308,15 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Look for the key by having the value
+     *
+     * @param map   Key.
+     * @param value Value.
+     * @param <T>   String.
+     * @param <E>   STring.
+     * @return Key with Value.
+     */
     public static <T, E> T getKeyByValue(HashMap<T, E> map, E value) {
         for (Map.Entry<T, E> entry : map.entrySet()) {
             if (Objects.equals(value, entry.getValue())) {
@@ -353,8 +403,6 @@ public class EventActivity extends AppCompatActivity {
                 }
 
                 getRecyclerViewData();
-
-                loadingPanel.setVisibility(View.GONE);
             }
 
             @Override

@@ -354,12 +354,14 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Check for different build, because it crashes.
+                mCalendar.add(Calendar.YEAR, -18);
                 int mYear = mCalendar.get(Calendar.YEAR);
                 int mMonth = mCalendar.get(Calendar.MONTH);
                 int mDay = mCalendar.get(Calendar.DAY_OF_MONTH);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(RegisterActivity.this, R.style.TimePicker, mDateSetListener, mYear, mMonth, mDay);
 
-                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() + 1000);
+                //datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - (1000));
+                datePickerDialog.getDatePicker().setMaxDate(mCalendar.getTimeInMillis());
                 datePickerDialog.show();
             }
         });

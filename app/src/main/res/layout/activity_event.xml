@@ -134,25 +134,24 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/notificationTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    android:padding="@dimen/recycler_view_padding"
-                    android:visibility="gone"/>
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/notificationTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/recycler_view_padding"
+                    android:textColor="@color/colorAccent"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/join_event_button"
                     style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_horizontal_margin"
                     android:onClick="joinEvent"
                     android:text="@string/text_join_event"
                     android:textColor="@android:color/white" />
