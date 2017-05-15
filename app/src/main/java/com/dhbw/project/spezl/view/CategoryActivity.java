@@ -94,7 +94,7 @@ public class CategoryActivity extends AppCompatActivity {
         Log.d("CATEGORY", category);
         DatabaseReference mDatabaseRef = FirebaseDatabase.getInstance().getReference("events");
         Query query = mDatabaseRef.orderByChild("category").equalTo(category);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 events.clear();
@@ -103,15 +103,12 @@ public class CategoryActivity extends AppCompatActivity {
                     String key = postSnapshot.getKey();
                     Log.d("KEY", key);
                     Event event = postSnapshot.getValue(Event.class);
-
+                    Log.d("Event", event.toString());
                     Calendar date = Calendar.getInstance();
                     date.setTime(event.getDate()); // your date
 
                     Calendar tooLate = Calendar.getInstance(); // today
                     tooLate.add(Calendar.DAY_OF_YEAR, -1); // too late
-
-                    Log.d("DELETE_EVENT", "Date: " + date.get(Calendar.YEAR) + " " + date.get(Calendar.DAY_OF_YEAR));
-                    Log.d("DELETE_EVENT", "Yesterday: " + tooLate.get(Calendar.YEAR) + " " + tooLate.get(Calendar.DAY_OF_YEAR));
 
                     if (date.get(Calendar.YEAR) <= tooLate.get(Calendar.YEAR)
                             && date.get(Calendar.DAY_OF_YEAR) <= tooLate.get(Calendar.DAY_OF_YEAR)) {
@@ -138,6 +135,7 @@ public class CategoryActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
+                Log.d("CATEGORY", databaseError.toString());
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });

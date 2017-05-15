@@ -129,7 +129,7 @@ public class EventActivity extends AppCompatActivity {
         adminDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteEvent();
+                deleteEvent(true);
             }
         });
 
@@ -156,7 +156,7 @@ public class EventActivity extends AppCompatActivity {
         readEvent();
 
         // Check if current user is admin.
-        // checkForAdmin();
+        checkForAdmin();
     }
 
     /**
@@ -192,6 +192,7 @@ public class EventActivity extends AppCompatActivity {
      * Check if current user is admin. If so make deleteButton visible.
      */
     public void checkForAdmin() {
+        Log.d("ADMIN", "User is admin: " + "called");
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         assert firebaseUser != null;
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -201,6 +202,7 @@ public class EventActivity extends AppCompatActivity {
                 User currentUser = dataSnapshot.getValue(User.class);
 
                 if (currentUser != null && currentUser.isAdmin()) {
+                    Log.d("ADMIN", "User is admin: " + currentUser.getUserId());
                     adminDeleteButton.setVisibility(View.VISIBLE);
                 }
             }
@@ -215,16 +217,37 @@ public class EventActivity extends AppCompatActivity {
     /**
      * Delete the current event.
      */
-    public void deleteEvent() {
-        new AlertDialog.Builder(this)
-                .setIcon(R.drawable.pic_owl_icon)
-                .setTitle("Event absagen")
-                .setMessage("Willst du wirklich das Event löschen?")
-                .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
-                        if (key != null) {
+    public void deleteEvent(boolean isAdmin) {
+        if (!isAdmin) {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.pic_owl_icon)
+                    .setTitle("Event absagen")
+                    .setMessage("Willst du wirklich das Event löschen?")
+                    .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String key = getKeyByValue(event.getParticipantIds(), fireUser.getUid());
+                            if (key != null) {
+                                DatabaseReference mDatabaseRef = mDatabase
+                                        .getReference("events")
+                                        .child(eventId);
+                                mDatabaseRef.removeValue();
+
+                                //StorageController.deleteLocalEvent(event, EventActivity.this);
+                                onBackPressed();
+                            }
+                        }
+                    })
+                    .setNegativeButton("Nein", null)
+                    .show();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setIcon(R.drawable.pic_owl_icon)
+                    .setTitle("Event absagen")
+                    .setMessage("Willst du wirklich das Event löschen [Admin]?")
+                    .setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
                             DatabaseReference mDatabaseRef = mDatabase
                                     .getReference("events")
                                     .child(eventId);
@@ -232,11 +255,12 @@ public class EventActivity extends AppCompatActivity {
 
                             //StorageController.deleteLocalEvent(event, EventActivity.this);
                             onBackPressed();
+
                         }
-                    }
-                })
-                .setNegativeButton("Nein", null)
-                .show();
+                    })
+                    .setNegativeButton("Nein", null)
+                    .show();
+        }
     }
 
     /**
@@ -300,7 +324,7 @@ public class EventActivity extends AppCompatActivity {
     public void joinEvent(final View view) {
         if (event.getParticipantIds().size() <= 1
                 && event.getParticipantIds().values().toArray()[0].equals(fireUser.getUid())) {
-            deleteEvent();
+            deleteEvent(false);
         } else if (userAlreadyParticipates()) {
             leaveEvent();
         } else {
