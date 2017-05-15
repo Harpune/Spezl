@@ -9,9 +9,7 @@ public class Spezl extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
         Firebase.setAndroidContext(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
     }
 }

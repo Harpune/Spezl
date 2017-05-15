@@ -34,7 +34,6 @@ import java.io.InputStream;
 public class DecisionActivity extends AppCompatActivity {
 
     private final String TAG_CATEGORY = "TAG_CATEGORY";
-    private final String TAG_REGISTER = "TAG_REGISTER";
 
     private DrawerLayout mDrawerLayout;
 
@@ -187,6 +186,7 @@ public class DecisionActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Logout", Toast.LENGTH_SHORT).show();
                         mDrawerLayout.closeDrawers();
                         FirebaseAuth.getInstance().signOut();
+
                         Intent logoutIntent = new Intent(getApplicationContext(), LoginActivity.class);
                         logoutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear every Activity.
                         startActivity(logoutIntent);
@@ -217,8 +217,9 @@ public class DecisionActivity extends AppCompatActivity {
         assert firebaseUser != null;
         View header = navigationView.getHeaderView(0);
         TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-        mUsernameTextField.setText(firebaseUser.getDisplayName());
-
+        if(mUsernameTextField != null){
+            mUsernameTextField.setText(firebaseUser.getDisplayName());
+        }
     }
 
     @Override

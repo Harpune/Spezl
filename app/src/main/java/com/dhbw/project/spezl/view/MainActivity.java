@@ -14,8 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
-
-
     // Firebase Auth for FirebaseUser.
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d("AUTH", "Signed in... UserID: + " + user.getUid());
-                    Intent intent = new Intent(getApplicationContext(), DecisionActivity.class);
+                    Intent intent = new Intent(MainActivity.this, DecisionActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -40,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
         // Get Firebase Instance.
         mAuth = FirebaseAuth.getInstance();
 

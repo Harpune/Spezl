@@ -66,6 +66,8 @@ public class WelcomeActivity extends AppCompatActivity {
             Log.d("SHOW_INTRO", "" + showIntro);
         }
 
+        super.onCreate(savedInstanceState);
+
         // Check if user lauchnes the app for the first time.
         if (!prefManager.isFirstTimeLaunch()) {
             if (showIntro) {
@@ -73,9 +75,9 @@ public class WelcomeActivity extends AppCompatActivity {
             } else {
                 launchHomeScreen();
             }
+        } else {
+            showIntro();
         }
-
-        super.onCreate(savedInstanceState);
     }
 
     /**
