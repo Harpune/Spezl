@@ -7,17 +7,17 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:clipToPadding="false"
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:layout_height="100dp"
+            android:background="@drawable/curve_toolbar"
             android:elevation="2dp"
             android:minHeight="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,37 +34,27 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <ImageButton
-            android:id="@+id/owl_button"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/app_name"
-            android:scaleType="fitCenter"
-            android:src="@drawable/pic_owl_active"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
         <GridLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:layout_marginBottom="64dp"
+            android:alignmentMode="alignMargins"
             android:columnCount="2"
-            android:rowCount="3"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/owl_button">
+            android:columnOrderPreserved="false"
+            android:rowCount="3">
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            <android.support.v7.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:background="?android:attr/selectableItemBackground"
+                android:layout_margin="@dimen/card_margin"
                 android:onClick="showRelaxEvents"
-                card_view:cardCornerRadius="8dp"
-                card_view:cardElevation="4dp"
-                card_view:cardUseCompatPadding="true">
+                app:cardBackgroundColor="@color/colorAccentCloudy"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -85,10 +75,12 @@
                 android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_margin="@dimen/card_margin"
                 android:onClick="showPartyEvents"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="8dp">
+                app:cardBackgroundColor="@color/colorAccentCloudy"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -109,10 +101,12 @@
                 android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_margin="@dimen/card_margin"
                 android:onClick="showSportEvents"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="8dp">
+                app:cardBackgroundColor="@color/colorAccentCloudy"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -133,10 +127,12 @@
                 android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_margin="@dimen/card_margin"
                 android:onClick="showCookEvents"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="8dp">
+                app:cardBackgroundColor="@color/colorAccentCloudy"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -157,10 +153,12 @@
                 android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_margin="@dimen/card_margin"
                 android:onClick="showDiscussionEvents"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="8dp">
+                app:cardBackgroundColor="@color/colorAccentCloudy"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -181,10 +179,12 @@
                 android:layout_height="0dp"
                 android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
-                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:layout_margin="@dimen/card_margin"
                 android:onClick="showCultureEvents"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="8dp">
+                app:cardBackgroundColor="@color/colorAccentCloudy"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -200,8 +200,19 @@
 
             </android.support.v7.widget.CardView>
 
-
         </GridLayout>
+
+        <ImageButton
+            android:id="@+id/owl_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/pic_owl_active" />
 
         <!--
                 <LinearLayout
@@ -298,7 +309,7 @@
 
                 </LinearLayout>
                 -->
-    </android.support.constraint.ConstraintLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#004D40</color>
-    <color name="colorAccent">#80CBC4</color>
+    <color name="colorPrimary">#09A285</color>
+    <color name="colorPrimaryDark">#014D40</color>
+    <color name="colorAccent">#FF04D6</color>
 
     <color name="colorAccentCloudy">#8080CBC4</color>
     <color name="colorPrimaryCloudy">#80009688</color>
