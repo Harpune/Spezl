@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -85,16 +86,18 @@ public class WelcomeActivity extends AppCompatActivity {
      */
     public void showIntro() {
         // Making notification bar transparent.
+        /*
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
+        */
         setContentView(R.layout.activity_welcome);
 
         // Find the views.
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
-        btnSkip = (Button) findViewById(R.id.btn_skip);
-        btnNext = (Button) findViewById(R.id.btn_next);
+        viewPager = findViewById(R.id.viewPager);
+        dotsLayout = findViewById(R.id.layoutDots);
+        btnSkip = findViewById(R.id.btn_skip);
+        btnNext = findViewById(R.id.btn_next);
 
         // Find the slides.
         layouts = new int[]{R.layout.welcome_slide1,
@@ -106,7 +109,7 @@ public class WelcomeActivity extends AppCompatActivity {
         addBottomDots(0);
 
         // making notification bar transparent.
-        changeStatusBarColor();
+        //changeStatusBarColor();
 
         // Setup viewPager.
         MyViewPagerAdapter myViewPagerAdapter = new MyViewPagerAdapter();
@@ -189,7 +192,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     /**
      * @param i item number.
-     * @return curren Item.
+     * @return current Item.
      */
     private int getItem(int i) {
         return viewPager.getCurrentItem() + i;
@@ -234,8 +237,9 @@ public class WelcomeActivity extends AppCompatActivity {
         MyViewPagerAdapter() {
         }
 
+        @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View view = layoutInflater.inflate(layouts[position], container, false);
@@ -245,34 +249,18 @@ public class WelcomeActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0://First Slide
-                    TextView label0 = (TextView) view.findViewById(R.id.app_name_label);
+                    TextView label0 = view.findViewById(R.id.app_name_label);
                     label0.setTypeface(typeFace);
                     break;
                 case 1:
-                    TextView label1 = (TextView) view.findViewById(R.id.app_name_label);
+                    TextView label1 = view.findViewById(R.id.app_name_label);
                     label1.setTypeface(typeFace);
-                    ImageView icon1 = (ImageView) view.findViewById(R.id.icon1);
-                    ImageView icon2 = (ImageView) view.findViewById(R.id.icon2);
-                    ImageView icon3 = (ImageView) view.findViewById(R.id.icon3);
-                    ImageView icon4 = (ImageView) view.findViewById(R.id.icon4);
-                    ImageView icon5 = (ImageView) view.findViewById(R.id.icon5);
-                    ImageView icon6 = (ImageView) view.findViewById(R.id.icon6);
-                    try {
-                        icon1.setBackground(getAssetImage(WelcomeActivity.this, "icon1"));
-                        icon2.setBackground(getAssetImage(WelcomeActivity.this, "icon2"));
-                        icon3.setBackground(getAssetImage(WelcomeActivity.this, "icon3"));
-                        icon4.setBackground(getAssetImage(WelcomeActivity.this, "icon4"));
-                        icon5.setBackground(getAssetImage(WelcomeActivity.this, "icon5"));
-                        icon6.setBackground(getAssetImage(WelcomeActivity.this, "icon6"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     break;
                 case 2:
-                    TextView label2 = (TextView) view.findViewById(R.id.app_name_label);
+                    TextView label2 = view.findViewById(R.id.app_name_label);
                     label2.setTypeface(typeFace);
 
-                    ImageView icon7 = (ImageView) view.findViewById(R.id.slide3_icon);
+                    ImageView icon7 = view.findViewById(R.id.slide3_icon);
                     try {
                         icon7.setBackground(getAssetImage(WelcomeActivity.this, "icon1"));
                     } catch (IOException e) {
@@ -280,10 +268,10 @@ public class WelcomeActivity extends AppCompatActivity {
                     }
                     break;
                 case 3:
-                    TextView label3 = (TextView) view.findViewById(R.id.app_name_label);
+                    TextView label3 = view.findViewById(R.id.app_name_label);
                     label3.setTypeface(typeFace);
 
-                    ImageView icon8 = (ImageView) view.findViewById(R.id.slide4_icon);
+                    ImageView icon8 = view.findViewById(R.id.slide4_icon);
                     try {
                         icon8.setBackground(getAssetImage(WelcomeActivity.this, "popUp"));
                     } catch (IOException e) {
@@ -301,13 +289,12 @@ public class WelcomeActivity extends AppCompatActivity {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object obj) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object obj) {
             return view == obj;
         }
 
-
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             View view = (View) object;
             container.removeView(view);
         }

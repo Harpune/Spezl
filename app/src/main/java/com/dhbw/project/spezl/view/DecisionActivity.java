@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +48,7 @@ public class DecisionActivity extends AppCompatActivity {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        ImageButton owl = (ImageButton) findViewById(R.id.owl_button);
+        ImageButton owl = findViewById(R.id.owl_button);
         owl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,32 +57,19 @@ public class DecisionActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton relaxButton = (ImageButton) findViewById(R.id.pic_relax);
-        ImageButton partyButton = (ImageButton) findViewById(R.id.pic_party);
-        ImageButton sportButton = (ImageButton) findViewById(R.id.pic_sport);
-        ImageButton cookButton = (ImageButton) findViewById(R.id.pic_cook);
-        ImageButton discussionButton = (ImageButton) findViewById(R.id.pic_discussion);
-        ImageButton cultureButton = (ImageButton) findViewById(R.id.pic_culture);
-
-        try {
-            relaxButton.setBackground(getAssetImage(this, "entspannt"));
-            partyButton.setBackground(getAssetImage(this, "feiern"));
-            sportButton.setBackground(getAssetImage(this, "sport"));
-            cookButton.setBackground(getAssetImage(this, "kochen"));
-            discussionButton.setBackground(getAssetImage(this, "diskussion"));
-            cultureButton.setBackground(getAssetImage(this, "kultur"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         initDrawerLayout(firebaseUser);
     }
 
-    public static Drawable getAssetImage(Context context, String filename) throws IOException {
-        AssetManager assets = context.getResources().getAssets();
-        InputStream buffer = new BufferedInputStream((assets.open("drawable/" + filename + ".png")));
-        Bitmap bitmap = BitmapFactory.decodeStream(buffer);
-        return new BitmapDrawable(context.getResources(), bitmap);
+    public static Drawable getAssetImage(Context context, String filename) {
+        try {
+            InputStream ims = context.getAssets().open("drawable/" + filename + ".png");
+            Drawable d = Drawable.createFromStream(ims, null);
+            ims.close();
+            return d;
+        } catch (IOException ex) {
+            // TODO return default drawable.
+            return null;
+        }
     }
 
     public void showRelaxEvents(View view) {
@@ -120,14 +109,15 @@ public class DecisionActivity extends AppCompatActivity {
     }
 
     private void initDrawerLayout(FirebaseUser firebaseUser) {
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle mDrawerToggle;
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         // Change font.
-        TextView registerText = (TextView) findViewById(R.id.decision_label);
+        TextView registerText = findViewById(R.id.decision_label);
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "fonts/AmaticSC-Regular.ttf");
         registerText.setTypeface(typeFace);
 
@@ -153,7 +143,7 @@ public class DecisionActivity extends AppCompatActivity {
             mDrawerToggle.syncState();
         }
 
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -217,7 +207,7 @@ public class DecisionActivity extends AppCompatActivity {
         assert firebaseUser != null;
         View header = navigationView.getHeaderView(0);
         TextView mUsernameTextField = (TextView) header.findViewById(R.id.user_name);
-        if(mUsernameTextField != null){
+        if (mUsernameTextField != null) {
             mUsernameTextField.setText(firebaseUser.getDisplayName());
         }
     }
